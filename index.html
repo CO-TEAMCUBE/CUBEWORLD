@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🟦 큐브월드</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&family=Black+Han+Sans&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cube-blue: #2563eb;
+    --cube-sky: #60a5fa;
+    --cube-navy: #1e3a8a;
+    --cube-light: #eff6ff;
+    --cube-white: #ffffff;
+    --cube-yellow: #fbbf24;
+    --cube-pink: #f472b6;
+    --cube-green: #34d399;
+    --cube-gray: #94a3b8;
+    --cube-dark: #1e293b;
+    --sidebar-w: 220px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background: #dbeafe;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 20%, #bfdbfe 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, #e0e7ff 0%, transparent 50%);
+  }
+
+  /* ===== TOP BAR ===== */
+  #topbar {
+    background: var(--cube-navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 50px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  #topbar .logo {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: var(--cube-yellow);
+    letter-spacing: 2px;
+    cursor: pointer;
+  }
+  #topbar .logo span { color: white; }
+  #topbar-right { display: flex; gap: 10px; align-items: center; }
+  #topbar-right button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  #topbar-right button:hover { background: rgba(255,255,255,0.25); }
+  #topbar-search {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px;
+    width: 180px;
+    outline: none;
+  }
+  #topbar-search::placeholder { color: rgba(255,255,255,0.5); }
+
+  /* ===== LAYOUT ===== */
+  #main-layout {
+    display: flex;
+    margin-top: 50px;
+    min-height: calc(100vh - 50px);
+  }
+
+  /* ===== SIDEBAR ===== */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: white;
+    border-right: 2px solid #bfdbfe;
+    position: fixed;
+    top: 50px; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+  #my-mini-profile {
+    background: linear-gradient(135deg, var(--cube-navy), var(--cube-blue));
+    color: white;
+    padding: 20px 15px;
+    text-align: center;
+  }
+  #my-mini-avatar {
+    width: 65px; height: 65px;
+    border-radius: 50%;
+    border: 3px solid var(--cube-yellow);
+    object-fit: cover;
+    margin: 0 auto 8px;
+    display: block;
+    background: #3b82f6;
+    font-size: 28px;
+    line-height: 59px;
+    cursor: pointer;
+  }
+  #my-mini-name { font-family: 'Jua', sans-serif; font-size: 16px; margin-bottom: 3px; }
+  #my-mini-msg { font-size: 11px; color: #bfdbfe; margin-bottom: 8px; }
+  #my-mini-coins {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 12px;
+    display: inline-block;
+  }
+
+  .sidebar-menu { padding: 10px 0; flex: 1; }
+  .menu-section { padding: 8px 15px 4px; font-size: 10px; color: var(--cube-gray); font-weight: 700; letter-spacing: 1px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    color: var(--cube-dark);
+    border-left: 3px solid transparent;
+  }
+  .menu-item:hover { background: #eff6ff; border-left-color: var(--cube-sky); }
+  .menu-item.active { background: #dbeafe; border-left-color: var(--cube-blue); color: var(--cube-blue); font-weight: 700; }
+  .menu-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  /* ===== CONTENT ===== */
+  #content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 25px;
+    min-height: calc(100vh - 50px);
+  }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 24px;
+    color: var(--cube-navy);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(37,99,235,0.08);
+    border: 1.5px solid #e0e7ff;
+    margin-bottom: 20px;
+  }
+
+  /* ===== AUTH ===== */
+  #auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 50px);
+    padding: 20px;
+  }
+  #auth-box {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 40px rgba(37,99,235,0.15);
+    border: 2px solid #bfdbfe;
+    text-align: center;
+  }
+  #auth-box .auth-logo {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 36px;
+    color: var(--cube-navy);
+    margin-bottom: 5px;
+  }
+  #auth-box .auth-logo span { color: var(--cube-blue); }
+  #auth-box .auth-sub { color: var(--cube-gray); font-size: 13px; margin-bottom: 25px; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 25px; border-radius: 12px; overflow: hidden; border: 1.5px solid #bfdbfe; }
+  .auth-tab {
+    flex: 1; padding: 10px; border: none; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    background: white; color: var(--cube-gray); transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--cube-blue); color: white; }
+  .auth-input {
+    width: 100%; padding: 12px 15px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; margin-bottom: 12px; outline: none; transition: border 0.2s;
+  }
+  .auth-input:focus { border-color: var(--cube-blue); }
+  .auth-btn {
+    width: 100%; padding: 13px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; font-family: 'Jua', sans-serif;
+    font-size: 16px; cursor: pointer; transition: all 0.2s;
+  }
+  .auth-btn:hover { background: var(--cube-navy); }
+  #auth-msg { margin-top: 12px; font-size: 13px; color: #ef4444; }
+
+  /* ===== HOMPY ===== */
+  #hompy-container { display: flex; gap: 20px; flex-wrap: wrap; }
+  #hompy-left { flex: 0 0 280px; }
+  #hompy-right { flex: 1; min-width: 300px; }
+
+  .hompy-profile-card {
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.12);
+    border: 2px solid #bfdbfe;
+  }
+  .hompy-header {
+    height: 80px;
+    background: linear-gradient(135deg, var(--cube-navy), var(--cube-blue));
+    position: relative;
+  }
+  .hompy-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 4px solid white; position: absolute;
+    bottom: -40px; left: 20px;
+    background: #3b82f6; font-size: 36px;
+    line-height: 72px; text-align: center;
+    cursor: pointer; overflow: hidden;
+  }
+  .hompy-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .hompy-body { background: white; padding: 50px 20px 20px; }
+  .hompy-name { font-family: 'Black Han Sans', sans-serif; font-size: 20px; color: var(--cube-navy); }
+  .hompy-msg { color: var(--cube-gray); font-size: 13px; margin: 5px 0 12px; }
+  .hompy-stats { display: flex; gap: 15px; font-size: 12px; color: var(--cube-gray); }
+  .hompy-stats span b { color: var(--cube-blue); font-size: 15px; }
+
+  .skin-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .skin-opt {
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .skin-opt.selected { border-color: var(--cube-blue); transform: scale(1.1); }
+
+  .bgm-box {
+    background: #f8faff; border-radius: 12px; padding: 12px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .bgm-box input[type=text] {
+    flex: 1; min-width: 120px; padding: 8px 12px;
+    border: 1.5px solid #bfdbfe; border-radius: 8px;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px; outline: none;
+  }
+  .bgm-box button {
+    padding: 8px 14px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  /* ===== GUESTBOOK ===== */
+  .gb-entry {
+    display: flex; gap: 12px; padding: 14px 0;
+    border-bottom: 1px solid #e0e7ff;
+  }
+  .gb-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--cube-blue); font-size: 18px;
+    text-align: center; line-height: 42px; flex-shrink: 0;
+    overflow: hidden;
+  }
+  .gb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .gb-name { font-weight: 700; font-size: 13px; color: var(--cube-navy); }
+  .gb-time { font-size: 11px; color: var(--cube-gray); }
+  .gb-text { font-size: 13px; margin-top: 4px; }
+  .gb-form { display: flex; gap: 8px; margin-top: 10px; }
+  .gb-form textarea {
+    flex: 1; padding: 10px; border: 1.5px solid #bfdbfe; border-radius: 10px;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px;
+    resize: none; height: 70px; outline: none;
+  }
+  .gb-form button {
+    padding: 10px 16px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer; font-size: 13px;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  /* ===== DIARY ===== */
+  .diary-entry { padding: 16px 0; border-bottom: 1px solid #e0e7ff; cursor: pointer; }
+  .diary-entry:hover .diary-title { color: var(--cube-blue); }
+  .diary-title { font-weight: 700; font-size: 15px; color: var(--cube-dark); transition: color 0.2s; }
+  .diary-preview { font-size: 13px; color: var(--cube-gray); margin-top: 4px; }
+  .diary-meta { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+  .diary-form input, .diary-form textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; outline: none; margin-bottom: 10px;
+  }
+  .diary-form textarea { height: 120px; resize: none; }
+  .btn-primary {
+    padding: 10px 20px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--cube-navy); }
+  .btn-secondary {
+    padding: 10px 20px; background: #e0e7ff; color: var(--cube-blue);
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    transition: all 0.2s; margin-right: 8px;
+  }
+
+  /* ===== CUBE-CHIN (친구) ===== */
+  .chin-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; background: #f8faff; border-radius: 12px;
+    margin-bottom: 10px; transition: all 0.2s; cursor: pointer;
+    border: 1.5px solid #e0e7ff;
+  }
+  .chin-card:hover { border-color: var(--cube-blue); background: #eff6ff; }
+  .chin-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--cube-blue); font-size: 22px;
+    text-align: center; line-height: 48px; flex-shrink: 0;
+    overflow: hidden;
+  }
+  .chin-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .chin-name { font-weight: 700; font-size: 14px; color: var(--cube-navy); }
+  .chin-msg { font-size: 12px; color: var(--cube-gray); }
+  .chin-badge {
+    margin-left: auto; background: var(--cube-blue); color: white;
+    font-size: 11px; padding: 3px 8px; border-radius: 10px;
+  }
+  .chin-badge.pending { background: var(--cube-yellow); color: #1e293b; }
+  .chin-badge.request { background: var(--cube-green); color: white; }
+
+  .search-box {
+    display: flex; gap: 8px; margin-bottom: 16px;
+  }
+  .search-box input {
+    flex: 1; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px; outline: none;
+  }
+  .search-box button {
+    padding: 10px 16px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer; font-size: 13px;
+  }
+
+  /* ===== PHOTO ===== */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .photo-item {
+    aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+    border: 2px solid #e0e7ff; cursor: pointer; position: relative;
+    background: #f0f4ff;
+    transition: transform 0.2s;
+  }
+  .photo-item:hover { transform: scale(1.03); }
+  .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-item .photo-delete {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(0,0,0,0.5); color: white;
+    border: none; border-radius: 50%; width: 24px; height: 24px;
+    font-size: 12px; cursor: pointer; display: none;
+    line-height: 24px; text-align: center;
+  }
+  .photo-item:hover .photo-delete { display: block; }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #e0e7ff; }
+  .tab-btn {
+    padding: 8px 16px; border: none; background: none; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px; font-weight: 700;
+    color: var(--cube-gray); border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s;
+  }
+  .tab-btn.active { color: var(--cube-blue); border-bottom-color: var(--cube-blue); }
+
+  /* ===== OTHER HOMPY VIEW ===== */
+  #other-hompy { display: none; }
+  #other-hompy.active { display: block; }
+
+  /* ===== COIN / SHOP ===== */
+  .coin-display {
+    display: flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white; padding: 12px 20px; border-radius: 16px;
+    font-family: 'Jua', sans-serif; font-size: 20px;
+    margin-bottom: 16px; box-shadow: 0 4px 15px rgba(251,191,36,0.3);
+  }
+  .shop-item {
+    background: white; border: 2px solid #e0e7ff; border-radius: 14px;
+    padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .shop-item:hover { border-color: var(--cube-blue); transform: translateY(-2px); }
+  .shop-item .item-icon { font-size: 36px; margin-bottom: 8px; }
+  .shop-item .item-name { font-weight: 700; font-size: 14px; color: var(--cube-dark); }
+  .shop-item .item-price { color: #f59e0b; font-weight: 700; margin-top: 4px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+
+  /* ===== NOTIFICATIONS ===== */
+  .notif-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid #e0e7ff;
+  }
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cube-blue); margin-top: 6px; flex-shrink: 0; }
+  .notif-dot.read { background: #cbd5e1; }
+  .notif-text { font-size: 13px; }
+  .notif-time { font-size: 11px; color: var(--cube-gray); margin-top: 3px; }
+
+  /* ===== BADGE ===== */
+  #notif-badge {
+    background: #ef4444; color: white; border-radius: 50%;
+    width: 18px; height: 18px; font-size: 10px; font-weight: 700;
+    display: none; align-items: center; justify-content: center;
+    margin-left: auto;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; display: none;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white; border-radius: 20px; padding: 30px;
+    width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .modal-title { font-family: 'Black Han Sans', sans-serif; font-size: 20px; color: var(--cube-navy); margin-bottom: 16px; }
+  .modal-close { float: right; cursor: pointer; font-size: 20px; color: var(--cube-gray); border: none; background: none; }
+
+  /* ===== TOAST ===== */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--cube-navy); color: white;
+    padding: 12px 20px; border-radius: 12px;
+    font-size: 14px; z-index: 9999;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ===== VISITOR ===== */
+  .visitor-log { font-size: 12px; color: var(--cube-gray); }
+  .visitor-item { padding: 5px 0; border-bottom: 1px solid #f0f4ff; }
+
+  /* ===== BGM PLAYER ===== */
+  #bgm-player {
+    position: fixed; bottom: 24px; left: calc(var(--sidebar-w) + 16px);
+    background: var(--cube-navy); color: white; border-radius: 50px;
+    padding: 8px 18px; display: none; align-items: center; gap: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 500; font-size: 13px;
+  }
+  #bgm-player.visible { display: flex; }
+  #bgm-note { animation: bounce 1s infinite; display: inline-block; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    :root { --sidebar-w: 0px; }
+    #sidebar { display: none; }
+    #content { margin-left: 0; padding: 15px; }
+    #hompy-left { flex: 0 0 100%; }
+  }
+
+  .delete-btn {
+    background: none; border: none; color: #ef4444;
+    cursor: pointer; font-size: 12px; padding: 2px 6px;
+    border-radius: 6px; transition: background 0.2s;
+  }
+  .delete-btn:hover { background: #fee2e2; }
+
+  .empty-state {
+    text-align: center; color: var(--cube-gray);
+    padding: 40px 20px; font-size: 14px;
+  }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
+
+  #profile-edit-form input {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; outline: none; margin-bottom: 10px;
+  }
+
+  .wave-text {
+    display: inline-block;
+    animation: wave 2s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo" onclick="goHome()">🟦 큐브<span>월드</span></div>
+  <div id="topbar-right">
+    <input type="text" id="topbar-search" placeholder="🔍 유저 검색..." onkeydown="if(event.key==='Enter')searchUser()">
+    <button onclick="searchUser()">검색</button>
+    <button onclick="logout()" id="logout-btn" style="display:none">로그아웃</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar" style="display:none">
+  <div id="my-mini-profile">
+    <div id="my-mini-avatar" onclick="showPage('hompy')">🙂</div>
+    <div id="my-mini-name">로그인 필요</div>
+    <div id="my-mini-msg">한마디를 설정해요!</div>
+    <div id="my-mini-coins">🟡 0 큐브코인</div>
+  </div>
+  <div class="sidebar-menu">
+    <div class="menu-section">나의 공간</div>
+    <div class="menu-item active" onclick="showPage('hompy')" id="menu-hompy">
+      <span class="menu-icon">🏠</span> 미니홈피
+    </div>
+    <div class="menu-item" onclick="showPage('diary')" id="menu-diary">
+      <span class="menu-icon">📝</span> 다이어리
+    </div>
+    <div class="menu-item" onclick="showPage('photo')" id="menu-photo">
+      <span class="menu-icon">🖼️</span> 사진첩
+    </div>
+    <div class="menu-section">소셜</div>
+    <div class="menu-item" onclick="showPage('chin')" id="menu-chin">
+      <span class="menu-icon">👥</span> 큐브친
+    </div>
+    <div class="menu-item" onclick="showPage('surf')" id="menu-surf">
+      <span class="menu-icon">🌊</span> 파도타기
+    </div>
+    <div class="menu-section">기타</div>
+    <div class="menu-item" onclick="showPage('shop')" id="menu-shop">
+      <span class="menu-icon">🛍️</span> 큐브샵
+    </div>
+    <div class="menu-item" onclick="showPage('notif')" id="menu-notif">
+      <span class="menu-icon">🔔</span> 알림
+      <span id="notif-badge">0</span>
+    </div>
+    <div class="menu-item" onclick="showPage('attend')" id="menu-attend">
+      <span class="menu-icon">✅</span> 출석체크
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-layout">
+  <div id="content">
+
+    <!-- AUTH PAGE -->
+    <div id="auth-page">
+      <div id="auth-box">
+        <div class="auth-logo">🟦 큐브<span>월드</span></div>
+        <div class="auth-sub">TEAM CUBE의 미니홈피 세상 <span class="wave-text">👋</span></div>
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuth('login')">로그인</button>
+          <button class="auth-tab" onclick="switchAuth('signup')">회원가입</button>
+        </div>
+        <div id="login-form">
+          <input class="auth-input" type="email" id="login-email" placeholder="이메일">
+          <input class="auth-input" type="password" id="login-pw" placeholder="비밀번호">
+          <button class="auth-btn" onclick="login()">🔐 로그인</button>
+        </div>
+        <div id="signup-form" style="display:none">
+          <input class="auth-input" type="text" id="signup-name" placeholder="닉네임 (2~10자)">
+          <input class="auth-input" type="email" id="signup-email" placeholder="이메일">
+          <input class="auth-input" type="password" id="signup-pw" placeholder="비밀번호 (6자 이상)">
+          <button class="auth-btn" onclick="signup()">✨ 큐브월드 가입!</button>
+        </div>
+        <div id="auth-msg"></div>
+      </div>
+    </div>
+
+    <!-- HOMPY PAGE -->
+    <div id="hompy-page" class="page" style="display:none">
+      <div class="page-title">🏠 <span id="hompy-title-name">내</span> 미니홈피</div>
+
+      <!-- OTHER HOMPY VIEW -->
+      <div id="other-hompy">
+        <div class="card" style="margin-bottom:16px">
+          <button class="btn-secondary" onclick="backToMyHompy()">← 내 홈피로</button>
+        </div>
+      </div>
+
+      <div id="hompy-container">
+        <div id="hompy-left">
+          <!-- Profile Card -->
+          <div class="hompy-profile-card card" style="padding:0">
+            <div class="hompy-header" id="hompy-header-bg">
+              <div class="hompy-avatar" id="hompy-avatar" onclick="triggerAvatarUpload()">🙂</div>
+            </div>
+            <div class="hompy-body">
+              <div class="hompy-name" id="hompy-name">닉네임</div>
+              <div class="hompy-msg" id="hompy-status">한마디를 설정해보세요!</div>
+              <div class="hompy-stats">
+                <span>큐브친 <b id="stat-chins">0</b></span>
+                <span>방문 <b id="stat-visits">0</b></span>
+                <span>오늘 <b id="stat-today">0</b></span>
+              </div>
+              <div id="hompy-edit-btns" style="margin-top:12px">
+                <button class="btn-secondary" style="font-size:12px;padding:6px 12px" onclick="openProfileEdit()">✏️ 프로필 편집</button>
+              </div>
+              <!-- Skin -->
+              <div style="margin-top:14px">
+                <div style="font-size:12px;font-weight:700;color:var(--cube-gray);margin-bottom:8px">🎨 스킨</div>
+                <div class="skin-selector" id="skin-selector"></div>
+              </div>
+              <!-- BGM -->
+              <div style="margin-top:14px" id="bgm-section">
+                <div style="font-size:12px;font-weight:700;color:var(--cube-gray);margin-bottom:8px">🎵 BGM</div>
+                <div class="bgm-box">
+                  <input type="text" id="bgm-input" placeholder="유튜브 URL 입력..." style="font-size:12px">
+                  <button onclick="setBGM()" style="font-size:12px">설정</button>
+                </div>
+                <div id="bgm-title" style="font-size:11px;color:var(--cube-gray);margin-top:6px"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visitor Log -->
+          <div class="card" style="margin-top:16px">
+            <div style="font-weight:700;font-size:14px;margin-bottom:10px">👀 최근 방문자</div>
+            <div id="visitor-list" class="visitor-log"></div>
+          </div>
+        </div>
+
+        <div id="hompy-right">
+          <!-- Guestbook -->
+          <div class="card">
+            <div style="font-weight:700;font-size:16px;margin-bottom:12px">📖 방명록</div>
+            <div id="guestbook-list"></div>
+            <div id="guestbook-write" class="gb-form" style="margin-top:14px">
+              <textarea id="gb-input" placeholder="방명록을 남겨보세요 ✨"></textarea>
+              <button onclick="writeGuestbook()">작성</button>
+            </div>
+          </div>
+
+          <!-- Mini Diary Preview -->
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-weight:700;font-size:16px">📝 최근 다이어리</div>
+              <button class="btn-primary" style="font-size:12px;padding:6px 12px" onclick="showPage('diary')">전체보기</button>
+            </div>
+            <div id="hompy-diary-preview"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIARY PAGE -->
+    <div id="diary-page" class="page" style="display:none">
+      <div class="page-title">📝 다이어리</div>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchDiaryTab('list')">목록</button>
+          <button class="tab-btn" onclick="switchDiaryTab('write')">새 글 쓰기</button>
+        </div>
+        <div id="diary-list-tab">
+          <div id="diary-list"></div>
+        </div>
+        <div id="diary-write-tab" style="display:none">
+          <div class="diary-form">
+            <input type="text" id="diary-title-input" placeholder="제목">
+            <textarea id="diary-content-input" placeholder="오늘의 이야기를 써보세요... ✍️"></textarea>
+            <div style="display:flex;gap:8px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+                <input type="radio" name="diary-private" value="public" checked> 공개
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+                <input type="radio" name="diary-private" value="private"> 비공개
+              </label>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn-secondary" onclick="switchDiaryTab('list')">취소</button>
+              <button class="btn-primary" onclick="writeDiary()">저장</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diary View Modal -->
+      <div id="diary-view" style="display:none" class="card">
+        <button class="btn-secondary" onclick="closeDiaryView()" style="margin-bottom:12px">← 목록으로</button>
+        <div id="diary-view-title" style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--cube-navy);margin-bottom:8px"></div>
+        <div id="diary-view-meta" style="font-size:12px;color:var(--cube-gray);margin-bottom:16px"></div>
+        <div id="diary-view-content" style="font-size:15px;line-height:1.8;white-space:pre-wrap"></div>
+      </div>
+    </div>
+
+    <!-- PHOTO PAGE -->
+    <div id="photo-page" class="page" style="display:none">
+      <div class="page-title">🖼️ 사진첩</div>
+      <div class="card">
+        <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+          <label class="btn-primary" style="cursor:pointer;display:inline-block">
+            📸 사진 추가
+            <input type="file" id="photo-upload" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)">
+          </label>
+          <span style="font-size:13px;color:var(--cube-gray)" id="photo-count">0장</span>
+        </div>
+        <div class="photo-grid" id="photo-grid">
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-icon">📷</div>
+            사진을 추가해보세요!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHIN PAGE -->
+    <div id="chin-page" class="page" style="display:none">
+      <div class="page-title">👥 큐브친</div>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchChinTab('list')">큐브친 목록</button>
+          <button class="tab-btn" onclick="switchChinTab('requests')">받은 신청 <span id="req-count-badge" style="background:#ef4444;color:white;border-radius:10px;padding:1px 6px;font-size:11px"></span></button>
+          <button class="tab-btn" onclick="switchChinTab('sent')">보낸 신청</button>
+          <button class="tab-btn" onclick="switchChinTab('search')">검색</button>
+        </div>
+        <div id="chin-list-tab">
+          <div id="chin-list"></div>
+        </div>
+        <div id="chin-requests-tab" style="display:none">
+          <div id="chin-requests-list"></div>
+        </div>
+        <div id="chin-sent-tab" style="display:none">
+          <div id="chin-sent-list"></div>
+        </div>
+        <div id="chin-search-tab" style="display:none">
+          <div class="search-box">
+            <input type="text" id="chin-search-input" placeholder="닉네임으로 검색...">
+            <button onclick="searchChinUser()">검색</button>
+          </div>
+          <div id="chin-search-results"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SURF PAGE -->
+    <div id="surf-page" class="page" style="display:none">
+      <div class="page-title">🌊 파도타기</div>
+      <div class="card">
+        <div style="color:var(--cube-gray);font-size:13px;margin-bottom:16px">큐브친들의 홈피를 구경해보세요!</div>
+        <div id="surf-list"></div>
+      </div>
+    </div>
+
+    <!-- SHOP PAGE -->
+    <div id="shop-page" class="page" style="display:none">
+      <div class="page-title">🛍️ 큐브샵</div>
+      <div class="coin-display">
+        🟡 <span id="shop-coins">0</span> 큐브코인
+      </div>
+      <div class="card">
+        <div style="font-weight:700;font-size:16px;margin-bottom:14px">🎨 스킨</div>
+        <div class="shop-grid" id="shop-skins"></div>
+      </div>
+    </div>
+
+    <!-- NOTIF PAGE -->
+    <div id="notif-page" class="page" style="display:none">
+      <div class="page-title">🔔 알림</div>
+      <div class="card">
+        <div id="notif-list"></div>
+      </div>
+    </div>
+
+    <!-- ATTEND PAGE -->
+    <div id="attend-page" class="page" style="display:none">
+      <div class="page-title">✅ 출석체크</div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:60px;margin-bottom:16px">🗓️</div>
+        <div style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--cube-navy);margin-bottom:8px">오늘의 출석체크</div>
+        <div style="color:var(--cube-gray);font-size:14px;margin-bottom:20px">출석하면 큐브코인 10개를 드려요!</div>
+        <div id="attend-streak" style="font-size:14px;color:var(--cube-blue);margin-bottom:16px"></div>
+        <button class="btn-primary" id="attend-btn" onclick="doAttend()" style="font-size:18px;padding:16px 40px">
+          출석 도장 찍기 🔵
+        </button>
+        <div id="attend-msg" style="margin-top:16px;font-size:14px"></div>
+      </div>
+      <div class="card" style="margin-top:20px">
+        <div style="font-weight:700;font-size:16px;margin-bottom:12px">📅 이번 달 출석 현황</div>
+        <div id="attend-calendar"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<!-- Profile Edit Modal -->
+<div class="modal-overlay" id="profile-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('profile-modal')">✕</button>
+    <div class="modal-title">✏️ 프로필 편집</div>
+    <div id="profile-edit-form">
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="modal-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--cube-blue);font-size:36px;text-align:center;line-height:80px;margin:0 auto 10px;cursor:pointer;overflow:hidden" onclick="triggerAvatarUpload()">🙂</div>
+        <div style="font-size:12px;color:var(--cube-gray)">클릭해서 사진 변경</div>
+        <input type="file" id="avatar-upload" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+      </div>
+      <input type="text" id="edit-name" placeholder="닉네임">
+      <input type="text" id="edit-status" placeholder="한마디">
+      <button class="btn-primary" onclick="saveProfile()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Diary View in Other Hompy -->
+<div class="modal-overlay" id="diary-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('diary-modal')">✕</button>
+    <div id="diary-modal-title" class="modal-title"></div>
+    <div id="diary-modal-meta" style="font-size:12px;color:var(--cube-gray);margin-bottom:14px"></div>
+    <div id="diary-modal-content" style="font-size:14px;line-height:1.8;white-space:pre-wrap"></div>
+  </div>
+</div>
+
+<!-- Photo View Modal -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal-box" style="max-width:600px;text-align:center;background:transparent;box-shadow:none">
+    <button class="modal-close" onclick="closeModal('photo-modal')" style="color:white;position:absolute;top:10px;right:10px;font-size:30px">✕</button>
+    <img id="photo-modal-img" src="" style="max-width:100%;max-height:80vh;border-radius:12px">
+  </div>
+</div>
+
+<!-- BGM Player -->
+<div id="bgm-player">
+  <span id="bgm-note">🎵</span>
+  <span id="bgm-playing-title">재생 중</span>
+  <button onclick="stopBGM()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:4px 8px;border-radius:6px;font-size:12px">⏹</button>
+</div>
+<iframe id="bgm-iframe" style="display:none" allow="autoplay"></iframe>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection, query, where, orderBy, getDocs, onSnapshot, deleteDoc, serverTimestamp, increment, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC74vyDekUpvCd3rg6GUmexbA17kys8_TE",
+  authDomain: "cubeworld-54ea1.firebaseapp.com",
+  projectId: "cubeworld-54ea1",
+  storageBucket: "cubeworld-54ea1.firebasestorage.app",
+  messagingSenderId: "694036215087",
+  appId: "1:694036215087:web:98fb60470f317162d69dda"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ===== STATE =====
+let currentUser = null;
+let myProfile = null;
+let viewingUid = null; // whose hompy we're viewing
+let currentPage = 'hompy';
+let unsubNotif = null;
+let bgmYid = null;
+
+const SKINS = [
+  { id:'blue', name:'큐브블루', color:'#2563eb', bg:'#eff6ff', price:0, owned:true },
+  { id:'pink', name:'핑크드림', color:'#f472b6', bg:'#fdf2f8', price:50 },
+  { id:'green', name:'민트그린', color:'#10b981', bg:'#f0fdf4', price:50 },
+  { id:'purple', name:'퍼플', color:'#8b5cf6', bg:'#faf5ff', price:50 },
+  { id:'orange', name:'오렌지', color:'#f97316', bg:'#fff7ed', price:50 },
+  { id:'dark', name:'다크', color:'#334155', bg:'#0f172a', price:100 },
+];
+
+const SHOP_ITEMS = [
+  { id:'skin_pink', name:'핑크드림 스킨', icon:'🌸', price:50, type:'skin', skinId:'pink' },
+  { id:'skin_green', name:'민트그린 스킨', icon:'🌿', price:50, type:'skin', skinId:'green' },
+  { id:'skin_purple', name:'퍼플 스킨', icon:'💜', price:50, type:'skin', skinId:'purple' },
+  { id:'skin_orange', name:'오렌지 스킨', icon:'🍊', price:50, type:'skin', skinId:'orange' },
+  { id:'skin_dark', name:'다크 스킨', icon:'🌙', price:100, type:'skin', skinId:'dark' },
+];
+
+// ===== AUTH STATE =====
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    myProfile = await loadProfile(user.uid);
+    if (!myProfile) {
+      // create default profile
+      myProfile = {
+        uid: user.uid,
+        name: user.displayName || '큐브인',
+        email: user.email,
+        status: '큐브월드에 왔어요! 🎉',
+        avatar: '',
+        skin: 'blue',
+        bgm: '',
+        bgmTitle: '',
+        coins: 100,
+        chins: [],
+        ownedSkins: ['blue'],
+        visits: 0,
+        todayVisits: 0,
+        createdAt: serverTimestamp()
+      };
+      await setDoc(doc(db, 'users', user.uid), myProfile);
+    }
+    showLoggedIn();
+    viewingUid = user.uid;
+    renderMyProfile();
+    showPage('hompy');
+    loadHompy(user.uid);
+    listenNotifications();
+  } else {
+    currentUser = null;
+    myProfile = null;
+    showLoggedOut();
+  }
+});
+
+async function loadProfile(uid) {
+  const snap = await getDoc(doc(db, 'users', uid));
+  return snap.exists() ? snap.data() : null;
+}
+
+function showLoggedIn() {
+  document.getElementById('auth-page').style.display = 'none';
+  document.getElementById('sidebar').style.display = 'flex';
+  document.getElementById('logout-btn').style.display = 'block';
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+}
+
+function showLoggedOut() {
+  document.getElementById('auth-page').style.display = 'flex';
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('logout-btn').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+}
+
+// ===== AUTH FUNCTIONS =====
+window.switchAuth = (tab) => {
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'signup'));
+  });
+  document.getElementById('auth-msg').textContent = '';
+};
+
+window.login = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pw = document.getElementById('login-pw').value;
+  if (!email || !pw) return setAuthMsg('이메일과 비밀번호를 입력해주세요');
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+  } catch(e) {
+    setAuthMsg('로그인 실패: ' + (e.code === 'auth/invalid-credential' ? '이메일 또는 비밀번호가 틀렸어요' : e.message));
+  }
+};
+
+window.signup = async () => {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pw = document.getElementById('signup-pw').value;
+  if (!name || name.length < 2 || name.length > 10) return setAuthMsg('닉네임은 2~10자로 입력해주세요');
+  if (!email) return setAuthMsg('이메일을 입력해주세요');
+  if (pw.length < 6) return setAuthMsg('비밀번호는 6자 이상이어야 해요');
+  // check name dup
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  if (!snap.empty) return setAuthMsg('이미 사용 중인 닉네임이에요');
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pw);
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      uid: cred.user.uid,
+      name, email,
+      status: '큐브월드에 왔어요! 🎉',
+      avatar: '',
+      skin: 'blue',
+      bgm: '',
+      bgmTitle: '',
+      coins: 100,
+      chins: [],
+      ownedSkins: ['blue'],
+      visits: 0,
+      todayVisits: 0,
+      lastAttend: '',
+      attendStreak: 0,
+      attendDates: [],
+      createdAt: serverTimestamp()
+    });
+  } catch(e) {
+    setAuthMsg('가입 실패: ' + (e.code === 'auth/email-already-in-use' ? '이미 사용 중인 이메일이에요' : e.message));
+  }
+};
+
+window.logout = async () => {
+  if (unsubNotif) unsubNotif();
+  await signOut(auth);
+  stopBGM();
+};
+
+function setAuthMsg(msg) {
+  document.getElementById('auth-msg').textContent = msg;
+}
+
+// ===== NAVIGATION =====
+window.showPage = (page) => {
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+
+  const pageEl = document.getElementById(page + '-page');
+  if (pageEl) pageEl.style.display = 'block';
+  const menuEl = document.getElementById('menu-' + page);
+  if (menuEl) menuEl.classList.add('active');
+
+  if (page === 'hompy') { viewingUid = currentUser.uid; loadHompy(currentUser.uid); }
+  if (page === 'diary') loadDiary();
+  if (page === 'photo') loadPhotos();
+  if (page === 'chin') loadChin();
+  if (page === 'surf') loadSurf();
+  if (page === 'shop') loadShop();
+  if (page === 'notif') loadNotif();
+  if (page === 'attend') loadAttend();
+};
+
+window.goHome = () => {
+  if (currentUser) showPage('hompy');
+};
+
+// ===== PROFILE =====
+function renderMyProfile() {
+  if (!myProfile) return;
+  const avatar = myProfile.avatar || '';
+  const avatarHtml = avatar ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '🙂';
+  document.getElementById('my-mini-avatar').innerHTML = avatarHtml;
+  document.getElementById('my-mini-name').textContent = myProfile.name;
+  document.getElementById('my-mini-msg').textContent = myProfile.status || '';
+  document.getElementById('my-mini-coins').textContent = `🟡 ${myProfile.coins || 0} 큐브코인`;
+}
+
+window.triggerAvatarUpload = () => {
+  if (viewingUid !== currentUser.uid) return;
+  document.getElementById('avatar-upload').click();
+};
+
+window.uploadAvatar = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('2MB 이하 이미지만 가능해요'); return; }
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const b64 = ev.target.result;
+    await updateDoc(doc(db, 'users', currentUser.uid), { avatar: b64 });
+    myProfile.avatar = b64;
+    renderMyProfile();
+    loadHompy(currentUser.uid);
+    showToast('프로필 사진이 변경됐어요!');
+  };
+  reader.readAsDataURL(file);
+};
+
+window.openProfileEdit = () => {
+  document.getElementById('edit-name').value = myProfile.name;
+  document.getElementById('edit-status').value = myProfile.status || '';
+  const avatar = myProfile.avatar || '';
+  document.getElementById('modal-avatar').innerHTML = avatar
+    ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : '🙂';
+  openModal('profile-modal');
+};
+
+window.saveProfile = async () => {
+  const name = document.getElementById('edit-name').value.trim();
+  const status = document.getElementById('edit-status').value.trim();
+  if (!name || name.length < 2 || name.length > 10) { showToast('닉네임은 2~10자로 입력해주세요'); return; }
+  // check dup (excluding self)
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  if (!snap.empty && snap.docs[0].id !== currentUser.uid) { showToast('이미 사용 중인 닉네임이에요'); return; }
+  await updateDoc(doc(db, 'users', currentUser.uid), { name, status });
+  myProfile.name = name; myProfile.status = status;
+  renderMyProfile();
+  loadHompy(currentUser.uid);
+  closeModal('profile-modal');
+  showToast('프로필이 저장됐어요!');
+};
+
+// ===== HOMPY =====
+async function loadHompy(uid) {
+  const profile = uid === currentUser.uid ? myProfile : await loadProfile(uid);
+  if (!profile) return;
+  viewingUid = uid;
+
+  const isMe = uid === currentUser.uid;
+
+  // Header
+  document.getElementById('hompy-title-name').textContent = isMe ? '내' : profile.name + '의';
+
+  // Other hompy banner
+  document.getElementById('other-hompy').classList.toggle('active', !isMe);
+
+  // Apply skin
+  const skin = SKINS.find(s => s.id === (profile.skin || 'blue')) || SKINS[0];
+  document.getElementById('hompy-header-bg').style.background =
+    `linear-gradient(135deg, ${skin.color}cc, ${skin.color})`;
+
+  // Avatar
+  const avatar = profile.avatar || '';
+  document.getElementById('hompy-avatar').innerHTML = avatar
+    ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover">`
+    : '🙂';
+
+  document.getElementById('hompy-name').textContent = profile.name;
+  document.getElementById('hompy-status').textContent = profile.status || '';
+
+  // Stats
+  const chinsCount = (profile.chins || []).length;
+  document.getElementById('stat-chins').textContent = chinsCount;
+  document.getElementById('stat-visits').textContent = profile.visits || 0;
+  document.getElementById('stat-today').textContent = profile.todayVisits || 0;
+
+  // Edit buttons
+  document.getElementById('hompy-edit-btns').style.display = isMe ? 'block' : 'none';
+  document.getElementById('bgm-section').style.display = isMe ? 'block' : 'none';
+
+  // Skin selector
+  const ownedSkins = profile.ownedSkins || ['blue'];
+  const skinSel = document.getElementById('skin-selector');
+  skinSel.innerHTML = '';
+  SKINS.forEach(s => {
+    if (!ownedSkins.includes(s.id)) return;
+    const el = document.createElement('div');
+    el.className = 'skin-opt' + (profile.skin === s.id ? ' selected' : '');
+    el.style.background = s.color;
+    el.title = s.name;
+    if (isMe) el.onclick = () => applySkin(s.id);
+    skinSel.appendChild(el);
+  });
+
+  // BGM
+  if (isMe) {
+    document.getElementById('bgm-input').value = profile.bgm || '';
+    document.getElementById('bgm-title').textContent = profile.bgmTitle ? '🎵 ' + profile.bgmTitle : '';
+  }
+
+  // Play BGM
+  if (profile.bgm) {
+    playBGM(profile.bgm, profile.bgmTitle);
+  }
+
+  // Visit tracking
+  if (!isMe) {
+    await updateDoc(doc(db, 'users', uid), {
+      visits: increment(1),
+      todayVisits: increment(1)
+    });
+    // Log visitor
+    await addDoc(collection(db, 'visits'), {
+      toUid: uid,
+      fromUid: currentUser.uid,
+      fromName: myProfile.name,
+      fromAvatar: myProfile.avatar || '',
+      time: serverTimestamp()
+    });
+  }
+
+  // Load visitor log
+  loadVisitorLog(uid);
+  // Load guestbook
+  loadGuestbook(uid);
+  // Load diary preview
+  loadDiaryPreview(uid);
+}
+
+window.backToMyHompy = () => {
+  viewingUid = currentUser.uid;
+  loadHompy(currentUser.uid);
+};
+
+async function loadVisitorLog(uid) {
+  const q = query(collection(db, 'visits'), where('toUid', '==', uid), orderBy('time', 'desc'), limit(5));
+  const snap = await getDocs(q);
+  const el = document.getElementById('visitor-list');
+  if (snap.empty) { el.innerHTML = '<div style="color:#94a3b8;font-size:12px">방문자가 없어요</div>'; return; }
+  el.innerHTML = snap.docs.map(d => {
+    const v = d.data();
+    return `<div class="visitor-item">👤 <b>${v.fromName}</b> <span style="float:right">${timeAgo(v.time)}</span></div>`;
+  }).join('');
+}
+
+// ===== GUESTBOOK =====
+async function loadGuestbook(uid) {
+  const q = query(collection(db, 'guestbook'), where('toUid', '==', uid), orderBy('time', 'desc'));
+  const snap = await getDocs(q);
+  const el = document.getElementById('guestbook-list');
+  const write = document.getElementById('guestbook-write');
+
+  write.style.display = currentUser ? 'flex' : 'none';
+
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div>방명록이 비어있어요</div>';
+    return;
+  }
+  el.innerHTML = snap.docs.map(d => {
+    const g = d.data();
+    const avatar = g.fromAvatar ? `<img src="${g.fromAvatar}">` : '😊';
+    const canDelete = g.fromUid === currentUser.uid || uid === currentUser.uid;
+    return `<div class="gb-entry">
+      <div class="gb-avatar">${avatar}</div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="gb-name" onclick="visitHompy('${g.fromUid}')" style="cursor:pointer">${g.fromName}</span>
+          ${canDelete ? `<button class="delete-btn" onclick="deleteGuestbook('${d.id}','${uid}')">삭제</button>` : ''}
+        </div>
+        <div class="gb-time">${timeAgo(g.time)}</div>
+        <div class="gb-text">${escapeHtml(g.text)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.writeGuestbook = async () => {
+  const text = document.getElementById('gb-input').value.trim();
+  if (!text) return;
+  await addDoc(collection(db, 'guestbook'), {
+    toUid: viewingUid,
+    fromUid: currentUser.uid,
+    fromName: myProfile.name,
+    fromAvatar: myProfile.avatar || '',
+    text,
+    time: serverTimestamp()
+  });
+  document.getElementById('gb-input').value = '';
+  // Notification
+  if (viewingUid !== currentUser.uid) {
+    await addDoc(collection(db, 'notifications'), {
+      toUid: viewingUid,
+      text: `${myProfile.name}님이 방명록을 남겼어요`,
+      read: false,
+      time: serverTimestamp()
+    });
+  }
+  loadGuestbook(viewingUid);
+  showToast('방명록을 남겼어요!');
+};
+
+window.deleteGuestbook = async (id, uid) => {
+  await deleteDoc(doc(db, 'guestbook', id));
+  loadGuestbook(uid);
+  showToast('삭제됐어요');
+};
+
+// ===== DIARY =====
+window.switchDiaryTab = (tab) => {
+  document.getElementById('diary-list-tab').style.display = tab === 'list' ? 'block' : 'none';
+  document.getElementById('diary-write-tab').style.display = tab === 'write' ? 'block' : 'none';
+  document.getElementById('diary-view').style.display = 'none';
+  document.querySelectorAll('#diary-page .tab-btn').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='list') || (i===1 && tab==='write'));
+  });
+  if (tab === 'list') loadDiary();
+};
+
+async function loadDiary() {
+  const q = query(collection(db, 'diary'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
+  const snap = await getDocs(q);
+  const el = document.getElementById('diary-list');
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div>아직 글이 없어요. 첫 글을 써보세요!</div>';
+    return;
+  }
+  el.innerHTML = snap.docs.map(d => {
+    const di = d.data();
+    return `<div class="diary-entry" onclick="viewDiary('${d.id}', ${JSON.stringify(di).replace(/"/g,'&quot;')})">
+      <div style="display:flex;justify-content:space-between">
+        <div class="diary-title">${escapeHtml(di.title)}</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:11px;color:#94a3b8">${di.isPrivate ? '🔒' : '🌐'}</span>
+          <button class="delete-btn" onclick="event.stopPropagation();deleteDiary('${d.id}')">삭제</button>
+        </div>
+      </div>
+      <div class="diary-preview">${escapeHtml(di.content).substring(0, 60)}${di.content.length > 60 ? '...' : ''}</div>
+      <div class="diary-meta">${timeAgo(di.time)}</div>
+    </div>`;
+  }).join('');
+}
+
+async function loadDiaryPreview(uid) {
+  const isMe = uid === currentUser.uid;
+  const conditions = [where('uid', '==', uid), orderBy('time', 'desc'), limit(3)];
+  if (!isMe) conditions.splice(1, 0, where('isPrivate', '==', false));
+  const q = query(collection(db, 'diary'), ...conditions);
+  const snap = await getDocs(q);
+  const el = document.getElementById('hompy-diary-preview');
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-icon">📝</div>아직 글이 없어요</div>';
+    return;
+  }
+  el.innerHTML = snap.docs.map(d => {
+    const di = d.data();
+    return `<div class="diary-entry" onclick="openDiaryModal(${JSON.stringify(di).replace(/"/g,'&quot;')})">
+      <div class="diary-title">${escapeHtml(di.title)}</div>
+      <div class="diary-preview">${escapeHtml(di.content).substring(0, 50)}...</div>
+      <div class="diary-meta">${timeAgo(di.time)}</div>
+    </div>`;
+  }).join('');
+}
+
+window.openDiaryModal = (di) => {
+  document.getElementById('diary-modal-title').textContent = di.title;
+  document.getElementById('diary-modal-meta').textContent = timeAgo(di.time);
+  document.getElementById('diary-modal-content').textContent = di.content;
+  openModal('diary-modal');
+};
+
+window.viewDiary = (id, di) => {
+  document.getElementById('diary-list-tab').style.display = 'none';
+  document.getElementById('diary-write-tab').style.display = 'none';
+  document.getElementById('diary-view').style.display = 'block';
+  document.getElementById('diary-view-title').textContent = di.title;
+  document.getElementById('diary-view-meta').textContent = `${timeAgo(di.time)} · ${di.isPrivate ? '🔒 비공개' : '🌐 공개'}`;
+  document.getElementById('diary-view-content').textContent = di.content;
+};
+
+window.closeDiaryView = () => {
+  document.getElementById('diary-view').style.display = 'none';
+  document.getElementById('diary-list-tab').style.display = 'block';
+};
+
+window.writeDiary = async () => {
+  const title = document.getElementById('diary-title-input').value.trim();
+  const content = document.getElementById('diary-content-input').value.trim();
+  const isPrivate = document.querySelector('input[name="diary-private"]:checked').value === 'private';
+  if (!title || !content) { showToast('제목과 내용을 입력해주세요'); return; }
+  await addDoc(collection(db, 'diary'), {
+    uid: currentUser.uid,
+    authorName: myProfile.name,
+    title, content, isPrivate,
+    time: serverTimestamp()
+  });
+  document.getElementById('diary-title-input').value = '';
+  document.getElementById('diary-content-input').value = '';
+  switchDiaryTab('list');
+  showToast('다이어리가 저장됐어요!');
+};
+
+window.deleteDiary = async (id) => {
+  if (!confirm('삭제할까요?')) return;
+  await deleteDoc(doc(db, 'diary', id));
+  loadDiary();
+  showToast('삭제됐어요');
+};
+
+// ===== PHOTO =====
+async function loadPhotos() {
+  const q = query(collection(db, 'photos'), where('uid', '==', currentUser.uid), orderBy('time', 'desc'));
+  const snap = await getDocs(q);
+  const grid = document.getElementById('photo-grid');
+  document.getElementById('photo-count').textContent = snap.size + '장';
+  if (snap.empty) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📷</div>사진을 추가해보세요!</div>';
+    return;
+  }
+  grid.innerHTML = snap.docs.map(d => {
+    const p = d.data();
+    return `<div class="photo-item">
+      <img src="${p.url}" onclick="openPhotoModal('${p.url}')">
+      <button class="photo-delete" onclick="deletePhoto('${d.id}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+window.uploadPhotos = async (e) => {
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+  showToast('업로드 중...');
+  for (const file of files) {
+    if (file.size > 3 * 1024 * 1024) { showToast('3MB 이하 이미지만 가능해요'); continue; }
+    const reader = new FileReader();
+    await new Promise(res => {
+      reader.onload = async (ev) => {
+        await addDoc(collection(db, 'photos'), {
+          uid: currentUser.uid,
+          url: ev.target.result,
+          time: serverTimestamp()
+        });
+        res();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  loadPhotos();
+  showToast('사진이 추가됐어요!');
+  e.target.value = '';
+};
+
+window.deletePhoto = async (id) => {
+  if (!confirm('삭제할까요?')) return;
+  await deleteDoc(doc(db, 'photos', id));
+  loadPhotos();
+  showToast('삭제됐어요');
+};
+
+window.openPhotoModal = (url) => {
+  document.getElementById('photo-modal-img').src = url;
+  openModal('photo-modal');
+};
+
+// ===== CUBE-CHIN =====
+window.switchChinTab = (tab) => {
+  ['list','requests','sent','search'].forEach(t => {
+    document.getElementById('chin-'+t+'-tab').style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('#chin-page .tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['list','requests','sent','search'][i] === tab);
+  });
+  if (tab === 'list') loadChinList();
+  if (tab === 'requests') loadChinRequests();
+  if (tab === 'sent') loadChinSent();
+};
+
+async function loadChin() {
+  loadChinList();
+  loadChinRequests();
+}
+
+async function loadChinList() {
+  const chins = myProfile.chins || [];
+  const el = document.getElementById('chin-list');
+  if (!chins.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div>아직 큐브친이 없어요</div>';
+    return;
+  }
+  const profiles = await Promise.all(chins.map(uid => loadProfile(uid)));
+  el.innerHTML = profiles.filter(Boolean).map(p => {
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    return `<div class="chin-card" onclick="visitHompy('${p.uid}')">
+      <div class="chin-avatar">${avatar}</div>
+      <div>
+        <div class="chin-name">${p.name}</div>
+        <div class="chin-msg">${p.status || ''}</div>
+      </div>
+      <button class="delete-btn" onclick="event.stopPropagation();removeChin('${p.uid}')" style="margin-left:auto">삭제</button>
+    </div>`;
+  }).join('');
+}
+
+async function loadChinRequests() {
+  const q = query(collection(db, 'chinRequests'), where('toUid', '==', currentUser.uid), where('status', '==', 'pending'));
+  const snap = await getDocs(q);
+  const el = document.getElementById('chin-requests-list');
+  const badge = document.getElementById('req-count-badge');
+  badge.textContent = snap.size || '';
+
+  // Update notif badge
+  updateNotifBadge(snap.size);
+
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">✉️</div>받은 큐브친 신청이 없어요</div>';
+    return;
+  }
+  const profiles = await Promise.all(snap.docs.map(d => loadProfile(d.data().fromUid)));
+  el.innerHTML = snap.docs.map((d, i) => {
+    const p = profiles[i];
+    if (!p) return '';
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    return `<div class="chin-card">
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1">
+        <div class="chin-name">${p.name}</div>
+        <div class="chin-msg">${p.status || ''}</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn-primary" style="font-size:12px;padding:6px 10px" onclick="acceptChin('${d.id}','${p.uid}')">수락</button>
+        <button class="btn-secondary" style="font-size:12px;padding:6px 10px" onclick="rejectChin('${d.id}')">거절</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadChinSent() {
+  const q = query(collection(db, 'chinRequests'), where('fromUid', '==', currentUser.uid), where('status', '==', 'pending'));
+  const snap = await getDocs(q);
+  const el = document.getElementById('chin-sent-list');
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📤</div>보낸 신청이 없어요</div>';
+    return;
+  }
+  const profiles = await Promise.all(snap.docs.map(d => loadProfile(d.data().toUid)));
+  el.innerHTML = snap.docs.map((d, i) => {
+    const p = profiles[i];
+    if (!p) return '';
+    return `<div class="chin-card">
+      <div class="chin-avatar">${p.avatar ? `<img src="${p.avatar}">` : '😊'}</div>
+      <div style="flex:1"><div class="chin-name">${p.name}</div><div class="chin-msg">신청 대기 중...</div></div>
+      <button class="delete-btn" onclick="cancelChinRequest('${d.id}')">취소</button>
+    </div>`;
+  }).join('');
+}
+
+window.searchChinUser = async () => {
+  const name = document.getElementById('chin-search-input').value.trim();
+  if (!name) return;
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  const el = document.getElementById('chin-search-results');
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">찾을 수 없어요</div>'; return; }
+  const results = snap.docs.filter(d => d.id !== currentUser.uid);
+  if (!results.length) { el.innerHTML = '<div class="empty-state">자기 자신은 추가할 수 없어요</div>'; return; }
+  el.innerHTML = results.map(d => {
+    const p = d.data();
+    const isChin = (myProfile.chins || []).includes(p.uid);
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    return `<div class="chin-card">
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1"><div class="chin-name">${p.name}</div><div class="chin-msg">${p.status||''}</div></div>
+      ${isChin
+        ? '<span class="chin-badge">큐브친</span>'
+        : `<button class="btn-primary" style="font-size:12px;padding:6px 10px" onclick="sendChinRequest('${p.uid}','${p.name}')">신청</button>`
+      }
+    </div>`;
+  }).join('');
+};
+
+window.sendChinRequest = async (toUid, toName) => {
+  // Check existing
+  const q = query(collection(db, 'chinRequests'), where('fromUid', '==', currentUser.uid), where('toUid', '==', toUid), where('status', '==', 'pending'));
+  const snap = await getDocs(q);
+  if (!snap.empty) { showToast('이미 신청했어요'); return; }
+  await addDoc(collection(db, 'chinRequests'), {
+    fromUid: currentUser.uid,
+    fromName: myProfile.name,
+    toUid,
+    status: 'pending',
+    time: serverTimestamp()
+  });
+  await addDoc(collection(db, 'notifications'), {
+    toUid,
+    text: `${myProfile.name}님이 큐브친 신청을 보냈어요`,
+    read: false,
+    time: serverTimestamp()
+  });
+  showToast(`${toName}님께 큐브친 신청을 보냈어요!`);
+};
+
+window.acceptChin = async (reqId, fromUid) => {
+  await updateDoc(doc(db, 'chinRequests', reqId), { status: 'accepted' });
+  await updateDoc(doc(db, 'users', currentUser.uid), { chins: arrayUnion(fromUid) });
+  await updateDoc(doc(db, 'users', fromUid), { chins: arrayUnion(currentUser.uid) });
+  myProfile.chins = [...(myProfile.chins || []), fromUid];
+  await addDoc(collection(db, 'notifications'), {
+    toUid: fromUid,
+    text: `${myProfile.name}님이 큐브친 신청을 수락했어요!`,
+    read: false,
+    time: serverTimestamp()
+  });
+  loadChin();
+  showToast('큐브친이 됐어요!');
+};
+
+window.rejectChin = async (reqId) => {
+  await updateDoc(doc(db, 'chinRequests', reqId), { status: 'rejected' });
+  loadChinRequests();
+  showToast('거절했어요');
+};
+
+window.cancelChinRequest = async (reqId) => {
+  await deleteDoc(doc(db, 'chinRequests', reqId));
+  loadChinSent();
+  showToast('취소됐어요');
+};
+
+window.removeChin = async (uid) => {
+  if (!confirm('큐브친을 삭제할까요?')) return;
+  await updateDoc(doc(db, 'users', currentUser.uid), { chins: arrayRemove(uid) });
+  await updateDoc(doc(db, 'users', uid), { chins: arrayRemove(currentUser.uid) });
+  myProfile.chins = (myProfile.chins || []).filter(c => c !== uid);
+  loadChinList();
+  showToast('큐브친을 삭제했어요');
+};
+
+// ===== SURF (파도타기) =====
+async function loadSurf() {
+  const chins = myProfile.chins || [];
+  const el = document.getElementById('surf-list');
+  if (!chins.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🌊</div>큐브친을 추가하면 파도타기를 할 수 있어요!</div>';
+    return;
+  }
+  const profiles = await Promise.all(chins.map(uid => loadProfile(uid)));
+  el.innerHTML = profiles.filter(Boolean).map(p => {
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    const skin = SKINS.find(s => s.id === (p.skin || 'blue')) || SKINS[0];
+    return `<div class="chin-card" style="border-left:4px solid ${skin.color}" onclick="visitHompy('${p.uid}')">
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1">
+        <div class="chin-name">${p.name}</div>
+        <div class="chin-msg">${p.status || '한마디 없음'}</div>
+      </div>
+      <span class="chin-badge" style="background:${skin.color}">홈피 방문 →</span>
+    </div>`;
+  }).join('');
+}
+
+window.visitHompy = async (uid) => {
+  showPage('hompy');
+  await loadHompy(uid);
+};
+
+// ===== SEARCH =====
+window.searchUser = async () => {
+  const name = document.getElementById('topbar-search').value.trim();
+  if (!name) return;
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  if (snap.empty) { showToast('찾을 수 없어요'); return; }
+  const uid = snap.docs[0].id;
+  if (uid === currentUser.uid) { showPage('hompy'); return; }
+  visitHompy(uid);
+  document.getElementById('topbar-search').value = '';
+};
+
+// ===== SKIN =====
+window.applySkin = async (skinId) => {
+  const skin = SKINS.find(s => s.id === skinId);
+  if (!skin) return;
+  if (!(myProfile.ownedSkins || ['blue']).includes(skinId)) {
+    showToast('먼저 샵에서 구매해주세요');
+    return;
+  }
+  await updateDoc(doc(db, 'users', currentUser.uid), { skin: skinId });
+  myProfile.skin = skinId;
+  loadHompy(currentUser.uid);
+  showToast(`${skin.name} 스킨 적용!`);
+};
+
+// ===== BGM =====
+window.setBGM = async () => {
+  const url = document.getElementById('bgm-input').value.trim();
+  if (!url) {
+    await updateDoc(doc(db, 'users', currentUser.uid), { bgm: '', bgmTitle: '' });
+    myProfile.bgm = ''; myProfile.bgmTitle = '';
+    document.getElementById('bgm-title').textContent = '';
+    stopBGM();
+    showToast('BGM을 제거했어요');
+    return;
+  }
+  const yid = extractYoutubeId(url);
+  if (!yid) { showToast('유튜브 URL을 입력해주세요'); return; }
+  await updateDoc(doc(db, 'users', currentUser.uid), { bgm: url, bgmTitle: url });
+  myProfile.bgm = url; myProfile.bgmTitle = url;
+  document.getElementById('bgm-title').textContent = '🎵 설정됨';
+  playBGM(url, '');
+  showToast('BGM 설정 완료!');
+};
+
+function extractYoutubeId(url) {
+  const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function playBGM(url, title) {
+  const yid = extractYoutubeId(url);
+  if (!yid) return;
+  if (bgmYid === yid) return;
+  bgmYid = yid;
+  const iframe = document.getElementById('bgm-iframe');
+  iframe.src = `https://www.youtube.com/embed/${yid}?autoplay=1&loop=1&playlist=${yid}`;
+  document.getElementById('bgm-player').classList.add('visible');
+  document.getElementById('bgm-playing-title').textContent = title || 'BGM 재생 중';
+}
+
+window.stopBGM = () => {
+  document.getElementById('bgm-iframe').src = '';
+  document.getElementById('bgm-player').classList.remove('visible');
+  bgmYid = null;
+};
+
+// ===== SHOP =====
+async function loadShop() {
+  const freshProfile = await loadProfile(currentUser.uid);
+  myProfile = {...myProfile, ...freshProfile};
+  document.getElementById('shop-coins').textContent = myProfile.coins || 0;
+  const owned = myProfile.ownedSkins || ['blue'];
+
+  const el = document.getElementById('shop-skins');
+  el.innerHTML = SHOP_ITEMS.map(item => {
+    const isOwned = owned.includes(item.skinId);
+    return `<div class="shop-item">
+      <div class="item-icon">${item.icon}</div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-price">🟡 ${item.price}코인</div>
+      <div style="margin-top:8px">
+        ${isOwned
+          ? `<button class="btn-secondary" style="width:100%;font-size:12px;padding:6px" onclick="applySkin('${item.skinId}')">착용</button>`
+          : `<button class="btn-primary" style="width:100%;font-size:12px;padding:6px" onclick="buyItem('${item.id}')">구매</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.buyItem = async (itemId) => {
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
+  if (!item) return;
+  const freshProfile = await loadProfile(currentUser.uid);
+  const coins = freshProfile.coins || 0;
+  if (coins < item.price) { showToast('큐브코인이 부족해요!'); return; }
+  await updateDoc(doc(db, 'users', currentUser.uid), {
+    coins: increment(-item.price),
+    ownedSkins: arrayUnion(item.skinId)
+  });
+  myProfile.coins = coins - item.price;
+  myProfile.ownedSkins = [...(myProfile.ownedSkins || ['blue']), item.skinId];
+  renderMyProfile();
+  loadShop();
+  showToast(`${item.name} 구매 완료!`);
+};
+
+// ===== NOTIFICATIONS =====
+function listenNotifications() {
+  if (unsubNotif) unsubNotif();
+  const q = query(collection(db, 'notifications'), where('toUid', '==', currentUser.uid), where('read', '==', false));
+  unsubNotif = onSnapshot(q, snap => {
+    updateNotifBadge(snap.size);
+  });
+}
+
+function updateNotifBadge(count) {
+  const badge = document.getElementById('notif-badge');
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+}
+
+async function loadNotif() {
+  const q = query(collection(db, 'notifications'), where('toUid', '==', currentUser.uid), orderBy('time', 'desc'), limit(30));
+  const snap = await getDocs(q);
+  const el = document.getElementById('notif-list');
+  if (snap.empty) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔔</div>알림이 없어요</div>';
+    return;
+  }
+  el.innerHTML = snap.docs.map(d => {
+    const n = d.data();
+    return `<div class="notif-item">
+      <div class="notif-dot ${n.read ? 'read' : ''}"></div>
+      <div>
+        <div class="notif-text">${escapeHtml(n.text)}</div>
+        <div class="notif-time">${timeAgo(n.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  // Mark all read
+  snap.docs.filter(d => !d.data().read).forEach(d => {
+    updateDoc(doc(db, 'notifications', d.id), { read: true });
+  });
+}
+
+// ===== ATTENDANCE =====
+async function loadAttend() {
+  const freshProfile = await loadProfile(currentUser.uid);
+  myProfile = {...myProfile, ...freshProfile};
+  const today = new Date().toISOString().slice(0,10);
+  const lastAttend = myProfile.lastAttend || '';
+  const alreadyDone = lastAttend === today;
+  const btn = document.getElementById('attend-btn');
+  const msg = document.getElementById('attend-msg');
+
+  document.getElementById('attend-streak').textContent =
+    `🔥 연속 출석 ${myProfile.attendStreak || 0}일`;
+
+  if (alreadyDone) {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.textContent = '✅ 오늘 출석 완료!';
+    msg.textContent = '내일 또 만나요 😊';
+  } else {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '출석 도장 찍기 🔵';
+    msg.textContent = '';
+  }
+
+  // Calendar
+  const attendDates = myProfile.attendDates || [];
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+
+  let cal = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">`;
+  ['일','월','화','수','목','금','토'].forEach(d => {
+    cal += `<div style="font-size:11px;font-weight:700;color:var(--cube-gray);padding:4px">${d}</div>`;
+  });
+  for (let i=0; i<firstDay; i++) cal += '<div></div>';
+  for (let d=1; d<=daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const done = attendDates.includes(dateStr);
+    const isToday = dateStr === today;
+    cal += `<div style="padding:6px;border-radius:8px;font-size:13px;
+      background:${done ? 'var(--cube-blue)' : isToday ? '#e0e7ff' : '#f8faff'};
+      color:${done ? 'white' : 'var(--cube-dark)'};
+      border:${isToday ? '2px solid var(--cube-blue)' : '2px solid transparent'};
+      font-weight:${isToday ? '700' : '400'}">${d}${done ? ' ✓' : ''}</div>`;
+  }
+  cal += '</div>';
+  document.getElementById('attend-calendar').innerHTML = cal;
+}
+
+window.doAttend = async () => {
+  const today = new Date().toISOString().slice(0,10);
+  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0,10);
+  const last = myProfile.lastAttend || '';
+  const streak = last === yesterday ? (myProfile.attendStreak || 0) + 1 : 1;
+
+  await updateDoc(doc(db, 'users', currentUser.uid), {
+    lastAttend: today,
+    attendStreak: streak,
+    attendDates: arrayUnion(today),
+    coins: increment(10)
+  });
+  myProfile.lastAttend = today;
+  myProfile.attendStreak = streak;
+  myProfile.coins = (myProfile.coins || 0) + 10;
+  renderMyProfile();
+  loadAttend();
+  showToast(`출석 완료! 🎉 큐브코인 10개 획득! (${streak}일 연속)`);
+};
+
+// ===== UTILS =====
+window.openModal = (id) => document.getElementById(id).classList.add('open');
+window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+window.showToast = (msg) => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+};
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const date = ts.toDate ? ts.toDate() : new Date(ts);
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return '방금 전';
+  if (diff < 3600) return Math.floor(diff/60) + '분 전';
+  if (diff < 86400) return Math.floor(diff/3600) + '시간 전';
+  return Math.floor(diff/86400) + '일 전';
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
