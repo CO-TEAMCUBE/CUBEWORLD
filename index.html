@@ -7,819 +7,944 @@
 <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700;800&family=Black+Han+Sans&display=swap" rel="stylesheet">
 <style>
   :root {
-    --blue: #2563eb; --sky: #60a5fa; --navy: #1e3a8a;
-    --light: #eff6ff; --white: #ffffff; --yellow: #fbbf24;
-    --pink: #f472b6; --green: #34d399; --gray: #94a3b8;
-    --dark: #1e293b; --red: #ef4444; --purple: #8b5cf6;
-    --orange: #f97316; --sidebar-w: 230px;
+    --cube-blue: #2563eb;
+    --cube-sky: #60a5fa;
+    --cube-navy: #1e3a8a;
+    --cube-light: #eff6ff;
+    --cube-white: #ffffff;
+    --cube-yellow: #fbbf24;
+    --cube-pink: #f472b6;
+    --cube-green: #34d399;
+    --cube-gray: #94a3b8;
+    --cube-dark: #1e293b;
+    --sidebar-w: 220px;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Nanum Gothic',sans-serif; background:#dbeafe; min-height:100vh; }
 
-  /* ===== TOPBAR ===== */
-  #topbar {
-    background:var(--navy); color:white;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 20px; height:52px;
-    position:fixed; top:0; left:0; right:0; z-index:1000;
-    box-shadow:0 2px 12px rgba(0,0,0,0.3);
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background: #dbeafe;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 20%, #bfdbfe 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, #e0e7ff 0%, transparent 50%);
   }
-  .logo { font-family:'Black Han Sans',sans-serif; font-size:22px; color:var(--yellow); cursor:pointer; letter-spacing:2px; }
-  .logo span { color:white; }
-  #topbar-right { display:flex; gap:8px; align-items:center; }
-  #topbar-right button { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white; padding:5px 12px; border-radius:20px; cursor:pointer; font-family:'Nanum Gothic',sans-serif; font-size:13px; transition:.2s; }
-  #topbar-right button:hover { background:rgba(255,255,255,0.25); }
-  #topbar-search { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white; padding:5px 12px; border-radius:20px; font-family:'Nanum Gothic',sans-serif; font-size:13px; width:180px; outline:none; }
-  #topbar-search::placeholder { color:rgba(255,255,255,0.5); }
-  #online-count { font-size:12px; color:var(--green); background:rgba(52,211,153,0.15); padding:4px 10px; border-radius:20px; }
+
+  /* ===== TOP BAR ===== */
+  #topbar {
+    background: var(--cube-navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 50px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  #topbar .logo {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 22px;
+    color: var(--cube-yellow);
+    letter-spacing: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #topbar .logo span { color: white; }
+  #topbar-right { display: flex; gap: 8px; align-items: center; }
+  #topbar-right button {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+  #topbar-right button:hover { background: rgba(255,255,255,0.25); }
+  #topbar-search {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px;
+    width: 150px;
+    outline: none;
+  }
+  #topbar-search::placeholder { color: rgba(255,255,255,0.5); }
+
+  /* 모바일 햄버거 */
+  #hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
 
   /* ===== LAYOUT ===== */
-  #main-layout { display:flex; margin-top:52px; min-height:calc(100vh - 52px); }
-  #sidebar {
-    width:var(--sidebar-w); background:white; border-right:2px solid #bfdbfe;
-    position:fixed; top:52px; left:0; bottom:0; overflow-y:auto; z-index:100; display:flex; flex-direction:column;
+  #main-layout {
+    display: flex;
+    margin-top: 50px;
+    min-height: calc(100vh - 50px);
   }
-  #mini-profile {
-    background:linear-gradient(135deg,var(--navy),var(--blue));
-    color:white; padding:18px 15px; text-align:center;
-  }
-  #mini-avatar {
-    width:64px; height:64px; border-radius:50%; border:3px solid var(--yellow);
-    object-fit:cover; margin:0 auto 8px; display:flex; align-items:center; justify-content:center;
-    background:var(--blue); font-size:28px; cursor:pointer; overflow:hidden;
-  }
-  #mini-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-  #mini-name { font-family:'Jua',sans-serif; font-size:15px; margin-bottom:2px; display:flex; align-items:center; justify-content:center; gap:4px; }
-  #mini-status { font-size:11px; color:#bfdbfe; margin-bottom:8px; }
-  #mini-coins { background:rgba(255,255,255,0.2); border-radius:10px; padding:3px 10px; font-size:12px; display:inline-block; }
-  #mini-level { font-size:11px; color:var(--yellow); margin-top:4px; }
 
-  /* ===== SIDEBAR MENU ===== */
-  .sidebar-menu { padding:8px 0; flex:1; }
-  .menu-section { padding:8px 15px 4px; font-size:10px; color:var(--gray); font-weight:700; letter-spacing:1px; }
-  .menu-item { display:flex; align-items:center; gap:10px; padding:9px 18px; cursor:pointer; transition:.2s; font-size:13px; color:var(--dark); border-left:3px solid transparent; position:relative; }
-  .menu-item:hover { background:#eff6ff; border-left-color:var(--sky); }
-  .menu-item.active { background:#dbeafe; border-left-color:var(--blue); color:var(--blue); font-weight:700; }
-  .menu-icon { font-size:16px; width:20px; text-align:center; }
-  .menu-badge { background:var(--red); color:white; border-radius:10px; padding:1px 6px; font-size:10px; margin-left:auto; }
+  /* ===== SIDEBAR ===== */
+  #sidebar {
+    width: var(--sidebar-w);
+    background: white;
+    border-right: 2px solid #bfdbfe;
+    position: fixed;
+    top: 50px; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s;
+  }
+  #sidebar.mobile-hidden { transform: translateX(-100%); }
+  #sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+    top: 50px;
+  }
+  #sidebar-overlay.show { display: block; }
+
+  #my-mini-profile {
+    background: linear-gradient(135deg, var(--cube-navy), var(--cube-blue));
+    color: white;
+    padding: 20px 15px;
+    text-align: center;
+  }
+  #my-mini-avatar {
+    width: 65px; height: 65px;
+    border-radius: 50%;
+    border: 3px solid var(--cube-yellow);
+    object-fit: cover;
+    margin: 0 auto 8px;
+    display: block;
+    background: #3b82f6;
+    font-size: 28px;
+    line-height: 59px;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: center;
+  }
+  #my-mini-name { font-family: 'Jua', sans-serif; font-size: 16px; margin-bottom: 3px; }
+  #my-mini-msg { font-size: 11px; color: #bfdbfe; margin-bottom: 8px; }
+  #my-mini-coins {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 3px 10px;
+    font-size: 12px;
+    display: inline-block;
+  }
+
+  .sidebar-menu { padding: 10px 0; flex: 1; }
+  .menu-section { padding: 8px 15px 4px; font-size: 10px; color: var(--cube-gray); font-weight: 700; letter-spacing: 1px; }
+  .menu-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    color: var(--cube-dark);
+    border-left: 3px solid transparent;
+  }
+  .menu-item:hover { background: #eff6ff; border-left-color: var(--cube-sky); }
+  .menu-item.active { background: #dbeafe; border-left-color: var(--cube-blue); color: var(--cube-blue); font-weight: 700; }
+  .menu-icon { font-size: 16px; width: 20px; text-align: center; }
 
   /* ===== CONTENT ===== */
-  #content { margin-left:var(--sidebar-w); flex:1; padding:24px; }
-  .page { display:none; }
-  .page.active { display:block; }
-  .page-title { font-family:'Black Han Sans',sans-serif; font-size:24px; color:var(--navy); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
-
-  /* ===== CARDS ===== */
-  .card { background:white; border-radius:16px; padding:20px; box-shadow:0 2px 15px rgba(37,99,235,0.08); border:1.5px solid #e0e7ff; margin-bottom:20px; }
-  .card-sm { background:white; border-radius:12px; padding:14px; box-shadow:0 2px 10px rgba(37,99,235,0.06); border:1.5px solid #e0e7ff; }
-
-  /* ===== BUTTONS ===== */
-  .btn { padding:9px 18px; border:none; border-radius:10px; cursor:pointer; font-family:'Nanum Gothic',sans-serif; font-size:13px; font-weight:700; transition:.2s; }
-  .btn-primary { background:var(--blue); color:white; }
-  .btn-primary:hover { background:var(--navy); }
-  .btn-secondary { background:#e0e7ff; color:var(--blue); }
-  .btn-secondary:hover { background:#bfdbfe; }
-  .btn-sm { padding:5px 10px; font-size:12px; }
-  .btn-danger { background:#fee2e2; color:var(--red); }
-  .delete-btn { background:none; border:none; color:var(--red); cursor:pointer; font-size:12px; padding:2px 6px; border-radius:6px; transition:.2s; }
-  .delete-btn:hover { background:#fee2e2; }
-
-  /* ===== INPUTS ===== */
-  .input { width:100%; padding:10px 14px; border:1.5px solid #bfdbfe; border-radius:10px; font-family:'Nanum Gothic',sans-serif; font-size:14px; outline:none; transition:.2s; }
-  .input:focus { border-color:var(--blue); }
-  .textarea { width:100%; padding:10px 14px; border:1.5px solid #bfdbfe; border-radius:10px; font-family:'Nanum Gothic',sans-serif; font-size:14px; outline:none; resize:none; transition:.2s; }
-  .textarea:focus { border-color:var(--blue); }
-
-  /* ===== TABS ===== */
-  .tabs { display:flex; gap:4px; margin-bottom:16px; border-bottom:2px solid #e0e7ff; }
-  .tab-btn { padding:8px 16px; border:none; background:none; cursor:pointer; font-family:'Nanum Gothic',sans-serif; font-size:13px; font-weight:700; color:var(--gray); border-bottom:2px solid transparent; margin-bottom:-2px; transition:.2s; }
-  .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
-
-  /* ===== EMPTY STATE ===== */
-  .empty { text-align:center; color:var(--gray); padding:40px 20px; }
-  .empty-icon { font-size:40px; margin-bottom:10px; }
-
-  /* ===== AUTH ===== */
-  #auth-page { display:flex; align-items:center; justify-content:center; min-height:calc(100vh - 52px); padding:20px; }
-  #auth-box { background:white; border-radius:24px; padding:40px; width:100%; max-width:420px; box-shadow:0 8px 40px rgba(37,99,235,0.15); border:2px solid #bfdbfe; text-align:center; }
-  .auth-logo { font-family:'Black Han Sans',sans-serif; font-size:36px; color:var(--navy); margin-bottom:5px; }
-  .auth-logo span { color:var(--blue); }
-  .auth-sub { color:var(--gray); font-size:13px; margin-bottom:25px; }
-  .auth-tabs { display:flex; margin-bottom:25px; border-radius:12px; overflow:hidden; border:1.5px solid #bfdbfe; }
-  .auth-tab { flex:1; padding:10px; border:none; cursor:pointer; font-family:'Nanum Gothic',sans-serif; font-size:14px; font-weight:700; background:white; color:var(--gray); transition:.2s; }
-  .auth-tab.active { background:var(--blue); color:white; }
-  #auth-msg { margin-top:12px; font-size:13px; color:var(--red); }
-
-  /* ===== BADGE ===== */
-  .badge-verified { color:#3b82f6; font-size:14px; }
-  .badge-dev { background:linear-gradient(135deg,#7c3aed,#2563eb); color:white; font-size:10px; padding:1px 6px; border-radius:6px; font-weight:700; }
-  .badge-popular { color:#f59e0b; font-size:13px; }
-  .badge-new { background:#dcfce7; color:#16a34a; font-size:10px; padding:1px 6px; border-radius:6px; font-weight:700; }
-
-  /* ===== HOMPY ===== */
-  #hompy-wrap { display:flex; gap:20px; flex-wrap:wrap; }
-  #hompy-left { flex:0 0 280px; }
-  #hompy-right { flex:1; min-width:300px; }
-  .hompy-card { border-radius:20px; overflow:hidden; box-shadow:0 4px 20px rgba(37,99,235,0.12); border:2px solid #bfdbfe; }
-  .hompy-header { height:90px; position:relative; background:linear-gradient(135deg,var(--navy),var(--blue)); }
-  .hompy-cover-img { width:100%; height:100%; object-fit:cover; }
-  .hompy-avatar { width:80px; height:80px; border-radius:50%; border:4px solid white; position:absolute; bottom:-40px; left:20px; background:var(--blue); font-size:34px; line-height:72px; text-align:center; cursor:pointer; overflow:hidden; }
-  .hompy-avatar img { width:100%; height:100%; object-fit:cover; }
-  .hompy-body { background:white; padding:50px 20px 20px; }
-  .hompy-name { font-family:'Black Han Sans',sans-serif; font-size:20px; color:var(--navy); display:flex; align-items:center; gap:6px; }
-  .hompy-msg { color:var(--gray); font-size:13px; margin:5px 0 12px; }
-  .hompy-stats { display:flex; gap:15px; font-size:12px; color:var(--gray); flex-wrap:wrap; }
-  .hompy-stats span b { color:var(--blue); font-size:14px; }
-
-  /* ===== FEED ===== */
-  .feed-post { background:white; border-radius:16px; border:1.5px solid #e0e7ff; margin-bottom:16px; overflow:hidden; box-shadow:0 2px 12px rgba(37,99,235,0.07); }
-  .feed-post-header { display:flex; align-items:center; gap:10px; padding:14px 16px 10px; }
-  .feed-avatar { width:42px; height:42px; border-radius:50%; background:var(--blue); font-size:18px; text-align:center; line-height:42px; flex-shrink:0; overflow:hidden; cursor:pointer; }
-  .feed-avatar img { width:100%; height:100%; object-fit:cover; }
-  .feed-user-info { flex:1; }
-  .feed-user-name { font-weight:700; font-size:14px; color:var(--navy); cursor:pointer; display:flex; align-items:center; gap:4px; }
-  .feed-time { font-size:11px; color:var(--gray); }
-  .feed-post-img { width:100%; max-height:500px; object-fit:cover; cursor:pointer; }
-  .feed-post-body { padding:12px 16px; }
-  .feed-post-text { font-size:14px; line-height:1.7; margin-bottom:10px; white-space:pre-wrap; }
-  .feed-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
-  .feed-tag { color:var(--blue); font-size:13px; cursor:pointer; }
-  .feed-actions { display:flex; gap:16px; align-items:center; padding:8px 16px 14px; border-top:1px solid #f0f4ff; }
-  .feed-action-btn { display:flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer; color:var(--gray); font-size:13px; font-family:'Nanum Gothic',sans-serif; transition:.2s; padding:4px 8px; border-radius:8px; }
-  .feed-action-btn:hover { background:#f0f4ff; color:var(--blue); }
-  .feed-action-btn.liked { color:var(--red); }
-  .feed-comments { padding:0 16px 14px; }
-  .feed-comment { display:flex; gap:8px; margin-bottom:8px; }
-  .feed-comment-avatar { width:28px; height:28px; border-radius:50%; background:var(--sky); font-size:12px; text-align:center; line-height:28px; flex-shrink:0; overflow:hidden; }
-  .feed-comment-avatar img { width:100%; height:100%; object-fit:cover; }
-  .feed-comment-body { background:#f8faff; border-radius:10px; padding:6px 10px; flex:1; font-size:13px; }
-  .feed-comment-name { font-weight:700; font-size:12px; color:var(--navy); }
-  .feed-comment-input { display:flex; gap:8px; margin-top:10px; }
-  .feed-comment-input input { flex:1; padding:8px 12px; border:1.5px solid #bfdbfe; border-radius:20px; font-family:'Nanum Gothic',sans-serif; font-size:13px; outline:none; }
-  .feed-post-write { background:white; border-radius:16px; border:1.5px solid #e0e7ff; padding:16px; margin-bottom:16px; box-shadow:0 2px 12px rgba(37,99,235,0.07); }
-  .feed-write-top { display:flex; gap:10px; align-items:flex-start; }
-  .feed-write-area { flex:1; }
-  .feed-write-area textarea { width:100%; padding:10px; border:1.5px solid #bfdbfe; border-radius:12px; font-family:'Nanum Gothic',sans-serif; font-size:14px; outline:none; resize:none; height:80px; }
-  .feed-write-area textarea:focus { border-color:var(--blue); }
-  .feed-write-actions { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
-  .feed-write-extras { display:flex; gap:8px; }
-  .feed-write-btn { font-size:12px; background:#f0f4ff; border:none; border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--blue); }
-
-  /* ===== GUESTBOOK ===== */
-  .gb-entry { display:flex; gap:12px; padding:14px 0; border-bottom:1px solid #e0e7ff; }
-  .gb-avatar { width:42px; height:42px; border-radius:50%; background:var(--blue); font-size:18px; text-align:center; line-height:42px; flex-shrink:0; overflow:hidden; }
-  .gb-avatar img { width:100%; height:100%; object-fit:cover; }
-
-  /* ===== DIARY ===== */
-  .diary-entry { padding:16px 0; border-bottom:1px solid #e0e7ff; cursor:pointer; }
-  .diary-entry:hover .diary-title { color:var(--blue); }
-  .diary-title { font-weight:700; font-size:15px; color:var(--dark); transition:.2s; }
-  .diary-preview { font-size:13px; color:var(--gray); margin-top:4px; }
-  .diary-meta { font-size:11px; color:#94a3b8; margin-top:4px; display:flex; gap:10px; align-items:center; }
-  .mood-select { display:flex; gap:6px; margin-bottom:10px; }
-  .mood-btn { font-size:22px; background:none; border:2px solid transparent; border-radius:8px; cursor:pointer; padding:4px; transition:.2s; }
-  .mood-btn.active { border-color:var(--blue); background:#eff6ff; }
-
-  /* ===== PHOTO ===== */
-  .photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
-  .photo-item { aspect-ratio:1; border-radius:12px; overflow:hidden; border:2px solid #e0e7ff; cursor:pointer; position:relative; background:#f0f4ff; transition:.2s; }
-  .photo-item:hover { transform:scale(1.03); }
-  .photo-item img { width:100%; height:100%; object-fit:cover; }
-  .photo-item .photo-delete { position:absolute; top:5px; right:5px; background:rgba(0,0,0,0.5); color:white; border:none; border-radius:50%; width:24px; height:24px; font-size:12px; cursor:pointer; display:none; line-height:24px; text-align:center; }
-  .photo-item:hover .photo-delete { display:block; }
-
-  /* ===== CHIN ===== */
-  .chin-card { display:flex; align-items:center; gap:12px; padding:12px; background:#f8faff; border-radius:12px; margin-bottom:10px; transition:.2s; cursor:pointer; border:1.5px solid #e0e7ff; }
-  .chin-card:hover { border-color:var(--blue); background:#eff6ff; }
-  .chin-avatar { width:48px; height:48px; border-radius:50%; background:var(--blue); font-size:22px; text-align:center; line-height:48px; flex-shrink:0; overflow:hidden; }
-  .chin-avatar img { width:100%; height:100%; object-fit:cover; }
-  .chin-name { font-weight:700; font-size:14px; color:var(--navy); }
-  .chin-msg { font-size:12px; color:var(--gray); }
-
-  /* ===== SHOP ===== */
-  .coin-display { display:flex; align-items:center; gap:8px; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:white; padding:12px 20px; border-radius:16px; font-family:'Jua',sans-serif; font-size:20px; margin-bottom:16px; box-shadow:0 4px 15px rgba(251,191,36,0.3); }
-  .shop-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:12px; }
-  .shop-item { background:white; border:2px solid #e0e7ff; border-radius:14px; padding:16px; text-align:center; cursor:pointer; transition:.2s; }
-  .shop-item:hover { border-color:var(--blue); transform:translateY(-2px); }
-  .shop-item .item-icon { font-size:36px; margin-bottom:8px; }
-  .shop-item .item-name { font-weight:700; font-size:13px; color:var(--dark); }
-  .shop-item .item-price { color:#f59e0b; font-weight:700; margin-top:4px; font-size:13px; }
-
-  /* ===== MUSIC ===== */
-  .music-item { display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; border:1.5px solid #e0e7ff; margin-bottom:8px; transition:.2s; }
-  .music-item:hover { border-color:var(--blue); background:#f8faff; }
-  .music-thumb { width:50px; height:50px; border-radius:8px; background:linear-gradient(135deg,var(--blue),var(--purple)); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-
-  /* ===== LEVEL / XP ===== */
-  .xp-bar-wrap { background:#e0e7ff; border-radius:10px; height:8px; margin-top:6px; overflow:hidden; }
-  .xp-bar { background:linear-gradient(90deg,var(--blue),var(--purple)); height:100%; border-radius:10px; transition:width .5s; }
-
-  /* ===== SKIN ===== */
-  .skin-opt { width:32px; height:32px; border-radius:8px; cursor:pointer; border:2px solid transparent; transition:.2s; }
-  .skin-opt.selected { border-color:var(--blue); transform:scale(1.1); }
-
-  /* ===== NOTIF ===== */
-  .notif-item { display:flex; gap:12px; align-items:flex-start; padding:12px 0; border-bottom:1px solid #e0e7ff; }
-  .notif-dot { width:8px; height:8px; border-radius:50%; background:var(--blue); margin-top:6px; flex-shrink:0; }
-  .notif-dot.read { background:#cbd5e1; }
-
-  /* ===== WEATHER ===== */
-  .weather-card { background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:white; border-radius:16px; padding:20px; margin-bottom:16px; }
-
-  /* ===== RANKING ===== */
-  .rank-item { display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px; border:1.5px solid #e0e7ff; margin-bottom:8px; }
-  .rank-num { font-family:'Black Han Sans',sans-serif; font-size:20px; color:var(--gray); width:30px; text-align:center; }
-  .rank-num.gold { color:#f59e0b; }
-  .rank-num.silver { color:#94a3b8; }
-  .rank-num.bronze { color:#b45309; }
-
-  /* ===== BGM PLAYER ===== */
-  #bgm-player { position:fixed; bottom:20px; left:calc(var(--sidebar-w) + 16px); background:var(--navy); color:white; border-radius:50px; padding:8px 18px; display:none; align-items:center; gap:10px; box-shadow:0 4px 20px rgba(0,0,0,0.3); z-index:500; font-size:13px; }
-  #bgm-player.visible { display:flex; }
-  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
-  #bgm-note { animation:bounce 1s infinite; display:inline-block; }
-
-  /* ===== MODAL ===== */
-  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:2000; }
-  .modal-overlay.open { display:flex; }
-  .modal-box { background:white; border-radius:20px; padding:30px; width:90%; max-width:480px; max-height:85vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.2); }
-  .modal-title { font-family:'Black Han Sans',sans-serif; font-size:20px; color:var(--navy); margin-bottom:16px; }
-  .modal-close { float:right; cursor:pointer; font-size:20px; color:var(--gray); border:none; background:none; }
-
-  /* ===== TOAST ===== */
-  #toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:white; padding:12px 20px; border-radius:12px; font-size:14px; z-index:9999; transform:translateY(100px); opacity:0; transition:.3s; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
-  #toast.show { transform:translateY(0); opacity:1; }
-
-  /* ===== ATTEND CALENDAR ===== */
-  .attend-day { padding:6px; border-radius:8px; font-size:13px; text-align:center; }
-
-  /* ===== QUIZ ===== */
-  .quiz-opt { padding:12px 16px; border:2px solid #bfdbfe; border-radius:10px; cursor:pointer; transition:.2s; margin-bottom:8px; }
-  .quiz-opt:hover { border-color:var(--blue); background:#eff6ff; }
-  .quiz-opt.correct { border-color:#16a34a; background:#dcfce7; color:#16a34a; }
-  .quiz-opt.wrong { border-color:var(--red); background:#fee2e2; color:var(--red); }
-
-  /* ===== CHAT ===== */
-  .msg-item { display:flex; gap:8px; margin-bottom:12px; }
-  .msg-item.mine { flex-direction:row-reverse; }
-  .msg-bubble { max-width:70%; padding:10px 14px; border-radius:16px; font-size:13px; line-height:1.5; }
-  .msg-item:not(.mine) .msg-bubble { background:#f0f4ff; border-radius:4px 16px 16px 16px; }
-  .msg-item.mine .msg-bubble { background:var(--blue); color:white; border-radius:16px 4px 16px 16px; }
-  .msg-time { font-size:10px; color:var(--gray); align-self:flex-end; }
-  #chat-messages { height:300px; overflow-y:auto; padding:12px; background:#f8faff; border-radius:12px; border:1.5px solid #bfdbfe; margin-bottom:10px; }
-
-  /* ===== SEARCH BOX ===== */
-  .search-box { display:flex; gap:8px; margin-bottom:16px; }
-  .search-box input { flex:1; padding:10px 14px; border:1.5px solid #bfdbfe; border-radius:10px; font-family:'Nanum Gothic',sans-serif; font-size:13px; outline:none; }
-  .search-box button { padding:10px 16px; background:var(--blue); color:white; border:none; border-radius:10px; cursor:pointer; font-size:13px; }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width:700px) {
-    :root { --sidebar-w:0px; }
-    #sidebar { display:none; }
-    #content { margin-left:0; padding:14px; }
-    #hompy-left { flex:0 0 100%; }
+  #content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    padding: 25px;
+    min-height: calc(100vh - 50px);
   }
 
-  /* ===== MISC ===== */
-  .wave { display:inline-block; animation:wave 2s ease-in-out infinite; }
-  @keyframes wave { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
-  .pulse { animation:pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-  .visitor-item { padding:5px 0; border-bottom:1px solid #f0f4ff; font-size:12px; color:var(--gray); }
-  .bgm-box { background:#f8faff; border-radius:12px; padding:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .bgm-box input { flex:1; min-width:120px; padding:8px 12px; border:1.5px solid #bfdbfe; border-radius:8px; font-family:'Nanum Gothic',sans-serif; font-size:12px; outline:none; }
-  .bgm-box button { padding:8px 12px; background:var(--blue); color:white; border:none; border-radius:8px; cursor:pointer; font-size:12px; }
-  .tag-input-wrap { display:flex; flex-wrap:wrap; gap:6px; padding:8px; border:1.5px solid #bfdbfe; border-radius:10px; min-height:40px; }
-  .tag-chip { background:#e0e7ff; color:var(--blue); padding:2px 10px; border-radius:20px; font-size:12px; display:flex; align-items:center; gap:4px; }
-  .tag-chip button { background:none; border:none; cursor:pointer; color:var(--blue); font-size:12px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .page-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 24px;
+    color: var(--cube-navy);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(37,99,235,0.08);
+    border: 1.5px solid #e0e7ff;
+    margin-bottom: 20px;
+  }
+
+  /* ===== AUTH ===== */
+  #auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 50px);
+    padding: 20px;
+  }
+  #auth-box {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 8px 40px rgba(37,99,235,0.15);
+    border: 2px solid #bfdbfe;
+    text-align: center;
+  }
+  #auth-box .auth-logo {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 36px;
+    color: var(--cube-navy);
+    margin-bottom: 5px;
+  }
+  #auth-box .auth-logo span { color: var(--cube-blue); }
+  #auth-box .auth-sub { color: var(--cube-gray); font-size: 13px; margin-bottom: 25px; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 25px; border-radius: 12px; overflow: hidden; border: 1.5px solid #bfdbfe; }
+  .auth-tab {
+    flex: 1; padding: 10px; border: none; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    background: white; color: var(--cube-gray); transition: all 0.2s;
+  }
+  .auth-tab.active { background: var(--cube-blue); color: white; }
+  .auth-input {
+    width: 100%; padding: 12px 15px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; margin-bottom: 12px; outline: none; transition: border 0.2s;
+  }
+  .auth-input:focus { border-color: var(--cube-blue); }
+  .auth-btn {
+    width: 100%; padding: 13px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; font-family: 'Jua', sans-serif;
+    font-size: 16px; cursor: pointer; transition: all 0.2s;
+  }
+  .auth-btn:hover { background: var(--cube-navy); }
+  #auth-msg { margin-top: 12px; font-size: 13px; color: #ef4444; }
+
+  /* ===== HOMPY ===== */
+  #hompy-container { display: flex; gap: 20px; flex-wrap: wrap; }
+  #hompy-left { flex: 0 0 280px; }
+  #hompy-right { flex: 1; min-width: 300px; }
+
+  .hompy-profile-card {
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.12);
+    border: 2px solid #bfdbfe;
+  }
+  .hompy-header {
+    height: 80px;
+    background: linear-gradient(135deg, var(--cube-navy), var(--cube-blue));
+    position: relative;
+  }
+  .hompy-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    border: 4px solid white; position: absolute;
+    bottom: -40px; left: 20px;
+    background: #3b82f6; font-size: 36px;
+    line-height: 72px; text-align: center;
+    cursor: pointer; overflow: hidden;
+  }
+  .hompy-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .hompy-body { background: white; padding: 50px 20px 20px; }
+  .hompy-name { font-family: 'Black Han Sans', sans-serif; font-size: 20px; color: var(--cube-navy); }
+  .hompy-msg { color: var(--cube-gray); font-size: 13px; margin: 5px 0 12px; }
+  .hompy-stats { display: flex; gap: 15px; font-size: 12px; color: var(--cube-gray); }
+  .hompy-stats span b { color: var(--cube-blue); font-size: 15px; }
+
+  .skin-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .skin-opt {
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.2s;
+  }
+  .skin-opt.selected { border-color: var(--cube-blue); transform: scale(1.1); }
+
+  .bgm-box {
+    background: #f8faff; border-radius: 12px; padding: 12px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .bgm-box input[type=text] {
+    flex: 1; min-width: 120px; padding: 8px 12px;
+    border: 1.5px solid #bfdbfe; border-radius: 8px;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px; outline: none;
+  }
+  .bgm-box button {
+    padding: 8px 14px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 8px; cursor: pointer; font-size: 13px;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  /* ===== GUESTBOOK ===== */
+  .gb-entry {
+    display: flex; gap: 12px; padding: 14px 0;
+    border-bottom: 1px solid #e0e7ff;
+  }
+  .gb-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--cube-blue); font-size: 18px;
+    text-align: center; line-height: 42px; flex-shrink: 0;
+    overflow: hidden;
+  }
+  .gb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .gb-name { font-weight: 700; font-size: 13px; color: var(--cube-navy); }
+  .gb-time { font-size: 11px; color: var(--cube-gray); }
+  .gb-text { font-size: 13px; margin-top: 4px; }
+  .gb-form { display: flex; gap: 8px; margin-top: 10px; }
+  .gb-form textarea {
+    flex: 1; padding: 10px; border: 1.5px solid #bfdbfe; border-radius: 10px;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px;
+    resize: none; height: 70px; outline: none;
+  }
+  .gb-form button {
+    padding: 10px 16px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer; font-size: 13px;
+    font-family: 'Nanum Gothic', sans-serif;
+  }
+
+  /* ===== DIARY ===== */
+  .diary-entry { padding: 16px 0; border-bottom: 1px solid #e0e7ff; cursor: pointer; }
+  .diary-entry:hover .diary-title { color: var(--cube-blue); }
+  .diary-title { font-weight: 700; font-size: 15px; color: var(--cube-dark); transition: color 0.2s; }
+  .diary-preview { font-size: 13px; color: var(--cube-gray); margin-top: 4px; }
+  .diary-meta { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+  .diary-form input, .diary-form textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; outline: none; margin-bottom: 10px;
+  }
+  .diary-form textarea { height: 120px; resize: none; }
+  .btn-primary {
+    padding: 10px 20px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--cube-navy); }
+  .btn-secondary {
+    padding: 10px 20px; background: #e0e7ff; color: var(--cube-blue);
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    transition: all 0.2s; margin-right: 8px;
+  }
+  .btn-danger {
+    padding: 10px 20px; background: #fee2e2; color: #ef4444;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 14px; font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  /* ===== CUBE-CHIN ===== */
+  .chin-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; background: #f8faff; border-radius: 12px;
+    margin-bottom: 10px; transition: all 0.2s; cursor: pointer;
+    border: 1.5px solid #e0e7ff;
+  }
+  .chin-card:hover { border-color: var(--cube-blue); background: #eff6ff; }
+  .chin-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--cube-blue); font-size: 22px;
+    text-align: center; line-height: 48px; flex-shrink: 0;
+    overflow: hidden;
+  }
+  .chin-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .chin-name { font-weight: 700; font-size: 14px; color: var(--cube-navy); }
+  .chin-msg { font-size: 12px; color: var(--cube-gray); }
+  .chin-badge {
+    margin-left: auto; background: var(--cube-blue); color: white;
+    font-size: 11px; padding: 3px 8px; border-radius: 10px;
+    white-space: nowrap;
+  }
+  .chin-badge.pending { background: var(--cube-yellow); color: #1e293b; }
+
+  .search-box {
+    display: flex; gap: 8px; margin-bottom: 16px;
+  }
+  .search-box input {
+    flex: 1; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 13px; outline: none;
+  }
+  .search-box button {
+    padding: 10px 16px; background: var(--cube-blue); color: white;
+    border: none; border-radius: 10px; cursor: pointer; font-size: 13px;
+  }
+
+  /* ===== PHOTO ===== */
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+  .photo-item {
+    aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+    border: 2px solid #e0e7ff; cursor: pointer; position: relative;
+    background: #f0f4ff;
+    transition: transform 0.2s;
+  }
+  .photo-item:hover { transform: scale(1.03); }
+  .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-item .photo-delete {
+    position: absolute; top: 5px; right: 5px;
+    background: rgba(0,0,0,0.5); color: white;
+    border: none; border-radius: 50%; width: 24px; height: 24px;
+    font-size: 12px; cursor: pointer; display: none;
+    line-height: 24px; text-align: center;
+  }
+  .photo-item:hover .photo-delete { display: block; }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid #e0e7ff; flex-wrap: wrap; }
+  .tab-btn {
+    padding: 8px 14px; border: none; background: none; cursor: pointer;
+    font-family: 'Nanum Gothic', sans-serif; font-size: 13px; font-weight: 700;
+    color: var(--cube-gray); border-bottom: 2px solid transparent;
+    margin-bottom: -2px; transition: all 0.2s;
+  }
+  .tab-btn.active { color: var(--cube-blue); border-bottom-color: var(--cube-blue); }
+
+  /* ===== OTHER HOMPY VIEW ===== */
+  #other-hompy { display: none; }
+  #other-hompy.active { display: block; }
+
+  /* ===== COIN / SHOP ===== */
+  .coin-display {
+    display: flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white; padding: 12px 20px; border-radius: 16px;
+    font-family: 'Jua', sans-serif; font-size: 20px;
+    margin-bottom: 16px; box-shadow: 0 4px 15px rgba(251,191,36,0.3);
+  }
+  .shop-item {
+    background: white; border: 2px solid #e0e7ff; border-radius: 14px;
+    padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .shop-item:hover { border-color: var(--cube-blue); transform: translateY(-2px); }
+  .shop-item .item-icon { font-size: 36px; margin-bottom: 8px; }
+  .shop-item .item-name { font-weight: 700; font-size: 14px; color: var(--cube-dark); }
+  .shop-item .item-price { color: #f59e0b; font-weight: 700; margin-top: 4px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+
+  /* ===== NOTIFICATIONS ===== */
+  .notif-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid #e0e7ff;
+  }
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cube-blue); margin-top: 6px; flex-shrink: 0; }
+  .notif-dot.read { background: #cbd5e1; }
+  .notif-text { font-size: 13px; }
+  .notif-time { font-size: 11px; color: var(--cube-gray); margin-top: 3px; }
+
+  /* ===== BADGE ===== */
+  #notif-badge {
+    background: #ef4444; color: white; border-radius: 50%;
+    width: 18px; height: 18px; font-size: 10px; font-weight: 700;
+    display: none; align-items: center; justify-content: center;
+    margin-left: auto;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+    z-index: 2000; display: none;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: white; border-radius: 20px; padding: 30px;
+    width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .modal-title { font-family: 'Black Han Sans', sans-serif; font-size: 20px; color: var(--cube-navy); margin-bottom: 16px; }
+  .modal-close { position: absolute; top: 16px; right: 16px; cursor: pointer; font-size: 20px; color: var(--cube-gray); border: none; background: none; }
+
+  /* ===== TOAST ===== */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--cube-navy); color: white;
+    padding: 12px 20px; border-radius: 12px;
+    font-size: 14px; z-index: 9999;
+    transform: translateY(100px); opacity: 0;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    max-width: calc(100vw - 48px);
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ===== VISITOR ===== */
+  .visitor-log { font-size: 12px; color: var(--cube-gray); }
+  .visitor-item { padding: 5px 0; border-bottom: 1px solid #f0f4ff; }
+
+  /* ===== BGM PLAYER ===== */
+  #bgm-player {
+    position: fixed; bottom: 24px; left: calc(var(--sidebar-w) + 16px);
+    background: var(--cube-navy); color: white; border-radius: 50px;
+    padding: 8px 18px; display: none; align-items: center; gap: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 500; font-size: 13px;
+  }
+  #bgm-player.visible { display: flex; }
+  #bgm-note { animation: bounce 1s infinite; display: inline-block; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+
+  /* ===== SETTINGS ===== */
+  .danger-zone {
+    border: 2px solid #fecaca;
+    border-radius: 14px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .danger-zone h3 { color: #ef4444; font-size: 15px; margin-bottom: 12px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 700px) {
+    :root { --sidebar-w: 0px; }
+    #sidebar {
+      width: 220px;
+      transform: translateX(-100%);
+    }
+    #sidebar.mobile-open {
+      transform: translateX(0);
+    }
+    #content { margin-left: 0; padding: 15px; }
+    #hompy-left { flex: 0 0 100%; }
+    #hamburger { display: block !important; }
+    #topbar-search { width: 110px; }
+    #bgm-player { left: 16px; bottom: 70px; }
+  }
+
+  .delete-btn {
+    background: none; border: none; color: #ef4444;
+    cursor: pointer; font-size: 12px; padding: 2px 6px;
+    border-radius: 6px; transition: background 0.2s;
+  }
+  .delete-btn:hover { background: #fee2e2; }
+
+  .empty-state {
+    text-align: center; color: var(--cube-gray);
+    padding: 40px 20px; font-size: 14px;
+  }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
+
+  #profile-edit-form input {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #bfdbfe;
+    border-radius: 10px; font-family: 'Nanum Gothic', sans-serif;
+    font-size: 14px; outline: none; margin-bottom: 10px;
+  }
+
+  .wave-text {
+    display: inline-block;
+    animation: wave 2s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)}
+  }
+
+  /* 모바일 하단 내비 */
+  #mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 2px solid #e0e7ff;
+    z-index: 500;
+    height: 56px;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .mobile-nav-item {
+    display: flex; flex-direction: column; align-items: center;
+    font-size: 10px; color: var(--cube-gray); cursor: pointer;
+    padding: 6px 10px; flex: 1; gap: 2px;
+  }
+  .mobile-nav-item .mn-icon { font-size: 20px; }
+  .mobile-nav-item.active { color: var(--cube-blue); }
+
+  @media (max-width: 700px) {
+    #mobile-nav { display: flex; }
+    #content { padding-bottom: 70px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
+<!-- TOP BAR -->
 <div id="topbar">
-  <div class="logo" onclick="goHome()">🟦 큐브<span>월드</span></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button id="hamburger" onclick="toggleSidebar()" style="display:none">☰</button>
+    <div class="logo" onclick="goHome()">🟦 큐브<span>월드</span></div>
+  </div>
   <div id="topbar-right">
-    <span id="online-count">● 0명 접속중</span>
-    <input type="text" id="topbar-search" placeholder="🔍 유저/해시태그 검색..." onkeydown="if(event.key==='Enter')topSearch()">
-    <button onclick="topSearch()">검색</button>
+    <input type="text" id="topbar-search" placeholder="🔍 유저 검색..." onkeydown="if(event.key==='Enter')searchUser()">
+    <button onclick="searchUser()">검색</button>
     <button onclick="logout()" id="logout-btn" style="display:none">로그아웃</button>
   </div>
 </div>
 
+<!-- Sidebar overlay for mobile -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
 <div id="sidebar" style="display:none">
-  <div id="mini-profile">
-    <div id="mini-avatar" onclick="showPage('hompy')"><span>🙂</span></div>
-    <div id="mini-name">로그인 필요</div>
-    <div id="mini-status">한마디를 설정해요!</div>
-    <div id="mini-coins">🟡 0 큐브코인</div>
-    <div id="mini-level">Lv.1 큐브새싹</div>
-    <div class="xp-bar-wrap" style="margin-top:6px"><div class="xp-bar" id="mini-xp-bar" style="width:0%"></div></div>
+  <div id="my-mini-profile">
+    <div id="my-mini-avatar" onclick="showPage('hompy')">🙂</div>
+    <div id="my-mini-name">로그인 필요</div>
+    <div id="my-mini-msg">한마디를 설정해요!</div>
+    <div id="my-mini-coins">🟡 0 큐브코인</div>
   </div>
   <div class="sidebar-menu">
     <div class="menu-section">나의 공간</div>
-    <div class="menu-item active" id="menu-hompy" onclick="showPage('hompy')"><span class="menu-icon">🏠</span>미니홈피</div>
-    <div class="menu-item" id="menu-feed" onclick="showPage('feed')"><span class="menu-icon">📸</span>피드</div>
-    <div class="menu-item" id="menu-diary" onclick="showPage('diary')"><span class="menu-icon">📝</span>다이어리</div>
-    <div class="menu-item" id="menu-photo" onclick="showPage('photo')"><span class="menu-icon">🖼️</span>사진첩</div>
+    <div class="menu-item active" onclick="showPage('hompy');closeSidebar()" id="menu-hompy">
+      <span class="menu-icon">🏠</span> 미니홈피
+    </div>
+    <div class="menu-item" onclick="showPage('diary');closeSidebar()" id="menu-diary">
+      <span class="menu-icon">📝</span> 다이어리
+    </div>
+    <div class="menu-item" onclick="showPage('photo');closeSidebar()" id="menu-photo">
+      <span class="menu-icon">🖼️</span> 사진첩
+    </div>
     <div class="menu-section">소셜</div>
-    <div class="menu-item" id="menu-chin" onclick="showPage('chin')"><span class="menu-icon">👥</span>큐브친<span class="menu-badge" id="chin-req-badge" style="display:none">0</span></div>
-    <div class="menu-item" id="menu-chat" onclick="showPage('chat')"><span class="menu-icon">💬</span>채팅<span class="menu-badge" id="chat-badge" style="display:none">NEW</span></div>
-    <div class="menu-item" id="menu-surf" onclick="showPage('surf')"><span class="menu-icon">🌊</span>파도타기</div>
-    <div class="menu-item" id="menu-ranking" onclick="showPage('ranking')"><span class="menu-icon">🏆</span>랭킹</div>
-    <div class="menu-section">활동</div>
-    <div class="menu-item" id="menu-attend" onclick="showPage('attend')"><span class="menu-icon">✅</span>출석체크</div>
-    <div class="menu-item" id="menu-quiz" onclick="showPage('quiz')"><span class="menu-icon">🧠</span>큐브퀴즈</div>
-    <div class="menu-item" id="menu-music" onclick="showPage('music')"><span class="menu-icon">🎵</span>뮤직플레이어</div>
+    <div class="menu-item" onclick="showPage('chin');closeSidebar()" id="menu-chin">
+      <span class="menu-icon">👥</span> 큐브친
+    </div>
+    <div class="menu-item" onclick="showPage('surf');closeSidebar()" id="menu-surf">
+      <span class="menu-icon">🌊</span> 파도타기
+    </div>
     <div class="menu-section">기타</div>
-    <div class="menu-item" id="menu-shop" onclick="showPage('shop')"><span class="menu-icon">🛍️</span>큐브샵</div>
-    <div class="menu-item" id="menu-notif" onclick="showPage('notif')"><span class="menu-icon">🔔</span>알림<span class="menu-badge" id="notif-badge" style="display:none">0</span></div>
-    <div class="menu-item" id="menu-settings" onclick="showPage('settings')"><span class="menu-icon">⚙️</span>설정</div>
+    <div class="menu-item" onclick="showPage('shop');closeSidebar()" id="menu-shop">
+      <span class="menu-icon">🛍️</span> 큐브샵
+    </div>
+    <div class="menu-item" onclick="showPage('notif');closeSidebar()" id="menu-notif">
+      <span class="menu-icon">🔔</span> 알림
+      <span id="notif-badge">0</span>
+    </div>
+    <div class="menu-item" onclick="showPage('attend');closeSidebar()" id="menu-attend">
+      <span class="menu-icon">✅</span> 출석체크
+    </div>
+    <div class="menu-item" onclick="showPage('settings');closeSidebar()" id="menu-settings">
+      <span class="menu-icon">⚙️</span> 설정
+    </div>
   </div>
 </div>
 
-<!-- MAIN -->
+<!-- MAIN CONTENT -->
 <div id="main-layout">
-<div id="content">
+  <div id="content">
 
-<!-- AUTH PAGE -->
-<div id="auth-page">
-  <div id="auth-box">
-    <div class="auth-logo">🟦 큐브<span>월드</span></div>
-    <div class="auth-sub">TEAM CUBE의 미니홈피 세상 <span class="wave">👋</span></div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuth('login')">로그인</button>
-      <button class="auth-tab" onclick="switchAuth('signup')">회원가입</button>
-    </div>
-    <div id="login-form">
-      <input class="input" type="email" id="login-email" placeholder="이메일" style="margin-bottom:10px">
-      <input class="input" type="password" id="login-pw" placeholder="비밀번호" style="margin-bottom:12px">
-      <button class="btn btn-primary" style="width:100%;font-size:16px;padding:13px" onclick="login()">🔐 로그인</button>
-    </div>
-    <div id="signup-form" style="display:none">
-      <input class="input" type="text" id="signup-name" placeholder="닉네임 (2~10자)" style="margin-bottom:10px">
-      <input class="input" type="email" id="signup-email" placeholder="이메일" style="margin-bottom:10px">
-      <input class="input" type="password" id="signup-pw" placeholder="비밀번호 (6자 이상)" style="margin-bottom:12px">
-      <button class="btn btn-primary" style="width:100%;font-size:16px;padding:13px" onclick="signup()">✨ 큐브월드 가입!</button>
-    </div>
-    <div id="auth-msg"></div>
-  </div>
-</div>
-
-<!-- HOMPY PAGE -->
-<div id="hompy-page" class="page" style="display:none">
-  <div class="page-title">🏠 <span id="hompy-page-title">내</span> 미니홈피</div>
-  <div id="other-hompy-bar" style="display:none" class="card" style="margin-bottom:16px;padding:12px">
-    <button class="btn btn-secondary btn-sm" onclick="backToMyHompy()">← 내 홈피로</button>
-    <span id="other-chin-btn-wrap"></span>
-  </div>
-  <div id="hompy-wrap">
-    <div id="hompy-left">
-      <div class="hompy-card card" style="padding:0">
-        <div class="hompy-header" id="hompy-header-bg">
-          <img id="hompy-cover" src="" style="display:none;width:100%;height:100%;object-fit:cover">
-          <div class="hompy-avatar" id="hompy-avatar" onclick="triggerAvatarUpload()">🙂</div>
+    <!-- AUTH PAGE -->
+    <div id="auth-page">
+      <div id="auth-box">
+        <div class="auth-logo">🟦 큐브<span>월드</span></div>
+        <div class="auth-sub">TEAM CUBE의 미니홈피 세상 <span class="wave-text">👋</span></div>
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuth('login')">로그인</button>
+          <button class="auth-tab" onclick="switchAuth('signup')">회원가입</button>
         </div>
-        <div class="hompy-body">
-          <div class="hompy-name" id="hompy-name">닉네임 <span id="hompy-badges"></span></div>
-          <div class="hompy-msg" id="hompy-status">한마디를 설정해보세요!</div>
-          <div class="hompy-stats">
-            <span>큐브친 <b id="stat-chins">0</b></span>
-            <span>방문 <b id="stat-visits">0</b></span>
-            <span>오늘 <b id="stat-today">0</b></span>
-            <span>게시물 <b id="stat-posts">0</b></span>
-          </div>
-          <div id="hompy-edit-btns" style="margin-top:12px;display:none">
-            <button class="btn btn-secondary btn-sm" onclick="openProfileEdit()">✏️ 프로필 편집</button>
-            <label class="btn btn-secondary btn-sm" style="cursor:pointer">🖼️ 커버 변경<input type="file" id="cover-upload" accept="image/*" style="display:none" onchange="uploadCover(event)"></label>
-          </div>
-          <!-- Skin -->
-          <div style="margin-top:14px">
-            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px">🎨 스킨</div>
-            <div id="skin-selector" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-          </div>
-          <!-- BGM -->
-          <div style="margin-top:14px" id="bgm-section">
-            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:8px">🎵 BGM</div>
-            <div class="bgm-box">
-              <input type="text" id="bgm-input" placeholder="유튜브 URL...">
-              <button onclick="setBGM()">설정</button>
+        <div id="login-form">
+          <input class="auth-input" type="email" id="login-email" placeholder="이메일">
+          <input class="auth-input" type="password" id="login-pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')login()">
+          <button class="auth-btn" onclick="login()">🔐 로그인</button>
+        </div>
+        <div id="signup-form" style="display:none">
+          <input class="auth-input" type="text" id="signup-name" placeholder="닉네임 (2~10자)">
+          <input class="auth-input" type="email" id="signup-email" placeholder="이메일">
+          <input class="auth-input" type="password" id="signup-pw" placeholder="비밀번호 (6자 이상)">
+          <button class="auth-btn" onclick="signup()">✨ 큐브월드 가입!</button>
+        </div>
+        <div id="auth-msg"></div>
+      </div>
+    </div>
+
+    <!-- HOMPY PAGE -->
+    <div id="hompy-page" class="page" style="display:none">
+      <div class="page-title">🏠 <span id="hompy-title-name">내</span> 미니홈피</div>
+
+      <div id="other-hompy">
+        <div class="card" style="margin-bottom:16px">
+          <button class="btn-secondary" onclick="backToMyHompy()">← 내 홈피로</button>
+        </div>
+      </div>
+
+      <div id="hompy-container">
+        <div id="hompy-left">
+          <div class="hompy-profile-card card" style="padding:0">
+            <div class="hompy-header" id="hompy-header-bg">
+              <div class="hompy-avatar" id="hompy-avatar" onclick="triggerAvatarUpload()">🙂</div>
             </div>
-            <div id="bgm-title" style="font-size:11px;color:var(--gray);margin-top:6px"></div>
+            <div class="hompy-body">
+              <div class="hompy-name" id="hompy-name">닉네임</div>
+              <div class="hompy-msg" id="hompy-status">한마디를 설정해보세요!</div>
+              <div class="hompy-stats">
+                <span>큐브친 <b id="stat-chins">0</b></span>
+                <span>방문 <b id="stat-visits">0</b></span>
+                <span>오늘 <b id="stat-today">0</b></span>
+              </div>
+              <div id="hompy-edit-btns" style="margin-top:12px">
+                <button class="btn-secondary" style="font-size:12px;padding:6px 12px" onclick="openProfileEdit()">✏️ 프로필 편집</button>
+              </div>
+              <div style="margin-top:14px">
+                <div style="font-size:12px;font-weight:700;color:var(--cube-gray);margin-bottom:8px">🎨 스킨</div>
+                <div class="skin-selector" id="skin-selector"></div>
+              </div>
+              <div style="margin-top:14px" id="bgm-section">
+                <div style="font-size:12px;font-weight:700;color:var(--cube-gray);margin-bottom:8px">🎵 BGM</div>
+                <div class="bgm-box">
+                  <input type="text" id="bgm-input" placeholder="유튜브 URL 입력..." style="font-size:12px">
+                  <button onclick="setBGM()" style="font-size:12px">설정</button>
+                </div>
+                <div id="bgm-title" style="font-size:11px;color:var(--cube-gray);margin-top:6px"></div>
+              </div>
+            </div>
           </div>
-          <!-- Mood -->
-          <div style="margin-top:14px" id="mood-display">
-            <div style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:4px">오늘의 기분</div>
-            <span id="hompy-mood" style="font-size:24px"></span>
-          </div>
-        </div>
-      </div>
-      <!-- Visitor Log -->
-      <div class="card" style="margin-top:16px">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px">👀 최근 방문자</div>
-        <div id="visitor-list"></div>
-      </div>
-      <!-- Awards -->
-      <div class="card" style="margin-top:16px">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px">🏅 획득 칭호</div>
-        <div id="hompy-awards" style="display:flex;flex-wrap:wrap;gap:6px"></div>
-      </div>
-    </div>
-    <div id="hompy-right">
-      <!-- Guestbook -->
-      <div class="card">
-        <div style="font-weight:700;font-size:16px;margin-bottom:12px">📖 방명록</div>
-        <div id="guestbook-list"></div>
-        <div id="gb-write-area" style="display:flex;gap:8px;margin-top:14px">
-          <textarea class="textarea" id="gb-input" style="height:70px" placeholder="방명록을 남겨보세요 ✨"></textarea>
-          <button class="btn btn-primary" onclick="writeGuestbook()">작성</button>
-        </div>
-      </div>
-      <!-- Mini Diary -->
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="font-weight:700;font-size:16px">📝 최근 다이어리</div>
-          <button class="btn btn-secondary btn-sm" onclick="showPage('diary')">전체보기</button>
-        </div>
-        <div id="hompy-diary-preview"></div>
-      </div>
-      <!-- Mini Feed -->
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="font-weight:700;font-size:16px">📸 최근 게시물</div>
-          <button class="btn btn-secondary btn-sm" onclick="showPage('feed')">피드 보기</button>
-        </div>
-        <div id="hompy-feed-preview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- FEED PAGE -->
-<div id="feed-page" class="page" style="display:none">
-  <div class="page-title">📸 피드</div>
-  <div style="display:flex;gap:20px;flex-wrap:wrap">
-    <div style="flex:1;min-width:300px;max-width:600px">
-      <!-- Write Post -->
-      <div class="feed-post-write" id="feed-write-box">
-        <div class="feed-write-top">
-          <div class="feed-avatar" id="feed-my-avatar">🙂</div>
-          <div class="feed-write-area">
-            <textarea id="feed-post-text" placeholder="무슨 생각을 하고 있나요? ✨"></textarea>
+          <div class="card" style="margin-top:16px">
+            <div style="font-weight:700;font-size:14px;margin-bottom:10px">👀 최근 방문자</div>
+            <div id="visitor-list" class="visitor-log"></div>
           </div>
         </div>
-        <div style="margin:8px 0">
-          <div id="feed-img-preview" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px"></div>
-          <div id="feed-tag-area">
-            <div id="feed-tags-preview" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"></div>
-            <input class="input" id="feed-tag-input" placeholder="#태그 입력 후 Enter" style="font-size:12px;padding:6px 10px" onkeydown="addFeedTag(event)">
+
+        <div id="hompy-right">
+          <div class="card">
+            <div style="font-weight:700;font-size:16px;margin-bottom:12px">📖 방명록</div>
+            <div id="guestbook-list"></div>
+            <div id="guestbook-write" class="gb-form" style="margin-top:14px">
+              <textarea id="gb-input" placeholder="방명록을 남겨보세요 ✨"></textarea>
+              <button onclick="writeGuestbook()">작성</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <div style="font-weight:700;font-size:16px">📝 최근 다이어리</div>
+              <button class="btn-primary" style="font-size:12px;padding:6px 12px" onclick="showPage('diary')">전체보기</button>
+            </div>
+            <div id="hompy-diary-preview"></div>
           </div>
         </div>
-        <div class="feed-write-actions">
-          <div class="feed-write-extras">
-            <label class="feed-write-btn">📷 사진<input type="file" id="feed-img-upload" accept="image/*" multiple style="display:none" onchange="previewFeedImages(event)"></label>
-            <button class="feed-write-btn" onclick="toggleFeedTagArea()">🏷️ 태그</button>
+      </div>
+    </div>
+
+    <!-- DIARY PAGE -->
+    <div id="diary-page" class="page" style="display:none">
+      <div class="page-title">📝 다이어리</div>
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchDiaryTab('list')">목록</button>
+          <button class="tab-btn" onclick="switchDiaryTab('write')">새 글 쓰기</button>
+        </div>
+        <div id="diary-list-tab">
+          <div id="diary-list"></div>
+        </div>
+        <div id="diary-write-tab" style="display:none">
+          <div class="diary-form">
+            <input type="text" id="diary-title-input" placeholder="제목">
+            <textarea id="diary-content-input" placeholder="오늘의 이야기를 써보세요... ✍️"></textarea>
+            <div style="display:flex;gap:8px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+                <input type="radio" name="diary-private" value="public" checked> 공개
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+                <input type="radio" name="diary-private" value="private"> 비공개
+              </label>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn-secondary" onclick="switchDiaryTab('list')">취소</button>
+              <button class="btn-primary" onclick="writeDiary()">저장</button>
+            </div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="submitFeedPost()">게시하기</button>
         </div>
       </div>
-      <!-- Feed List -->
-      <div id="feed-list"></div>
-      <div id="feed-load-more" style="text-align:center;padding:16px;display:none">
-        <button class="btn btn-secondary" onclick="loadMoreFeed()">더 보기</button>
-      </div>
-    </div>
-    <div style="flex:0 0 240px">
-      <!-- Trending Tags -->
-      <div class="card">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px">🔥 인기 태그</div>
-        <div id="trending-tags"></div>
-      </div>
-      <!-- Recommended Users -->
-      <div class="card" style="margin-top:12px">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px">💡 추천 유저</div>
-        <div id="recommended-users"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- DIARY PAGE -->
-<div id="diary-page" class="page" style="display:none">
-  <div class="page-title">📝 다이어리</div>
-  <div class="card">
-    <div class="tabs">
-      <button class="tab-btn active" id="diary-tab-list" onclick="switchDiaryTab('list')">목록</button>
-      <button class="tab-btn" id="diary-tab-write" onclick="switchDiaryTab('write')">새 글 쓰기</button>
+      <div id="diary-view" style="display:none" class="card">
+        <button class="btn-secondary" onclick="closeDiaryView()" style="margin-bottom:12px">← 목록으로</button>
+        <div id="diary-view-title" style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--cube-navy);margin-bottom:8px"></div>
+        <div id="diary-view-meta" style="font-size:12px;color:var(--cube-gray);margin-bottom:16px"></div>
+        <div id="diary-view-content" style="font-size:15px;line-height:1.8;white-space:pre-wrap"></div>
+      </div>
     </div>
-    <div id="diary-list-tab">
-      <div id="diary-list"></div>
-    </div>
-    <div id="diary-write-tab" style="display:none">
-      <div style="margin-bottom:10px">
-        <label style="font-size:13px;font-weight:700;color:var(--gray);display:block;margin-bottom:6px">오늘의 기분</label>
-        <div class="mood-select" id="diary-mood-select">
-          <button class="mood-btn" data-mood="😊" onclick="selectMood(this)">😊</button>
-          <button class="mood-btn" data-mood="😢" onclick="selectMood(this)">😢</button>
-          <button class="mood-btn" data-mood="😡" onclick="selectMood(this)">😡</button>
-          <button class="mood-btn" data-mood="🤩" onclick="selectMood(this)">🤩</button>
-          <button class="mood-btn" data-mood="😴" onclick="selectMood(this)">😴</button>
-          <button class="mood-btn" data-mood="🥳" onclick="selectMood(this)">🥳</button>
-          <button class="mood-btn" data-mood="😎" onclick="selectMood(this)">😎</button>
-          <button class="mood-btn" data-mood="🤔" onclick="selectMood(this)">🤔</button>
+
+    <!-- PHOTO PAGE -->
+    <div id="photo-page" class="page" style="display:none">
+      <div class="page-title">🖼️ 사진첩</div>
+      <div class="card">
+        <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+          <label class="btn-primary" style="cursor:pointer;display:inline-block">
+            📸 사진 추가
+            <input type="file" id="photo-upload" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)">
+          </label>
+          <span style="font-size:13px;color:var(--cube-gray)" id="photo-count">0장</span>
         </div>
-      </div>
-      <input class="input" type="text" id="diary-title-input" placeholder="제목" style="margin-bottom:10px">
-      <textarea class="textarea" id="diary-content-input" placeholder="오늘의 이야기를 써보세요... ✍️" style="height:150px;margin-bottom:10px"></textarea>
-      <div style="display:flex;gap:12px;margin-bottom:12px">
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="radio" name="diary-vis" value="public" checked> 🌐 공개</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="radio" name="diary-vis" value="friends"> 👥 친구공개</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="radio" name="diary-vis" value="private"> 🔒 비공개</label>
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" onclick="switchDiaryTab('list')">취소</button>
-        <button class="btn btn-primary" onclick="writeDiary()">저장하기</button>
-      </div>
-    </div>
-  </div>
-  <!-- Diary View -->
-  <div id="diary-view" style="display:none" class="card">
-    <button class="btn btn-secondary btn-sm" onclick="closeDiaryView()" style="margin-bottom:12px">← 목록으로</button>
-    <div id="diary-view-mood" style="font-size:28px;margin-bottom:8px"></div>
-    <div id="diary-view-title" style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--navy);margin-bottom:8px"></div>
-    <div id="diary-view-meta" style="font-size:12px;color:var(--gray);margin-bottom:16px"></div>
-    <div id="diary-view-content" style="font-size:15px;line-height:1.8;white-space:pre-wrap"></div>
-  </div>
-</div>
-
-<!-- PHOTO PAGE -->
-<div id="photo-page" class="page" style="display:none">
-  <div class="page-title">🖼️ 사진첩</div>
-  <div class="card">
-    <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <label class="btn btn-primary" style="cursor:pointer">📸 사진 추가<input type="file" id="photo-upload" accept="image/*" multiple style="display:none" onchange="uploadPhotos(event)"></label>
-      <span id="photo-count" style="font-size:13px;color:var(--gray)">0장</span>
-    </div>
-    <div class="photo-grid" id="photo-grid"></div>
-  </div>
-</div>
-
-<!-- CHIN PAGE -->
-<div id="chin-page" class="page" style="display:none">
-  <div class="page-title">👥 큐브친</div>
-  <div class="card">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchChinTab('list')">목록</button>
-      <button class="tab-btn" onclick="switchChinTab('requests')">받은 신청<span id="req-count-badge" style="background:var(--red);color:white;border-radius:10px;padding:1px 6px;font-size:11px;margin-left:4px"></span></button>
-      <button class="tab-btn" onclick="switchChinTab('sent')">보낸 신청</button>
-      <button class="tab-btn" onclick="switchChinTab('search')">검색</button>
-    </div>
-    <div id="chin-list-tab"><div id="chin-list"></div></div>
-    <div id="chin-requests-tab" style="display:none"><div id="chin-requests-list"></div></div>
-    <div id="chin-sent-tab" style="display:none"><div id="chin-sent-list"></div></div>
-    <div id="chin-search-tab" style="display:none">
-      <div class="search-box">
-        <input type="text" id="chin-search-input" placeholder="닉네임으로 검색...">
-        <button onclick="searchChinUser()">검색</button>
-      </div>
-      <div id="chin-search-results"></div>
-    </div>
-  </div>
-</div>
-
-<!-- CHAT PAGE -->
-<div id="chat-page" class="page" style="display:none">
-  <div class="page-title">💬 큐브 채팅</div>
-  <div style="display:flex;gap:16px;flex-wrap:wrap">
-    <div style="flex:0 0 220px">
-      <div class="card">
-        <div style="font-weight:700;font-size:14px;margin-bottom:10px">큐브친 목록</div>
-        <div id="chat-chin-list"></div>
-      </div>
-    </div>
-    <div style="flex:1;min-width:280px">
-      <div class="card">
-        <div id="chat-header" style="font-weight:700;font-size:15px;margin-bottom:12px;color:var(--navy)">채팅 상대를 선택하세요</div>
-        <div id="chat-messages"></div>
-        <div id="chat-input-area" style="display:none;display:flex;gap:8px">
-          <input class="input" id="chat-input" placeholder="메시지 입력..." onkeydown="if(event.key==='Enter')sendChat()" style="flex:1">
-          <button class="btn btn-primary btn-sm" onclick="sendChat()">전송</button>
+        <div class="photo-grid" id="photo-grid">
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-icon">📷</div>
+            사진을 추가해보세요!
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- SURF PAGE -->
-<div id="surf-page" class="page" style="display:none">
-  <div class="page-title">🌊 파도타기</div>
-  <div class="card">
-    <div style="color:var(--gray);font-size:13px;margin-bottom:16px">큐브친들의 홈피를 구경해보세요!</div>
-    <div id="surf-list"></div>
-  </div>
-</div>
-
-<!-- RANKING PAGE -->
-<div id="ranking-page" class="page" style="display:none">
-  <div class="page-title">🏆 큐브 랭킹</div>
-  <div style="display:flex;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:280px">
+    <!-- CHIN PAGE -->
+    <div id="chin-page" class="page" style="display:none">
+      <div class="page-title">👥 큐브친</div>
       <div class="card">
-        <div style="font-weight:700;font-size:16px;margin-bottom:14px">🌟 방문자 랭킹</div>
-        <div id="rank-visits"></div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchChinTab('list')">큐브친</button>
+          <button class="tab-btn" onclick="switchChinTab('requests')">받은 신청 <span id="req-count-badge" style="background:#ef4444;color:white;border-radius:10px;padding:1px 6px;font-size:11px"></span></button>
+          <button class="tab-btn" onclick="switchChinTab('sent')">보낸 신청</button>
+          <button class="tab-btn" onclick="switchChinTab('search')">검색</button>
+        </div>
+        <div id="chin-list-tab"><div id="chin-list"></div></div>
+        <div id="chin-requests-tab" style="display:none"><div id="chin-requests-list"></div></div>
+        <div id="chin-sent-tab" style="display:none"><div id="chin-sent-list"></div></div>
+        <div id="chin-search-tab" style="display:none">
+          <div class="search-box">
+            <input type="text" id="chin-search-input" placeholder="닉네임으로 검색..." onkeydown="if(event.key==='Enter')searchChinUser()">
+            <button onclick="searchChinUser()">검색</button>
+          </div>
+          <div id="chin-search-results"></div>
+        </div>
       </div>
     </div>
-    <div style="flex:1;min-width:280px">
+
+    <!-- SURF PAGE -->
+    <div id="surf-page" class="page" style="display:none">
+      <div class="page-title">🌊 파도타기</div>
       <div class="card">
-        <div style="font-weight:700;font-size:16px;margin-bottom:14px">💰 코인 랭킹</div>
-        <div id="rank-coins"></div>
+        <div style="color:var(--cube-gray);font-size:13px;margin-bottom:16px">큐브친들의 홈피를 구경해보세요!</div>
+        <div id="surf-list"></div>
       </div>
     </div>
-    <div style="flex:1;min-width:280px">
+
+    <!-- SHOP PAGE -->
+    <div id="shop-page" class="page" style="display:none">
+      <div class="page-title">🛍️ 큐브샵</div>
+      <div class="coin-display">🟡 <span id="shop-coins">0</span> 큐브코인</div>
       <div class="card">
-        <div style="font-weight:700;font-size:16px;margin-bottom:14px">🔥 연속출석 랭킹</div>
-        <div id="rank-streak"></div>
+        <div style="font-weight:700;font-size:16px;margin-bottom:14px">🎨 스킨</div>
+        <div class="shop-grid" id="shop-skins"></div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- ATTEND PAGE -->
-<div id="attend-page" class="page" style="display:none">
-  <div class="page-title">✅ 출석체크</div>
-  <div class="card" style="text-align:center;max-width:480px;margin:0 auto">
-    <div style="font-size:60px;margin-bottom:16px">🗓️</div>
-    <div style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--navy);margin-bottom:8px">오늘의 출석체크</div>
-    <div style="color:var(--gray);font-size:14px;margin-bottom:8px">출석하면 큐브코인 10개 + XP 20 획득!</div>
-    <div id="attend-streak" style="font-size:16px;color:var(--blue);font-weight:700;margin-bottom:16px"></div>
-    <button class="btn btn-primary" id="attend-btn" onclick="doAttend()" style="font-size:18px;padding:16px 40px">출석 도장 찍기 🔵</button>
-    <div id="attend-msg" style="margin-top:16px;font-size:14px"></div>
-  </div>
-  <div class="card" style="margin-top:20px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:12px">📅 이번 달 출석 현황</div>
-    <div id="attend-calendar"></div>
-  </div>
-</div>
-
-<!-- QUIZ PAGE -->
-<div id="quiz-page" class="page" style="display:none">
-  <div class="page-title">🧠 큐브 퀴즈</div>
-  <div class="card" style="max-width:560px;margin:0 auto;text-align:center">
-    <div id="quiz-intro">
-      <div style="font-size:60px;margin-bottom:16px">🎯</div>
-      <div style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--navy);margin-bottom:8px">큐브 데일리 퀴즈</div>
-      <div style="color:var(--gray);font-size:14px;margin-bottom:20px">정답 맞추면 코인 획득! 하루 한 번 도전!</div>
-      <button class="btn btn-primary" style="font-size:16px;padding:14px 36px" onclick="startQuiz()">퀴즈 시작!</button>
-    </div>
-    <div id="quiz-main" style="display:none">
-      <div id="quiz-progress" style="font-size:12px;color:var(--gray);margin-bottom:12px"></div>
-      <div id="quiz-q" style="font-size:18px;font-weight:700;margin-bottom:20px;line-height:1.6"></div>
-      <div id="quiz-opts"></div>
-      <div id="quiz-result" style="margin-top:16px;font-size:15px;display:none"></div>
-      <button id="quiz-next-btn" class="btn btn-primary" style="margin-top:14px;display:none" onclick="nextQuiz()">다음 문제</button>
-    </div>
-    <div id="quiz-done" style="display:none">
-      <div style="font-size:60px;margin-bottom:16px">🎊</div>
-      <div id="quiz-final-msg" style="font-family:'Black Han Sans',sans-serif;font-size:20px;margin-bottom:8px"></div>
-      <div id="quiz-coin-earn" style="color:#f59e0b;font-weight:700;margin-bottom:16px"></div>
-      <button class="btn btn-secondary" onclick="resetQuiz()">결과 확인</button>
-    </div>
-  </div>
-</div>
-
-<!-- MUSIC PAGE -->
-<div id="music-page" class="page" style="display:none">
-  <div class="page-title">🎵 뮤직플레이어</div>
-  <div class="card" style="max-width:560px">
-    <div id="music-now-playing" style="background:linear-gradient(135deg,var(--navy),var(--blue));color:white;border-radius:14px;padding:20px;margin-bottom:16px;text-align:center;display:none">
-      <div style="font-size:40px;margin-bottom:8px" id="music-note-anim">🎵</div>
-      <div id="now-title" style="font-weight:700;font-size:16px">재생 중...</div>
-      <div style="display:flex;justify-content:center;gap:12px;margin-top:14px">
-        <button onclick="prevMusic()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:8px 14px;border-radius:8px">⏮</button>
-        <button id="play-pause-btn" onclick="togglePlay()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:8px 16px;border-radius:8px">⏸</button>
-        <button onclick="nextMusic()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:8px 14px;border-radius:8px">⏭</button>
-        <button onclick="stopBGM()" style="background:rgba(255,255,255,0.2);border:none;color:white;cursor:pointer;padding:8px 14px;border-radius:8px">⏹</button>
+    <!-- NOTIF PAGE -->
+    <div id="notif-page" class="page" style="display:none">
+      <div class="page-title">🔔 알림</div>
+      <div class="card">
+        <div id="notif-list"><div class="empty-state"><div class="empty-icon">🔔</div>불러오는 중...</div></div>
       </div>
     </div>
-    <div style="font-weight:700;font-size:15px;margin-bottom:12px">🎶 플레이리스트</div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <input class="input" id="music-url-input" placeholder="유튜브 URL 입력..." style="flex:1">
-      <input class="input" id="music-title-input" placeholder="곡 제목" style="flex:0 0 140px">
-      <button class="btn btn-primary btn-sm" onclick="addToPlaylist()">추가</button>
-    </div>
-    <div id="playlist"></div>
-  </div>
-</div>
 
-<!-- SHOP PAGE -->
-<div id="shop-page" class="page" style="display:none">
-  <div class="page-title">🛍️ 큐브샵</div>
-  <div class="coin-display">🟡 <span id="shop-coins">0</span> 큐브코인 &nbsp;·&nbsp; XP <span id="shop-xp">0</span></div>
-  <div class="card">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchShopTab('skins')">스킨</button>
-      <button class="tab-btn" onclick="switchShopTab('frames')">아바타 프레임</button>
-      <button class="tab-btn" onclick="switchShopTab('special')">스페셜</button>
-    </div>
-    <div id="shop-skins-tab"><div class="shop-grid" id="shop-skins"></div></div>
-    <div id="shop-frames-tab" style="display:none"><div class="shop-grid" id="shop-frames"></div></div>
-    <div id="shop-special-tab" style="display:none"><div class="shop-grid" id="shop-special"></div></div>
-  </div>
-</div>
-
-<!-- NOTIF PAGE -->
-<div id="notif-page" class="page" style="display:none">
-  <div class="page-title">🔔 알림</div>
-  <div class="card"><div id="notif-list"></div></div>
-</div>
-
-<!-- SETTINGS PAGE -->
-<div id="settings-page" class="page" style="display:none">
-  <div class="page-title">⚙️ 설정</div>
-  <div class="card" style="max-width:500px">
-    <div style="font-weight:700;font-size:16px;margin-bottom:16px">계정 설정</div>
-    <div style="margin-bottom:16px">
-      <label style="font-size:13px;color:var(--gray);display:block;margin-bottom:6px">이메일 알림</label>
-      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="setting-notif" checked> 방명록·큐브친 알림 받기</label>
-    </div>
-    <div style="margin-bottom:16px">
-      <label style="font-size:13px;color:var(--gray);display:block;margin-bottom:6px">홈피 공개 설정</label>
-      <select class="input" id="setting-privacy" style="width:auto">
-        <option value="all">전체 공개</option>
-        <option value="friends">친구만</option>
-        <option value="private">비공개</option>
-      </select>
-    </div>
-    <div style="margin-bottom:20px">
-      <label style="font-size:13px;color:var(--gray);display:block;margin-bottom:6px">테마</label>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary btn-sm" onclick="setTheme('light')">☀️ 라이트</button>
-        <button class="btn btn-secondary btn-sm" onclick="setTheme('dark')">🌙 다크</button>
+    <!-- ATTEND PAGE -->
+    <div id="attend-page" class="page" style="display:none">
+      <div class="page-title">✅ 출석체크</div>
+      <div class="card" style="text-align:center">
+        <div style="font-size:60px;margin-bottom:16px">🗓️</div>
+        <div style="font-family:'Black Han Sans',sans-serif;font-size:22px;color:var(--cube-navy);margin-bottom:8px">오늘의 출석체크</div>
+        <div style="color:var(--cube-gray);font-size:14px;margin-bottom:20px">출석하면 큐브코인 10개를 드려요!</div>
+        <div id="attend-streak" style="font-size:14px;color:var(--cube-blue);margin-bottom:16px"></div>
+        <button class="btn-primary" id="attend-btn" onclick="doAttend()" style="font-size:18px;padding:16px 40px">
+          출석 도장 찍기 🔵
+        </button>
+        <div id="attend-msg" style="margin-top:16px;font-size:14px"></div>
+      </div>
+      <div class="card" style="margin-top:20px">
+        <div style="font-weight:700;font-size:16px;margin-bottom:12px">📅 이번 달 출석 현황</div>
+        <div id="attend-calendar"></div>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="saveSettings()">설정 저장</button>
-    <div style="margin-top:24px;padding-top:16px;border-top:1px solid #e0e7ff">
-      <div style="font-weight:700;font-size:14px;color:var(--red);margin-bottom:8px">⚠️ 위험 구역</div>
-      <button class="btn btn-danger btn-sm" onclick="deleteAccount()">계정 삭제</button>
+
+    <!-- SETTINGS PAGE -->
+    <div id="settings-page" class="page" style="display:none">
+      <div class="page-title">⚙️ 설정</div>
+      <div class="card">
+        <div style="font-weight:700;font-size:16px;margin-bottom:12px">계정 정보</div>
+        <div style="font-size:14px;color:var(--cube-gray)" id="settings-email"></div>
+        <div style="font-size:14px;margin-top:6px" id="settings-name"></div>
+      </div>
+      <div class="card">
+        <div class="danger-zone">
+          <h3>⚠️ 위험 구역</h3>
+          <p style="font-size:13px;color:var(--cube-gray);margin-bottom:12px">계정을 삭제하면 모든 데이터가 사라지고 복구할 수 없어요.</p>
+          <button class="btn-danger" onclick="deleteAccount()">🗑️ 계정 삭제</button>
+        </div>
+      </div>
     </div>
-  </div>
-  <!-- Admin Section -->
-  <div class="card" style="max-width:500px;margin-top:16px;display:none" id="admin-panel">
-    <div style="font-weight:700;font-size:16px;margin-bottom:16px">🛡️ 개발자 관리 패널</div>
-    <div class="search-box">
-      <input type="text" id="admin-search-input" placeholder="닉네임 검색...">
-      <button onclick="adminSearchUser()">검색</button>
-    </div>
-    <div id="admin-user-result"></div>
+
   </div>
 </div>
 
-</div><!-- /content -->
-</div><!-- /main-layout -->
+<!-- 모바일 하단 내비 -->
+<div id="mobile-nav">
+  <div class="mobile-nav-item active" id="mn-hompy" onclick="showPage('hompy')">
+    <div class="mn-icon">🏠</div><div>홈피</div>
+  </div>
+  <div class="mobile-nav-item" id="mn-diary" onclick="showPage('diary')">
+    <div class="mn-icon">📝</div><div>다이어리</div>
+  </div>
+  <div class="mobile-nav-item" id="mn-chin" onclick="showPage('chin')">
+    <div class="mn-icon">👥</div><div>큐브친</div>
+  </div>
+  <div class="mobile-nav-item" id="mn-notif" onclick="showPage('notif')">
+    <div class="mn-icon">🔔</div><div>알림</div>
+  </div>
+  <div class="mobile-nav-item" id="mn-attend" onclick="showPage('attend')">
+    <div class="mn-icon">✅</div><div>출석</div>
+  </div>
+</div>
 
 <!-- MODALS -->
 <div class="modal-overlay" id="profile-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('profile-modal')">✕</button>
     <div class="modal-title">✏️ 프로필 편집</div>
-    <div style="text-align:center;margin-bottom:16px">
-      <div id="modal-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--blue);font-size:36px;text-align:center;line-height:80px;margin:0 auto 10px;cursor:pointer;overflow:hidden" onclick="triggerAvatarUpload()">🙂</div>
-      <div style="font-size:12px;color:var(--gray)">클릭해서 사진 변경</div>
-      <input type="file" id="avatar-upload" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+    <div id="profile-edit-form">
+      <div style="text-align:center;margin-bottom:16px">
+        <div id="modal-avatar" style="width:80px;height:80px;border-radius:50%;background:var(--cube-blue);font-size:36px;text-align:center;line-height:80px;margin:0 auto 10px;cursor:pointer;overflow:hidden" onclick="triggerAvatarUpload()">🙂</div>
+        <div style="font-size:12px;color:var(--cube-gray)">클릭해서 사진 변경</div>
+        <input type="file" id="avatar-upload" accept="image/*" style="display:none" onchange="uploadAvatar(event)">
+      </div>
+      <input type="text" id="edit-name" placeholder="닉네임">
+      <input type="text" id="edit-status" placeholder="한마디">
+      <button class="btn-primary" onclick="saveProfile()">저장</button>
     </div>
-    <input class="input" type="text" id="edit-name" placeholder="닉네임" style="margin-bottom:10px">
-    <input class="input" type="text" id="edit-status" placeholder="한마디" style="margin-bottom:16px">
-    <button class="btn btn-primary" onclick="saveProfile()">저장</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="diary-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('diary-modal')">✕</button>
-    <div id="diary-modal-mood" style="font-size:28px;margin-bottom:4px"></div>
     <div id="diary-modal-title" class="modal-title"></div>
-    <div id="diary-modal-meta" style="font-size:12px;color:var(--gray);margin-bottom:14px"></div>
+    <div id="diary-modal-meta" style="font-size:12px;color:var(--cube-gray);margin-bottom:14px"></div>
     <div id="diary-modal-content" style="font-size:14px;line-height:1.8;white-space:pre-wrap"></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="photo-modal">
   <div class="modal-box" style="max-width:600px;text-align:center;background:transparent;box-shadow:none">
-    <button class="modal-close" onclick="closeModal('photo-modal')" style="color:white;position:absolute;top:10px;right:10px;font-size:30px">✕</button>
+    <button class="modal-close" onclick="closeModal('photo-modal')" style="color:white;top:10px;right:10px;font-size:30px">✕</button>
     <img id="photo-modal-img" src="" style="max-width:100%;max-height:80vh;border-radius:12px">
   </div>
 </div>
 
-<div class="modal-overlay" id="feed-modal">
-  <div class="modal-box" style="max-width:600px">
-    <button class="modal-close" onclick="closeModal('feed-modal')">✕</button>
-    <div id="feed-modal-content"></div>
-  </div>
-</div>
-
-<!-- BGM PLAYER -->
+<!-- BGM -->
 <div id="bgm-player">
   <span id="bgm-note">🎵</span>
   <span id="bgm-playing-title">재생 중</span>
@@ -831,8 +956,16 @@
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, collection, query, where, orderBy, getDocs, onSnapshot, deleteDoc, serverTimestamp, increment, arrayUnion, arrayRemove, limit, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  signOut, onAuthStateChanged, deleteUser
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, addDoc,
+  collection, query, where, orderBy, getDocs, onSnapshot,
+  deleteDoc, serverTimestamp, increment, arrayUnion, arrayRemove, limit,
+  writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC74vyDekUpvCd3rg6GUmexbA17kys8_TE",
@@ -847,91 +980,43 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ===== DEVELOPER UIDs (add real UIDs here) =====
-const DEV_UIDS = ['REPLACE_WITH_DEV_UID_1'];
-// ===== VERIFIED UIDs =====
-const VERIFIED_UIDS = ['REPLACE_WITH_VERIFIED_UID_1'];
-
 // ===== STATE =====
-let currentUser = null, myProfile = null;
+let currentUser = null;
+let myProfile = null;
 let viewingUid = null;
+let currentPage = 'hompy';
 let unsubNotif = null;
 let bgmYid = null;
-let currentChatUid = null;
-let unsubChat = null;
-let feedLastDoc = null;
-let feedTags = [];
-let feedImgData = [];
-let quizAnswered = 0;
-let quizScore = 0;
-let currentQuizIdx = 0;
-let quizData = [];
-let playlistData = [];
-let currentMusicIdx = -1;
-let selectedMood = '';
-
-const LEVELS = [
-  {min:0, name:'큐브새싹', icon:'🌱'},
-  {min:100, name:'큐브인', icon:'😊'},
-  {min:300, name:'큐브고수', icon:'⭐'},
-  {min:600, name:'큐브달인', icon:'🌟'},
-  {min:1000, name:'큐브마스터', icon:'🏆'},
-  {min:2000, name:'큐브레전드', icon:'👑'},
-];
+let isAttending = false; // 출석 중복 방지 플래그
 
 const SKINS = [
-  {id:'blue', name:'큐브블루', color:'#2563eb', price:0},
-  {id:'pink', name:'핑크드림', color:'#f472b6', price:50},
-  {id:'green', name:'민트그린', color:'#10b981', price:50},
-  {id:'purple', name:'퍼플', color:'#8b5cf6', price:50},
-  {id:'orange', name:'오렌지', color:'#f97316', price:50},
-  {id:'dark', name:'다크', color:'#334155', price:100},
-  {id:'gold', name:'골드', color:'#f59e0b', price:200},
-  {id:'rainbow', name:'레인보우', color:'linear-gradient(135deg,#ef4444,#f97316,#f59e0b,#10b981,#3b82f6,#8b5cf6)', price:300},
+  { id:'blue',   name:'큐브블루', color:'#2563eb', price:0   },
+  { id:'pink',   name:'핑크드림', color:'#f472b6', price:50  },
+  { id:'green',  name:'민트그린', color:'#10b981', price:50  },
+  { id:'purple', name:'퍼플',    color:'#8b5cf6', price:50  },
+  { id:'orange', name:'오렌지',  color:'#f97316', price:50  },
+  { id:'dark',   name:'다크',    color:'#334155', price:100 },
 ];
 
-const FRAMES = [
-  {id:'none', name:'기본', icon:'⬜', price:0},
-  {id:'star', name:'별빛', icon:'⭐', price:80},
-  {id:'flame', name:'불꽃', icon:'🔥', price:100},
-  {id:'rainbow', name:'레인보우', icon:'🌈', price:150},
-  {id:'crown', name:'왕관', icon:'👑', price:200},
+const SHOP_ITEMS = [
+  { id:'skin_pink',   name:'핑크드림 스킨', icon:'🌸', price:50,  type:'skin', skinId:'pink'   },
+  { id:'skin_green',  name:'민트그린 스킨', icon:'🌿', price:50,  type:'skin', skinId:'green'  },
+  { id:'skin_purple', name:'퍼플 스킨',    icon:'💜', price:50,  type:'skin', skinId:'purple' },
+  { id:'skin_orange', name:'오렌지 스킨',  icon:'🍊', price:50,  type:'skin', skinId:'orange' },
+  { id:'skin_dark',   name:'다크 스킨',    icon:'🌙', price:100, type:'skin', skinId:'dark'   },
 ];
 
-const QUIZ_POOL = [
-  {q:'대한민국의 수도는?', opts:['부산','서울','인천','광주'], ans:1},
-  {q:'1+1은?', opts:['1','2','3','11'], ans:1},
-  {q:'태양계에서 가장 큰 행성은?', opts:['토성','목성','해왕성','천왕성'], ans:1},
-  {q:'물의 화학식은?', opts:['CO2','H2O','NaCl','O2'], ans:1},
-  {q:'큐브월드의 기본 재화는?', opts:['큐브골드','큐브보석','큐브코인','큐브다이아'], ans:2},
-  {q:'인터넷 최초의 SNS로 알려진 것은?', opts:['페이스북','트위터','싸이월드','마이스페이스'], ans:2},
-  {q:'HTML의 약자는?', opts:['HyperText Markup Language','High Text Machine Language','Heavy Text Making Language','HyperText Making Layer'], ans:0},
-  {q:'세계에서 가장 높은 산은?', opts:['K2','몽블랑','에베레스트','킬리만자로'], ans:2},
-  {q:'JavaScript는 어떤 회사가 만들었나요?', opts:['Google','Microsoft','Netscape','Apple'], ans:2},
-  {q:'빛의 속도는 약 몇 km/s인가요?', opts:['30만','3만','300만','30억'], ans:0},
-];
-
-function getLevel(xp) {
-  let lv = LEVELS[0];
-  for (const l of LEVELS) { if ((xp || 0) >= l.min) lv = l; }
-  return lv;
-}
-function getLevelProgress(xp) {
-  const idx = LEVELS.findIndex(l => l === getLevel(xp));
-  if (idx === LEVELS.length - 1) return 100;
-  const next = LEVELS[idx + 1];
-  const curr = LEVELS[idx];
-  return Math.min(100, Math.round(((xp - curr.min) / (next.min - curr.min)) * 100));
-}
-
-function getBadgesHtml(uid, profile) {
-  let b = '';
-  if (DEV_UIDS.includes(uid)) b += `<span class="badge-dev">DEV</span>`;
-  if (VERIFIED_UIDS.includes(uid) || profile?.verified) b += `<span class="badge-verified" title="인증된 계정">✅</span>`;
-  if ((profile?.visits || 0) >= 500) b += `<span class="badge-popular" title="인기 유저">⭐</span>`;
-  if (profile?.isNewUser) b += `<span class="badge-new">NEW</span>`;
-  return b;
-}
+// ===== 모바일 사이드바 =====
+window.toggleSidebar = () => {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sidebar-overlay');
+  sb.classList.toggle('mobile-open');
+  ov.classList.toggle('show');
+};
+window.closeSidebar = () => {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+};
 
 // ===== AUTH STATE =====
 onAuthStateChanged(auth, async (user) => {
@@ -940,671 +1025,641 @@ onAuthStateChanged(auth, async (user) => {
     myProfile = await loadProfile(user.uid);
     if (!myProfile) {
       myProfile = {
-        uid: user.uid, name: '큐브인' + Math.floor(Math.random()*9000+1000),
-        email: user.email, status: '큐브월드에 왔어요! 🎉',
-        avatar:'', skin:'blue', frame:'none', bgm:'', bgmTitle:'',
-        coins:100, xp:0, chins:[], ownedSkins:['blue'], ownedFrames:['none'],
-        visits:0, todayVisits:0, attendStreak:0, lastAttend:'',
-        attendDates:[], settings:{}, playlist:[], mood:'',
-        isNewUser: true, awards: [], coverImg: '', createdAt: serverTimestamp()
+        uid: user.uid,
+        name: user.displayName || '큐브인',
+        email: user.email,
+        status: '큐브월드에 왔어요! 🎉',
+        avatar: '',
+        skin: 'blue',
+        bgm: '',
+        bgmTitle: '',
+        coins: 100,
+        chins: [],
+        ownedSkins: ['blue'],
+        visits: 0,
+        todayVisits: 0,
+        lastAttend: '',
+        attendStreak: 0,
+        attendDates: [],
+        createdAt: serverTimestamp()
       };
       await setDoc(doc(db, 'users', user.uid), myProfile);
     }
+    // 필수 필드 보정
+    if (!myProfile.ownedSkins) myProfile.ownedSkins = ['blue'];
+    if (!myProfile.chins) myProfile.chins = [];
+    if (!myProfile.attendDates) myProfile.attendDates = [];
+
     showLoggedIn();
     viewingUid = user.uid;
-    renderMiniProfile();
+    renderMyProfile();
     showPage('hompy');
     loadHompy(user.uid);
     listenNotifications();
-    updateOnlineCount();
-    if (DEV_UIDS.includes(user.uid)) document.getElementById('admin-panel').style.display = 'block';
   } else {
-    currentUser = null; myProfile = null;
+    currentUser = null;
+    myProfile = null;
     showLoggedOut();
   }
 });
 
 async function loadProfile(uid) {
-  const s = await getDoc(doc(db, 'users', uid));
-  return s.exists() ? s.data() : null;
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    return snap.exists() ? snap.data() : null;
+  } catch(e) {
+    console.error('loadProfile error:', e);
+    return null;
+  }
 }
 
 function showLoggedIn() {
   document.getElementById('auth-page').style.display = 'none';
   document.getElementById('sidebar').style.display = 'flex';
   document.getElementById('logout-btn').style.display = 'block';
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById('mobile-nav').style.display = 'flex';
+  // hamburger는 CSS 미디어쿼리로 제어
 }
+
 function showLoggedOut() {
   document.getElementById('auth-page').style.display = 'flex';
   document.getElementById('sidebar').style.display = 'none';
   document.getElementById('logout-btn').style.display = 'none';
+  document.getElementById('mobile-nav').style.display = 'none';
   document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
 }
 
 // ===== AUTH =====
 window.switchAuth = (tab) => {
-  document.getElementById('login-form').style.display = tab==='login' ? 'block' : 'none';
-  document.getElementById('signup-form').style.display = tab==='signup' ? 'block' : 'none';
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', i===(tab==='login'?0:1)));
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+  document.querySelectorAll('.auth-tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='signup'));
+  });
   document.getElementById('auth-msg').textContent = '';
 };
+
 window.login = async () => {
   const email = document.getElementById('login-email').value.trim();
   const pw = document.getElementById('login-pw').value;
   if (!email || !pw) return setAuthMsg('이메일과 비밀번호를 입력해주세요');
-  try { await signInWithEmailAndPassword(auth, email, pw); }
-  catch(e) { setAuthMsg('로그인 실패: ' + (e.code==='auth/invalid-credential' ? '이메일 또는 비밀번호가 틀렸어요' : e.message)); }
+  try {
+    await signInWithEmailAndPassword(auth, email, pw);
+  } catch(e) {
+    const msg = e.code === 'auth/invalid-credential' || e.code === 'auth/wrong-password'
+      ? '이메일 또는 비밀번호가 틀렸어요'
+      : e.code === 'auth/user-not-found'
+      ? '존재하지 않는 계정이에요'
+      : e.message;
+    setAuthMsg('로그인 실패: ' + msg);
+  }
 };
+
 window.signup = async () => {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const pw = document.getElementById('signup-pw').value;
-  if (!name||name.length<2||name.length>10) return setAuthMsg('닉네임은 2~10자로 입력해주세요');
+  if (!name || name.length < 2 || name.length > 10) return setAuthMsg('닉네임은 2~10자로 입력해주세요');
   if (!email) return setAuthMsg('이메일을 입력해주세요');
   if (pw.length < 6) return setAuthMsg('비밀번호는 6자 이상이어야 해요');
-  const q = query(collection(db,'users'), where('name','==',name));
-  if (!(await getDocs(q)).empty) return setAuthMsg('이미 사용 중인 닉네임이에요');
   try {
+    // 닉네임 중복 확인
+    const q = query(collection(db, 'users'), where('name', '==', name));
+    const snap = await getDocs(q);
+    if (!snap.empty) return setAuthMsg('이미 사용 중인 닉네임이에요');
+
     const cred = await createUserWithEmailAndPassword(auth, email, pw);
-    await setDoc(doc(db,'users',cred.user.uid), {
-      uid:cred.user.uid, name, email, status:'큐브월드에 왔어요! 🎉',
-      avatar:'', skin:'blue', frame:'none', bgm:'', bgmTitle:'',
-      coins:100, xp:0, chins:[], ownedSkins:['blue'], ownedFrames:['none'],
-      visits:0, todayVisits:0, attendStreak:0, lastAttend:'',
-      attendDates:[], playlist:[], mood:'', isNewUser:true, awards:[],
-      coverImg:'', createdAt:serverTimestamp()
+    await setDoc(doc(db, 'users', cred.user.uid), {
+      uid: cred.user.uid,
+      name, email,
+      status: '큐브월드에 왔어요! 🎉',
+      avatar: '',
+      skin: 'blue',
+      bgm: '',
+      bgmTitle: '',
+      coins: 100,
+      chins: [],
+      ownedSkins: ['blue'],
+      visits: 0,
+      todayVisits: 0,
+      lastAttend: '',
+      attendStreak: 0,
+      attendDates: [],
+      createdAt: serverTimestamp()
     });
-  } catch(e) { setAuthMsg('가입 실패: ' + (e.code==='auth/email-already-in-use'?'이미 사용 중인 이메일이에요':e.message)); }
+  } catch(e) {
+    const msg = e.code === 'auth/email-already-in-use'
+      ? '이미 사용 중인 이메일이에요'
+      : e.message;
+    setAuthMsg('가입 실패: ' + msg);
+  }
 };
+
 window.logout = async () => {
   if (unsubNotif) unsubNotif();
-  if (unsubChat) unsubChat();
-  await signOut(auth);
   stopBGM();
+  await signOut(auth);
 };
+
+// ===== 계정 삭제 =====
 window.deleteAccount = async () => {
-  if (!confirm('정말 계정을 삭제할까요? 모든 데이터가 삭제됩니다.')) return;
+  const confirmed = confirm('정말로 계정을 삭제할까요?\n모든 데이터가 삭제되고 복구할 수 없어요!');
+  if (!confirmed) return;
+  const confirmed2 = confirm('마지막 확인이에요. 정말 삭제할까요?');
+  if (!confirmed2) return;
+
   try {
-    await deleteDoc(doc(db,'users',currentUser.uid));
+    showToast('계정 삭제 중...');
+    const uid = currentUser.uid;
+    const batch = writeBatch(db);
+
+    // Firestore 데이터 삭제
+    batch.delete(doc(db, 'users', uid));
+
+    // 다이어리 삭제
+    const diarySnap = await getDocs(query(collection(db, 'diary'), where('uid', '==', uid)));
+    diarySnap.forEach(d => batch.delete(d.ref));
+
+    // 사진 삭제
+    const photoSnap = await getDocs(query(collection(db, 'photos'), where('uid', '==', uid)));
+    photoSnap.forEach(d => batch.delete(d.ref));
+
+    // 방명록 삭제 (내가 쓴 것)
+    const gbSnap = await getDocs(query(collection(db, 'guestbook'), where('fromUid', '==', uid)));
+    gbSnap.forEach(d => batch.delete(d.ref));
+
+    // 알림 삭제
+    const notifSnap = await getDocs(query(collection(db, 'notifications'), where('toUid', '==', uid)));
+    notifSnap.forEach(d => batch.delete(d.ref));
+
+    await batch.commit();
+
+    // Firebase Auth 삭제
     await deleteUser(currentUser);
     showToast('계정이 삭제됐어요');
-  } catch(e) { showToast('삭제 실패: 최근 로그인 후 다시 시도해주세요'); }
+  } catch(e) {
+    console.error(e);
+    if (e.code === 'auth/requires-recent-login') {
+      alert('보안을 위해 재로그인 후 다시 시도해주세요.\n로그아웃 → 로그인 → 설정에서 삭제');
+      await signOut(auth);
+    } else {
+      showToast('삭제 실패: ' + e.message);
+    }
+  }
 };
-function setAuthMsg(msg) { document.getElementById('auth-msg').textContent = msg; }
+
+function setAuthMsg(msg) {
+  document.getElementById('auth-msg').textContent = msg;
+}
 
 // ===== NAVIGATION =====
 window.showPage = (page) => {
-  document.querySelectorAll('.page').forEach(p => p.style.display='none');
+  if (!currentUser && page !== 'auth') return;
+  currentPage = page;
+
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
   document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-  const el = document.getElementById(page+'-page');
-  if (el) el.style.display = 'block';
-  const menu = document.getElementById('menu-'+page);
-  if (menu) menu.classList.add('active');
-  if (page==='hompy') { viewingUid=currentUser.uid; loadHompy(currentUser.uid); }
-  else if (page==='feed') loadFeed();
-  else if (page==='diary') loadDiary();
-  else if (page==='photo') loadPhotos();
-  else if (page==='chin') loadChin();
-  else if (page==='chat') loadChatChinList();
-  else if (page==='surf') loadSurf();
-  else if (page==='ranking') loadRanking();
-  else if (page==='attend') loadAttend();
-  else if (page==='quiz') loadQuiz();
-  else if (page==='music') loadMusic();
-  else if (page==='shop') loadShop();
-  else if (page==='notif') loadNotif();
-  else if (page==='settings') loadSettings();
+  document.querySelectorAll('.mobile-nav-item').forEach(m => m.classList.remove('active'));
+
+  const pageEl = document.getElementById(page + '-page');
+  if (pageEl) pageEl.style.display = 'block';
+  const menuEl = document.getElementById('menu-' + page);
+  if (menuEl) menuEl.classList.add('active');
+  const mnEl = document.getElementById('mn-' + page);
+  if (mnEl) mnEl.classList.add('active');
+
+  if (page === 'hompy') { viewingUid = currentUser.uid; loadHompy(currentUser.uid); }
+  if (page === 'diary') loadDiary();
+  if (page === 'photo') loadPhotos();
+  if (page === 'chin') loadChin();
+  if (page === 'surf') loadSurf();
+  if (page === 'shop') loadShop();
+  if (page === 'notif') loadNotif();
+  if (page === 'attend') loadAttend();
+  if (page === 'settings') loadSettings();
+
+  window.scrollTo(0, 0);
 };
+
 window.goHome = () => { if (currentUser) showPage('hompy'); };
 
-// ===== MINI PROFILE =====
-function renderMiniProfile() {
+// ===== PROFILE =====
+function renderMyProfile() {
   if (!myProfile) return;
-  const lv = getLevel(myProfile.xp || 0);
-  const prog = getLevelProgress(myProfile.xp || 0);
   const avatar = myProfile.avatar || '';
-  const avatarEl = document.getElementById('mini-avatar');
-  avatarEl.innerHTML = avatar ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '<span>🙂</span>';
-  document.getElementById('mini-name').innerHTML = esc(myProfile.name) + ' ' + getBadgesHtml(currentUser.uid, myProfile);
-  document.getElementById('mini-status').textContent = myProfile.status || '';
-  document.getElementById('mini-coins').textContent = `🟡 ${myProfile.coins||0} 큐브코인`;
-  document.getElementById('mini-level').textContent = `${lv.icon} Lv.${LEVELS.indexOf(lv)+1} ${lv.name}`;
-  document.getElementById('mini-xp-bar').style.width = prog + '%';
+  const avatarHtml = avatar
+    ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : '🙂';
+  document.getElementById('my-mini-avatar').innerHTML = avatarHtml;
+  document.getElementById('my-mini-name').textContent = myProfile.name;
+  document.getElementById('my-mini-msg').textContent = myProfile.status || '';
+  document.getElementById('my-mini-coins').textContent = `🟡 ${myProfile.coins || 0} 큐브코인`;
 }
 
-// ===== ONLINE COUNT =====
-async function updateOnlineCount() {
-  try {
-    const q = query(collection(db,'users'), limit(20));
-    const snap = await getDocs(q);
-    document.getElementById('online-count').textContent = `● ${snap.size}명 접속중`;
-  } catch(e) {}
+window.triggerAvatarUpload = () => {
+  if (!currentUser || viewingUid !== currentUser.uid) return;
+  document.getElementById('avatar-upload').click();
+};
+
+window.uploadAvatar = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('2MB 이하 이미지만 가능해요'); return; }
+  const reader = new FileReader();
+  reader.onload = async (ev) => {
+    const b64 = ev.target.result;
+    await updateDoc(doc(db, 'users', currentUser.uid), { avatar: b64 });
+    myProfile.avatar = b64;
+    renderMyProfile();
+    loadHompy(currentUser.uid);
+    showToast('프로필 사진이 변경됐어요!');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+};
+
+window.openProfileEdit = () => {
+  document.getElementById('edit-name').value = myProfile.name;
+  document.getElementById('edit-status').value = myProfile.status || '';
+  const avatar = myProfile.avatar || '';
+  document.getElementById('modal-avatar').innerHTML = avatar
+    ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : '🙂';
+  openModal('profile-modal');
+};
+
+window.saveProfile = async () => {
+  const name = document.getElementById('edit-name').value.trim();
+  const status = document.getElementById('edit-status').value.trim();
+  if (!name || name.length < 2 || name.length > 10) { showToast('닉네임은 2~10자로 입력해주세요'); return; }
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  if (!snap.empty && snap.docs[0].id !== currentUser.uid) { showToast('이미 사용 중인 닉네임이에요'); return; }
+  await updateDoc(doc(db, 'users', currentUser.uid), { name, status });
+  myProfile.name = name; myProfile.status = status;
+  renderMyProfile();
+  loadHompy(currentUser.uid);
+  closeModal('profile-modal');
+  showToast('프로필이 저장됐어요!');
+};
+
+// ===== SETTINGS =====
+function loadSettings() {
+  if (!currentUser || !myProfile) return;
+  document.getElementById('settings-email').textContent = '📧 ' + (myProfile.email || currentUser.email);
+  document.getElementById('settings-name').textContent = '👤 ' + myProfile.name;
 }
 
 // ===== HOMPY =====
 async function loadHompy(uid) {
+  if (!currentUser) return;
   const profile = uid === currentUser.uid ? myProfile : await loadProfile(uid);
-  if (!profile) return;
+  if (!profile) { showToast('유저를 찾을 수 없어요'); return; }
   viewingUid = uid;
   const isMe = uid === currentUser.uid;
-  document.getElementById('hompy-page-title').textContent = isMe ? '내' : profile.name + '의';
-  document.getElementById('other-hompy-bar').style.display = isMe ? 'none' : 'flex';
-  
-  // Other-hompy chin button
-  if (!isMe) {
-    const isChin = (myProfile.chins||[]).includes(uid);
-    const q2 = query(collection(db,'chinRequests'), where('fromUid','==',currentUser.uid), where('toUid','==',uid), where('status','==','pending'));
-    const pending = (await getDocs(q2));
-    let chinBtnHtml = '';
-    if (isChin) chinBtnHtml = `<span style="color:var(--green);font-size:13px;margin-left:10px">✓ 큐브친</span>`;
-    else if (!pending.empty) chinBtnHtml = `<span style="color:var(--gray);font-size:13px;margin-left:10px">신청 대기중</span>`;
-    else chinBtnHtml = `<button class="btn btn-primary btn-sm" style="margin-left:10px" onclick="sendChinRequest('${uid}','${esc(profile.name)}')">큐브친 신청</button>`;
-    document.getElementById('other-chin-btn-wrap').innerHTML = chinBtnHtml;
-  }
 
-  // Skin
-  const skin = SKINS.find(s=>s.id===(profile.skin||'blue'))||SKINS[0];
-  const skinColor = skin.color.startsWith('linear') ? skin.color : `linear-gradient(135deg,${skin.color}bb,${skin.color})`;
-  document.getElementById('hompy-header-bg').style.background = skinColor;
-  
-  // Cover
-  if (profile.coverImg) {
-    document.getElementById('hompy-cover').src = profile.coverImg;
-    document.getElementById('hompy-cover').style.display = 'block';
-  } else {
-    document.getElementById('hompy-cover').style.display = 'none';
-  }
+  document.getElementById('hompy-title-name').textContent = isMe ? '내' : profile.name + '의';
+  document.getElementById('other-hompy').classList.toggle('active', !isMe);
 
-  // Avatar
-  const av = profile.avatar || '';
-  document.getElementById('hompy-avatar').innerHTML = av ? `<img src="${av}">` : '🙂';
-  
-  document.getElementById('hompy-name').innerHTML = esc(profile.name) + ' ' + getBadgesHtml(uid, profile);
+  // 스킨 적용
+  const skin = SKINS.find(s => s.id === (profile.skin || 'blue')) || SKINS[0];
+  document.getElementById('hompy-header-bg').style.background =
+    `linear-gradient(135deg, ${skin.color}cc, ${skin.color})`;
+
+  // 아바타
+  const avatar = profile.avatar || '';
+  document.getElementById('hompy-avatar').innerHTML = avatar
+    ? `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover">`
+    : '🙂';
+
+  document.getElementById('hompy-name').textContent = profile.name;
   document.getElementById('hompy-status').textContent = profile.status || '';
-  document.getElementById('stat-chins').textContent = (profile.chins||[]).length;
-  document.getElementById('stat-visits').textContent = profile.visits||0;
-  document.getElementById('stat-today').textContent = profile.todayVisits||0;
-  
-  // Post count
-  try {
-    const pq = query(collection(db,'feedPosts'), where('uid','==',uid));
-    const ps = await getDocs(pq);
-    document.getElementById('stat-posts').textContent = ps.size;
-  } catch(e) {}
 
+  // 통계
+  document.getElementById('stat-chins').textContent = (profile.chins || []).length;
+  document.getElementById('stat-visits').textContent = profile.visits || 0;
+  document.getElementById('stat-today').textContent = profile.todayVisits || 0;
+
+  // 편집 버튼 (내 홈피만)
   document.getElementById('hompy-edit-btns').style.display = isMe ? 'block' : 'none';
   document.getElementById('bgm-section').style.display = isMe ? 'block' : 'none';
 
-  // Skin selector
-  const owned = profile.ownedSkins || ['blue'];
+  // 스킨 선택기
+  const ownedSkins = profile.ownedSkins || ['blue'];
   const skinSel = document.getElementById('skin-selector');
-  skinSel.innerHTML = SKINS.filter(s=>owned.includes(s.id)).map(s =>
-    `<div class="skin-opt${profile.skin===s.id?' selected':''}" style="background:${s.color.startsWith('linear')?'#e0e7ff':s.color}" title="${s.name}" ${isMe?`onclick="applySkin('${s.id}')"`:''}></div>`
-  ).join('');
+  skinSel.innerHTML = '';
+  SKINS.forEach(s => {
+    if (!ownedSkins.includes(s.id)) return;
+    const el = document.createElement('div');
+    el.className = 'skin-opt' + (profile.skin === s.id ? ' selected' : '');
+    el.style.background = s.color;
+    el.title = s.name;
+    if (isMe) el.onclick = () => applySkin(s.id);
+    skinSel.appendChild(el);
+  });
 
-  // BGM
+  // BGM 입력창 (내 홈피만)
   if (isMe) {
-    document.getElementById('bgm-input').value = profile.bgm||'';
-    document.getElementById('bgm-title').textContent = profile.bgmTitle ? '🎵 '+profile.bgmTitle : '';
+    document.getElementById('bgm-input').value = profile.bgm || '';
+    document.getElementById('bgm-title').textContent = profile.bgmTitle ? '🎵 ' + profile.bgmTitle : '';
   }
-  if (profile.bgm) playBGM(profile.bgm, profile.bgmTitle||'BGM');
 
-  // Mood
-  document.getElementById('hompy-mood').textContent = profile.mood || '';
-  
-  // Awards
-  const awards = profile.awards || [];
-  document.getElementById('hompy-awards').innerHTML = awards.length
-    ? awards.map(a=>`<span style="background:#eff6ff;color:var(--blue);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:700">${a}</span>`).join('')
-    : '<span style="color:var(--gray);font-size:12px">아직 칭호 없음</span>';
+  // BGM 재생
+  if (profile.bgm) playBGM(profile.bgm, profile.bgmTitle || '');
 
-  // Visit
+  // 방문 기록 (다른 사람 홈피)
   if (!isMe) {
-    await updateDoc(doc(db,'users',uid), { visits:increment(1), todayVisits:increment(1) });
-    await addDoc(collection(db,'visits'), { toUid:uid, fromUid:currentUser.uid, fromName:myProfile.name, fromAvatar:myProfile.avatar||'', time:serverTimestamp() });
-    await addXP(5);
+    try {
+      await updateDoc(doc(db, 'users', uid), {
+        visits: increment(1),
+        todayVisits: increment(1)
+      });
+      await addDoc(collection(db, 'visits'), {
+        toUid: uid,
+        fromUid: currentUser.uid,
+        fromName: myProfile.name,
+        fromAvatar: myProfile.avatar || '',
+        time: serverTimestamp()
+      });
+    } catch(e) { console.error('visit log error:', e); }
   }
 
   loadVisitorLog(uid);
   loadGuestbook(uid);
   loadDiaryPreview(uid);
-  loadHompyFeedPreview(uid);
 }
 
-window.backToMyHompy = () => { viewingUid=currentUser.uid; loadHompy(currentUser.uid); };
+window.backToMyHompy = () => {
+  viewingUid = currentUser.uid;
+  loadHompy(currentUser.uid);
+};
 
 async function loadVisitorLog(uid) {
-  const q = query(collection(db,'visits'), where('toUid','==',uid), orderBy('time','desc'), limit(5));
-  const snap = await getDocs(q);
-  const el = document.getElementById('visitor-list');
-  el.innerHTML = snap.empty
-    ? '<div style="color:#94a3b8;font-size:12px">방문자가 없어요</div>'
-    : snap.docs.map(d => {
-        const v = d.data();
-        return `<div class="visitor-item">👤 <b onclick="visitHompy('${v.fromUid}')" style="cursor:pointer">${esc(v.fromName)}</b> <span style="float:right">${timeAgo(v.time)}</span></div>`;
-      }).join('');
+  try {
+    // 인덱스 없이 동작하도록 단순 쿼리 후 클라이언트 정렬
+    const q = query(collection(db, 'visits'), where('toUid', '==', uid));
+    const snap = await getDocs(q);
+    const el = document.getElementById('visitor-list');
+    if (snap.empty) { el.innerHTML = '<div style="color:#94a3b8;font-size:12px">방문자가 없어요</div>'; return; }
+
+    const sorted = snap.docs
+      .map(d => d.data())
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      })
+      .slice(0, 5);
+
+    el.innerHTML = sorted.map(v =>
+      `<div class="visitor-item">👤 <b>${escapeHtml(v.fromName)}</b> <span style="float:right">${timeAgo(v.time)}</span></div>`
+    ).join('');
+  } catch(e) { console.error('visitor log error:', e); }
 }
 
 // ===== GUESTBOOK =====
 async function loadGuestbook(uid) {
-  const q = query(collection(db,'guestbook'), where('toUid','==',uid), orderBy('time','desc'));
-  const snap = await getDocs(q);
-  const el = document.getElementById('guestbook-list');
-  document.getElementById('gb-write-area').style.display = currentUser ? 'flex' : 'none';
-  if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">📖</div>방명록이 비어있어요</div>'; return; }
-  el.innerHTML = snap.docs.map(d => {
-    const g = d.data();
-    const av = g.fromAvatar ? `<img src="${g.fromAvatar}">` : '😊';
-    const canDel = g.fromUid===currentUser.uid || uid===currentUser.uid;
-    return `<div class="gb-entry">
-      <div class="gb-avatar">${av}</div>
-      <div style="flex:1">
-        <div style="display:flex;justify-content:space-between">
-          <span style="font-weight:700;font-size:13px;cursor:pointer;color:var(--navy)" onclick="visitHompy('${g.fromUid}')">${esc(g.fromName)}</span>
-          ${canDel?`<button class="delete-btn" onclick="deleteGuestbook('${d.id}','${uid}')">삭제</button>`:''}
+  try {
+    // 복합 인덱스 없이: where만, 클라이언트 정렬
+    const q = query(collection(db, 'guestbook'), where('toUid', '==', uid));
+    const snap = await getDocs(q);
+    const el = document.getElementById('guestbook-list');
+    const write = document.getElementById('guestbook-write');
+    write.style.display = currentUser ? 'flex' : 'none';
+
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div>방명록이 비어있어요</div>';
+      return;
+    }
+
+    const sorted = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      });
+
+    el.innerHTML = sorted.map(g => {
+      const avatar = g.fromAvatar ? `<img src="${g.fromAvatar}">` : '😊';
+      const canDelete = g.fromUid === currentUser.uid || uid === currentUser.uid;
+      return `<div class="gb-entry">
+        <div class="gb-avatar">${avatar}</div>
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="gb-name" onclick="visitHompy('${g.fromUid}')" style="cursor:pointer">${escapeHtml(g.fromName)}</span>
+            ${canDelete ? `<button class="delete-btn" onclick="deleteGuestbook('${g.id}','${uid}')">삭제</button>` : ''}
+          </div>
+          <div class="gb-time">${timeAgo(g.time)}</div>
+          <div class="gb-text">${escapeHtml(g.text)}</div>
         </div>
-        <div style="font-size:11px;color:var(--gray)">${timeAgo(g.time)}</div>
-        <div style="font-size:13px;margin-top:4px">${esc(g.text)}</div>
-      </div>
-    </div>`;
-  }).join('');
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('guestbook error:', e); }
 }
 
 window.writeGuestbook = async () => {
   const text = document.getElementById('gb-input').value.trim();
   if (!text) return;
-  await addDoc(collection(db,'guestbook'), {
-    toUid:viewingUid, fromUid:currentUser.uid, fromName:myProfile.name,
-    fromAvatar:myProfile.avatar||'', text, time:serverTimestamp()
+  await addDoc(collection(db, 'guestbook'), {
+    toUid: viewingUid,
+    fromUid: currentUser.uid,
+    fromName: myProfile.name,
+    fromAvatar: myProfile.avatar || '',
+    text,
+    time: serverTimestamp()
   });
   document.getElementById('gb-input').value = '';
   if (viewingUid !== currentUser.uid) {
-    await addDoc(collection(db,'notifications'), { toUid:viewingUid, text:`${myProfile.name}님이 방명록을 남겼어요`, read:false, time:serverTimestamp() });
-    await addXP(3);
+    await addDoc(collection(db, 'notifications'), {
+      toUid: viewingUid,
+      text: `${myProfile.name}님이 방명록을 남겼어요`,
+      read: false,
+      time: serverTimestamp()
+    });
   }
   loadGuestbook(viewingUid);
   showToast('방명록을 남겼어요!');
 };
+
 window.deleteGuestbook = async (id, uid) => {
-  await deleteDoc(doc(db,'guestbook',id));
+  await deleteDoc(doc(db, 'guestbook', id));
   loadGuestbook(uid);
   showToast('삭제됐어요');
 };
 
 // ===== DIARY =====
-window.selectMood = (btn) => {
-  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedMood = btn.dataset.mood;
-};
-
 window.switchDiaryTab = (tab) => {
-  document.getElementById('diary-list-tab').style.display = tab==='list'?'block':'none';
-  document.getElementById('diary-write-tab').style.display = tab==='write'?'block':'none';
+  document.getElementById('diary-list-tab').style.display = tab === 'list' ? 'block' : 'none';
+  document.getElementById('diary-write-tab').style.display = tab === 'write' ? 'block' : 'none';
   document.getElementById('diary-view').style.display = 'none';
-  document.getElementById('diary-tab-list').classList.toggle('active', tab==='list');
-  document.getElementById('diary-tab-write').classList.toggle('active', tab==='write');
-  if (tab==='list') loadDiary();
+  document.querySelectorAll('#diary-page .tab-btn').forEach((t,i) => {
+    t.classList.toggle('active', (i===0&&tab==='list')||(i===1&&tab==='write'));
+  });
+  if (tab === 'list') loadDiary();
 };
 
 async function loadDiary() {
-  const q = query(collection(db,'diary'), where('uid','==',currentUser.uid), orderBy('time','desc'));
-  const snap = await getDocs(q);
+  if (!currentUser) return;
   const el = document.getElementById('diary-list');
-  if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">📝</div>아직 글이 없어요!</div>'; return; }
-  el.innerHTML = snap.docs.map(d => {
-    const di = d.data();
-    const visIcon = di.visibility==='private'?'🔒':di.visibility==='friends'?'👥':'🌐';
-    return `<div class="diary-entry" onclick="viewDiary('${d.id}',${JSON.stringify(di).replace(/"/g,'&quot;')})">
-      <div style="display:flex;justify-content:space-between">
-        <div class="diary-title">${di.mood||''} ${esc(di.title)}</div>
-        <div style="display:flex;gap:6px;align-items:center">
-          <span style="font-size:11px">${visIcon}</span>
-          <button class="delete-btn" onclick="event.stopPropagation();deleteDiary('${d.id}')">삭제</button>
+  el.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div>불러오는 중...</div>';
+  try {
+    // 복합인덱스 불필요하게 클라이언트 정렬
+    const q = query(collection(db, 'diary'), where('uid', '==', currentUser.uid));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div>아직 글이 없어요. 첫 글을 써보세요!</div>';
+      return;
+    }
+
+    const sorted = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      });
+
+    el.innerHTML = sorted.map(di => {
+      const preview = (di.content || '').substring(0, 60);
+      const diStr = JSON.stringify(di).replace(/"/g,'&quot;');
+      return `<div class="diary-entry" onclick="viewDiary('${di.id}', ${diStr})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="diary-title">${escapeHtml(di.title || '')}</div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;margin-left:8px">
+            <span style="font-size:11px;color:#94a3b8">${di.isPrivate ? '🔒' : '🌐'}</span>
+            <button class="delete-btn" onclick="event.stopPropagation();deleteDiary('${di.id}')">삭제</button>
+          </div>
         </div>
-      </div>
-      <div class="diary-preview">${esc(di.content).substring(0,60)}${di.content.length>60?'...':''}</div>
-      <div class="diary-meta"><span>${timeAgo(di.time)}</span></div>
-    </div>`;
-  }).join('');
+        <div class="diary-preview">${escapeHtml(preview)}${(di.content||'').length > 60 ? '...' : ''}</div>
+        <div class="diary-meta">${timeAgo(di.time)}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    console.error('loadDiary error:', e);
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">❌</div>불러오기 실패. 잠시 후 다시 시도해주세요.</div>';
+  }
 }
 
 async function loadDiaryPreview(uid) {
-  const isMe = uid===currentUser.uid;
-  let conditions = [where('uid','==',uid), orderBy('time','desc'), limit(3)];
-  if (!isMe) conditions.splice(1,0,where('visibility','==','public'));
-  const snap = await getDocs(query(collection(db,'diary'), ...conditions));
+  if (!currentUser) return;
   const el = document.getElementById('hompy-diary-preview');
-  if (snap.empty) { el.innerHTML = '<div class="empty" style="padding:20px"><div class="empty-icon">📝</div>글이 없어요</div>'; return; }
-  el.innerHTML = snap.docs.map(d => {
-    const di = d.data();
-    return `<div class="diary-entry" onclick="openDiaryModal(${JSON.stringify(di).replace(/"/g,'&quot;')})">
-      <div class="diary-title">${di.mood||''} ${esc(di.title)}</div>
-      <div class="diary-preview">${esc(di.content).substring(0,50)}...</div>
-      <div class="diary-meta">${timeAgo(di.time)}</div>
-    </div>`;
-  }).join('');
+  el.innerHTML = '<div style="color:#94a3b8;font-size:13px;padding:10px">불러오는 중...</div>';
+  try {
+    const isMe = uid === currentUser.uid;
+    const q = query(collection(db, 'diary'), where('uid', '==', uid));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-icon">📝</div>아직 글이 없어요</div>';
+      return;
+    }
+
+    const sorted = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(d => isMe || !d.isPrivate)
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      })
+      .slice(0, 3);
+
+    if (!sorted.length) {
+      el.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-icon">📝</div>공개된 글이 없어요</div>';
+      return;
+    }
+
+    el.innerHTML = sorted.map(di => {
+      const diStr = JSON.stringify(di).replace(/"/g,'&quot;');
+      return `<div class="diary-entry" onclick="openDiaryModal(${diStr})">
+        <div class="diary-title">${escapeHtml(di.title || '')}</div>
+        <div class="diary-preview">${escapeHtml((di.content||'').substring(0,50))}...</div>
+        <div class="diary-meta">${timeAgo(di.time)}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    console.error('loadDiaryPreview error:', e);
+    el.innerHTML = '<div class="empty-state" style="padding:20px"><div class="empty-icon">❌</div>불러오기 실패</div>';
+  }
 }
 
 window.openDiaryModal = (di) => {
-  document.getElementById('diary-modal-mood').textContent = di.mood||'';
-  document.getElementById('diary-modal-title').textContent = di.title;
+  document.getElementById('diary-modal-title').textContent = di.title || '';
   document.getElementById('diary-modal-meta').textContent = timeAgo(di.time);
-  document.getElementById('diary-modal-content').textContent = di.content;
+  document.getElementById('diary-modal-content').textContent = di.content || '';
   openModal('diary-modal');
 };
+
 window.viewDiary = (id, di) => {
   document.getElementById('diary-list-tab').style.display = 'none';
   document.getElementById('diary-write-tab').style.display = 'none';
   document.getElementById('diary-view').style.display = 'block';
-  document.getElementById('diary-view-mood').textContent = di.mood||'';
-  document.getElementById('diary-view-title').textContent = di.title;
-  const vis = di.visibility==='private'?'🔒 비공개':di.visibility==='friends'?'👥 친구공개':'🌐 공개';
-  document.getElementById('diary-view-meta').textContent = `${timeAgo(di.time)} · ${vis}`;
-  document.getElementById('diary-view-content').textContent = di.content;
+  document.getElementById('diary-view-title').textContent = di.title || '';
+  document.getElementById('diary-view-meta').textContent =
+    `${timeAgo(di.time)} · ${di.isPrivate ? '🔒 비공개' : '🌐 공개'}`;
+  document.getElementById('diary-view-content').textContent = di.content || '';
 };
+
 window.closeDiaryView = () => {
   document.getElementById('diary-view').style.display = 'none';
   document.getElementById('diary-list-tab').style.display = 'block';
 };
+
 window.writeDiary = async () => {
   const title = document.getElementById('diary-title-input').value.trim();
   const content = document.getElementById('diary-content-input').value.trim();
-  const visibility = document.querySelector('input[name="diary-vis"]:checked').value;
-  if (!title||!content) { showToast('제목과 내용을 입력해주세요'); return; }
-  await addDoc(collection(db,'diary'), {
-    uid:currentUser.uid, authorName:myProfile.name,
-    title, content, visibility, mood: selectedMood,
-    time:serverTimestamp()
+  const isPrivate = document.querySelector('input[name="diary-private"]:checked').value === 'private';
+  if (!title || !content) { showToast('제목과 내용을 입력해주세요'); return; }
+  await addDoc(collection(db, 'diary'), {
+    uid: currentUser.uid,
+    authorName: myProfile.name,
+    title, content, isPrivate,
+    time: serverTimestamp()
   });
   document.getElementById('diary-title-input').value = '';
   document.getElementById('diary-content-input').value = '';
-  selectedMood = '';
-  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('active'));
-  await addXP(10);
   switchDiaryTab('list');
-  showToast('다이어리가 저장됐어요! +10 XP 🎉');
+  showToast('다이어리가 저장됐어요!');
 };
+
 window.deleteDiary = async (id) => {
   if (!confirm('삭제할까요?')) return;
-  await deleteDoc(doc(db,'diary',id));
+  await deleteDoc(doc(db, 'diary', id));
   loadDiary();
   showToast('삭제됐어요');
 };
 
-// ===== FEED =====
-async function loadFeed() {
-  document.getElementById('feed-list').innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray)">로딩 중...</div>';
-  const myAvatar = myProfile?.avatar||'';
-  const feedMyAvatar = document.getElementById('feed-my-avatar');
-  feedMyAvatar.innerHTML = myAvatar ? `<img src="${myAvatar}">` : '🙂';
-  
-  feedTags = []; feedImgData = [];
-  document.getElementById('feed-tags-preview').innerHTML = '';
-  document.getElementById('feed-img-preview').innerHTML = '';
-  document.getElementById('feed-tag-area').style.display = 'none';
-
-  const q = query(collection(db,'feedPosts'), orderBy('time','desc'), limit(10));
-  const snap = await getDocs(q);
-  feedLastDoc = snap.docs[snap.docs.length-1];
-  document.getElementById('feed-load-more').style.display = snap.size===10 ? 'block':'none';
-
-  if (snap.empty) {
-    document.getElementById('feed-list').innerHTML = '<div class="empty"><div class="empty-icon">📸</div>아직 게시물이 없어요. 첫 게시물을 올려보세요!</div>';
-    return;
-  }
-  document.getElementById('feed-list').innerHTML = '';
-  for (const d of snap.docs) {
-    document.getElementById('feed-list').appendChild(await renderFeedPost(d.id, d.data()));
-  }
-  loadTrendingTags();
-  loadRecommendedUsers();
-}
-
-async function renderFeedPost(postId, post) {
-  const div = document.createElement('div');
-  div.className = 'feed-post';
-  div.id = 'post-'+postId;
-
-  // Check liked
-  const likeq = query(collection(db,'feedLikes'), where('postId','==',postId), where('uid','==',currentUser.uid));
-  const likeSnap = await getDocs(likeq);
-  const liked = !likeSnap.empty;
-
-  const av = post.authorAvatar ? `<img src="${post.authorAvatar}">` : '🙂';
-  const imgs = post.images||[];
-  const tags = (post.tags||[]).map(t=>`<span class="feed-tag" onclick="searchByTag('${t}')">#${esc(t)}</span>`).join('');
-
-  div.innerHTML = `
-    <div class="feed-post-header">
-      <div class="feed-avatar" onclick="visitHompy('${post.uid}')">${av}</div>
-      <div class="feed-user-info">
-        <div class="feed-user-name" onclick="visitHompy('${post.uid}')">${esc(post.authorName)} ${getBadgesHtml(post.uid, null)}</div>
-        <div class="feed-time">${timeAgo(post.time)}</div>
-      </div>
-      ${post.uid===currentUser.uid ? `<button class="delete-btn" onclick="deleteFeedPost('${postId}')">삭제</button>` : ''}
-    </div>
-    ${imgs.length ? `<img src="${imgs[0]}" class="feed-post-img" onclick="openModal('photo-modal');document.getElementById('photo-modal-img').src='${imgs[0]}'">` : ''}
-    <div class="feed-post-body">
-      <div class="feed-post-text">${esc(post.text)}</div>
-      ${tags ? `<div class="feed-tags">${tags}</div>` : ''}
-    </div>
-    <div class="feed-actions">
-      <button class="feed-action-btn${liked?' liked':''}" id="like-btn-${postId}" onclick="toggleLike('${postId}','${postId}')">
-        ${liked?'❤️':'🤍'} <span id="like-count-${postId}">${post.likes||0}</span>
-      </button>
-      <button class="feed-action-btn" onclick="toggleComments('${postId}')">💬 <span id="comment-count-${postId}">${post.commentCount||0}</span></button>
-      <button class="feed-action-btn" onclick="sharePost('${postId}')">🔗 공유</button>
-    </div>
-    <div class="feed-comments" id="comments-${postId}" style="display:none">
-      <div id="comment-list-${postId}"></div>
-      <div class="feed-comment-input">
-        <div class="feed-avatar" style="width:28px;height:28px;font-size:12px;line-height:28px">${av}</div>
-        <input placeholder="댓글 달기..." onkeydown="if(event.key==='Enter')addComment('${postId}',this)">
-        <button class="btn btn-primary btn-sm" onclick="addComment('${postId}',this.previousElementSibling)">작성</button>
-      </div>
-    </div>
-  `;
-  return div;
-}
-
-window.toggleLike = async (postId, elId) => {
-  const likeq = query(collection(db,'feedLikes'), where('postId','==',postId), where('uid','==',currentUser.uid));
-  const snap = await getDocs(likeq);
-  const btn = document.getElementById('like-btn-'+postId);
-  const countEl = document.getElementById('like-count-'+postId);
-  const ref = doc(db,'feedPosts',postId);
-  if (snap.empty) {
-    await addDoc(collection(db,'feedLikes'), {postId, uid:currentUser.uid, time:serverTimestamp()});
-    await updateDoc(ref, {likes: increment(1)});
-    btn.classList.add('liked');
-    btn.innerHTML = `❤️ <span id="like-count-${postId}">${parseInt(countEl.textContent)+1}</span>`;
-  } else {
-    await deleteDoc(snap.docs[0].ref);
-    await updateDoc(ref, {likes: increment(-1)});
-    btn.classList.remove('liked');
-    btn.innerHTML = `🤍 <span id="like-count-${postId}">${Math.max(0,parseInt(countEl.textContent)-1)}</span>`;
-  }
-};
-
-window.toggleComments = async (postId) => {
-  const el = document.getElementById('comments-'+postId);
-  el.style.display = el.style.display==='none' ? 'block' : 'none';
-  if (el.style.display==='block') loadComments(postId);
-};
-
-async function loadComments(postId) {
-  const q = query(collection(db,'feedComments'), where('postId','==',postId), orderBy('time','asc'));
-  const snap = await getDocs(q);
-  const el = document.getElementById('comment-list-'+postId);
-  if (!el) return;
-  el.innerHTML = snap.docs.map(d => {
-    const c = d.data();
-    const av = c.authorAvatar ? `<img src="${c.authorAvatar}">` : '😊';
-    return `<div class="feed-comment">
-      <div class="feed-comment-avatar">${av}</div>
-      <div class="feed-comment-body">
-        <div class="feed-comment-name">${esc(c.authorName)}</div>
-        <div>${esc(c.text)}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-window.addComment = async (postId, input) => {
-  const text = input.value.trim();
-  if (!text) return;
-  await addDoc(collection(db,'feedComments'), {
-    postId, text, uid:currentUser.uid,
-    authorName:myProfile.name, authorAvatar:myProfile.avatar||'', time:serverTimestamp()
-  });
-  await updateDoc(doc(db,'feedPosts',postId), {commentCount:increment(1)});
-  input.value = '';
-  loadComments(postId);
-  await addXP(2);
-};
-
-window.deleteFeedPost = async (postId) => {
-  if (!confirm('게시물을 삭제할까요?')) return;
-  await deleteDoc(doc(db,'feedPosts',postId));
-  document.getElementById('post-'+postId)?.remove();
-  showToast('삭제됐어요');
-};
-
-// Feed write
-window.previewFeedImages = (e) => {
-  feedImgData = [];
-  const files = Array.from(e.target.files);
-  const prev = document.getElementById('feed-img-preview');
-  prev.innerHTML = '';
-  files.slice(0,4).forEach(file => {
-    if (file.size > 3*1024*1024) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      feedImgData.push(ev.target.result);
-      prev.innerHTML += `<img src="${ev.target.result}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:2px solid #e0e7ff">`;
-    };
-    reader.readAsDataURL(file);
-  });
-};
-
-window.toggleFeedTagArea = () => {
-  const el = document.getElementById('feed-tag-area');
-  el.style.display = el.style.display==='none'?'block':'none';
-};
-
-window.addFeedTag = (e) => {
-  if (e.key !== 'Enter') return;
-  let tag = e.target.value.trim().replace(/^#/,'');
-  if (!tag) return;
-  feedTags.push(tag);
-  const prev = document.getElementById('feed-tags-preview');
-  prev.innerHTML += `<span class="tag-chip">#${esc(tag)}<button onclick="removeFeedTag('${tag}',this)">×</button></span>`;
-  e.target.value = '';
-};
-
-window.removeFeedTag = (tag, btn) => {
-  feedTags = feedTags.filter(t=>t!==tag);
-  btn.parentElement.remove();
-};
-
-window.submitFeedPost = async () => {
-  const text = document.getElementById('feed-post-text').value.trim();
-  if (!text && feedImgData.length===0) { showToast('내용이나 사진을 추가해주세요'); return; }
-  await addDoc(collection(db,'feedPosts'), {
-    uid:currentUser.uid, authorName:myProfile.name,
-    authorAvatar:myProfile.avatar||'', text,
-    images:feedImgData.slice(0,4), tags:feedTags,
-    likes:0, commentCount:0, time:serverTimestamp()
-  });
-  document.getElementById('feed-post-text').value = '';
-  feedTags = []; feedImgData = [];
-  document.getElementById('feed-tags-preview').innerHTML = '';
-  document.getElementById('feed-img-preview').innerHTML = '';
-  await addXP(15);
-  checkAchievements();
-  loadFeed();
-  showToast('게시물을 올렸어요! +15 XP 🎉');
-};
-
-window.loadMoreFeed = async () => {
-  if (!feedLastDoc) return;
-  const q = query(collection(db,'feedPosts'), orderBy('time','desc'), limit(10));
-  const snap = await getDocs(q);
-  feedLastDoc = snap.docs[snap.docs.length-1];
-  document.getElementById('feed-load-more').style.display = snap.size===10?'block':'none';
-  for (const d of snap.docs) {
-    if (!document.getElementById('post-'+d.id)) {
-      document.getElementById('feed-list').appendChild(await renderFeedPost(d.id, d.data()));
-    }
-  }
-};
-
-window.searchByTag = (tag) => {
-  showPage('feed');
-  showToast(`#${tag} 태그 검색`);
-};
-
-window.sharePost = (postId) => {
-  navigator.clipboard?.writeText(location.href + '#post=' + postId);
-  showToast('링크가 복사됐어요!');
-};
-
-async function loadTrendingTags() {
-  const q = query(collection(db,'feedPosts'), orderBy('time','desc'), limit(20));
-  const snap = await getDocs(q);
-  const tagCount = {};
-  snap.docs.forEach(d => (d.data().tags||[]).forEach(t => { tagCount[t]=(tagCount[t]||0)+1; }));
-  const sorted = Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  document.getElementById('trending-tags').innerHTML = sorted.length
-    ? sorted.map(([t,c])=>`<div style="padding:6px 0;border-bottom:1px solid #f0f4ff;font-size:13px;cursor:pointer;color:var(--blue)" onclick="searchByTag('${esc(t)}')">#${esc(t)} <span style="color:var(--gray);float:right">${c}</span></div>`).join('')
-    : '<div style="color:var(--gray);font-size:13px">태그가 없어요</div>';
-}
-
-async function loadRecommendedUsers() {
-  const q = query(collection(db,'users'), limit(5));
-  const snap = await getDocs(q);
-  const el = document.getElementById('recommended-users');
-  el.innerHTML = snap.docs.filter(d=>d.id!==currentUser.uid).slice(0,3).map(d => {
-    const p = d.data();
-    const av = p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '🙂';
-    const isChin = (myProfile.chins||[]).includes(d.id);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f4ff">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--blue);font-size:16px;text-align:center;line-height:36px;overflow:hidden;cursor:pointer" onclick="visitHompy('${d.id}')">${av}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</div>
-      </div>
-      ${isChin ? '<span style="font-size:11px;color:var(--green)">친구</span>':`<button class="btn btn-primary" style="font-size:11px;padding:3px 8px" onclick="sendChinRequest('${d.id}','${esc(p.name)}')">신청</button>`}
-    </div>`;
-  }).join('');
-}
-
-async function loadHompyFeedPreview(uid) {
-  const q = query(collection(db,'feedPosts'), where('uid','==',uid), orderBy('time','desc'), limit(6));
-  const snap = await getDocs(q);
-  const el = document.getElementById('hompy-feed-preview');
-  if (snap.empty) { el.innerHTML = '<div style="grid-column:1/-1;color:var(--gray);font-size:13px;text-align:center;padding:16px">게시물이 없어요</div>'; return; }
-  el.innerHTML = snap.docs.map(d => {
-    const p = d.data();
-    const img = (p.images||[])[0];
-    return `<div style="aspect-ratio:1;border-radius:8px;background:${img?'#000':'#eff6ff'};overflow:hidden;cursor:pointer;border:1.5px solid #e0e7ff" onclick="showPage('feed')">
-      ${img ? `<img src="${img}" style="width:100%;height:100%;object-fit:cover;opacity:.9">` : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gray);padding:6px;text-align:center">${esc(p.text).substring(0,30)}</div>`}
-    </div>`;
-  }).join('');
-}
-
 // ===== PHOTO =====
 async function loadPhotos() {
-  const q = query(collection(db,'photos'), where('uid','==',currentUser.uid), orderBy('time','desc'));
-  const snap = await getDocs(q);
-  const grid = document.getElementById('photo-grid');
-  document.getElementById('photo-count').textContent = snap.size+'장';
-  if (snap.empty) { grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📷</div>사진을 추가해보세요!</div>'; return; }
-  grid.innerHTML = snap.docs.map(d => {
-    const p = d.data();
-    return `<div class="photo-item"><img src="${p.url}" onclick="openPhotoModal('${p.url}')"><button class="photo-delete" onclick="deletePhoto('${d.id}')">✕</button></div>`;
-  }).join('');
+  if (!currentUser) return;
+  try {
+    const q = query(collection(db, 'photos'), where('uid', '==', currentUser.uid));
+    const snap = await getDocs(q);
+    const grid = document.getElementById('photo-grid');
+
+    const sorted = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      });
+
+    document.getElementById('photo-count').textContent = sorted.length + '장';
+
+    if (!sorted.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">📷</div>사진을 추가해보세요!</div>';
+      return;
+    }
+    grid.innerHTML = sorted.map(p =>
+      `<div class="photo-item">
+        <img src="${p.url}" onclick="openPhotoModal('${p.url}')">
+        <button class="photo-delete" onclick="deletePhoto('${p.id}')">✕</button>
+      </div>`
+    ).join('');
+  } catch(e) { console.error('loadPhotos error:', e); }
 }
 
 window.uploadPhotos = async (e) => {
@@ -1612,27 +1667,32 @@ window.uploadPhotos = async (e) => {
   if (!files.length) return;
   showToast('업로드 중...');
   for (const file of files) {
-    if (file.size > 3*1024*1024) { showToast('3MB 이하 이미지만 가능해요'); continue; }
+    if (file.size > 3 * 1024 * 1024) { showToast('3MB 이하 이미지만 가능해요'); continue; }
     const reader = new FileReader();
     await new Promise(res => {
-      reader.onload = async ev => {
-        await addDoc(collection(db,'photos'), { uid:currentUser.uid, url:ev.target.result, time:serverTimestamp() });
+      reader.onload = async (ev) => {
+        await addDoc(collection(db, 'photos'), {
+          uid: currentUser.uid,
+          url: ev.target.result,
+          time: serverTimestamp()
+        });
         res();
       };
       reader.readAsDataURL(file);
     });
   }
-  await addXP(5);
   loadPhotos();
-  showToast('사진이 추가됐어요! +5 XP');
+  showToast('사진이 추가됐어요!');
   e.target.value = '';
 };
 
 window.deletePhoto = async (id) => {
   if (!confirm('삭제할까요?')) return;
-  await deleteDoc(doc(db,'photos',id));
+  await deleteDoc(doc(db, 'photos', id));
   loadPhotos();
+  showToast('삭제됐어요');
 };
+
 window.openPhotoModal = (url) => {
   document.getElementById('photo-modal-img').src = url;
   openModal('photo-modal');
@@ -1641,192 +1701,195 @@ window.openPhotoModal = (url) => {
 // ===== CHIN =====
 window.switchChinTab = (tab) => {
   ['list','requests','sent','search'].forEach(t => {
-    document.getElementById('chin-'+t+'-tab').style.display = t===tab?'block':'none';
+    document.getElementById('chin-'+t+'-tab').style.display = t === tab ? 'block' : 'none';
   });
   document.querySelectorAll('#chin-page .tab-btn').forEach((b,i) => {
-    b.classList.toggle('active', ['list','requests','sent','search'][i]===tab);
+    b.classList.toggle('active', ['list','requests','sent','search'][i] === tab);
   });
-  if (tab==='list') loadChinList();
-  if (tab==='requests') loadChinRequests();
-  if (tab==='sent') loadChinSent();
+  if (tab === 'list') loadChinList();
+  if (tab === 'requests') loadChinRequests();
+  if (tab === 'sent') loadChinSent();
 };
-async function loadChin() { loadChinList(); loadChinRequests(); }
+
+async function loadChin() {
+  loadChinList();
+  loadChinRequests();
+}
 
 async function loadChinList() {
-  const chins = myProfile.chins||[];
+  const chins = myProfile.chins || [];
   const el = document.getElementById('chin-list');
-  if (!chins.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">👥</div>아직 큐브친이 없어요</div>'; return; }
-  const profiles = await Promise.all(chins.map(uid=>loadProfile(uid)));
+  if (!chins.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">👥</div>아직 큐브친이 없어요</div>';
+    return;
+  }
+  const profiles = await Promise.all(chins.map(uid => loadProfile(uid)));
   el.innerHTML = profiles.filter(Boolean).map(p => {
-    const av = p.avatar?`<img src="${p.avatar}">`:'😊';
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
     return `<div class="chin-card" onclick="visitHompy('${p.uid}')">
-      <div class="chin-avatar">${av}</div>
-      <div style="flex:1"><div class="chin-name">${esc(p.name)} ${getBadgesHtml(p.uid,p)}</div><div class="chin-msg">${esc(p.status||'')}</div></div>
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1">
+        <div class="chin-name">${escapeHtml(p.name)}</div>
+        <div class="chin-msg">${escapeHtml(p.status || '')}</div>
+      </div>
       <button class="delete-btn" onclick="event.stopPropagation();removeChin('${p.uid}')">삭제</button>
-      <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openChatWith('${p.uid}','${esc(p.name)}')">💬</button>
     </div>`;
   }).join('');
 }
 
 async function loadChinRequests() {
-  const q = query(collection(db,'chinRequests'), where('toUid','==',currentUser.uid), where('status','==','pending'));
-  const snap = await getDocs(q);
-  const el = document.getElementById('chin-requests-list');
-  const badge = document.getElementById('req-count-badge');
-  const menuBadge = document.getElementById('chin-req-badge');
-  badge.textContent = snap.size||'';
-  menuBadge.textContent = snap.size;
-  menuBadge.style.display = snap.size>0?'inline':'none';
-  if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">✉️</div>받은 신청이 없어요</div>'; return; }
-  const profiles = await Promise.all(snap.docs.map(d=>loadProfile(d.data().fromUid)));
-  el.innerHTML = snap.docs.map((d,i) => {
-    const p = profiles[i]; if (!p) return '';
-    const av = p.avatar?`<img src="${p.avatar}">`:'😊';
-    return `<div class="chin-card">
-      <div class="chin-avatar">${av}</div>
-      <div style="flex:1"><div class="chin-name">${esc(p.name)}</div><div class="chin-msg">${esc(p.status||'')}</div></div>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-primary btn-sm" onclick="acceptChin('${d.id}','${p.uid}')">수락</button>
-        <button class="btn btn-secondary btn-sm" onclick="rejectChin('${d.id}')">거절</button>
-      </div>
-    </div>`;
-  }).join('');
+  try {
+    const q = query(collection(db, 'chinRequests'), where('toUid', '==', currentUser.uid), where('status', '==', 'pending'));
+    const snap = await getDocs(q);
+    const el = document.getElementById('chin-requests-list');
+    const badge = document.getElementById('req-count-badge');
+    badge.textContent = snap.size || '';
+
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">✉️</div>받은 큐브친 신청이 없어요</div>';
+      return;
+    }
+    const profiles = await Promise.all(snap.docs.map(d => loadProfile(d.data().fromUid)));
+    el.innerHTML = snap.docs.map((d, i) => {
+      const p = profiles[i];
+      if (!p) return '';
+      const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+      return `<div class="chin-card">
+        <div class="chin-avatar">${avatar}</div>
+        <div style="flex:1">
+          <div class="chin-name">${escapeHtml(p.name)}</div>
+          <div class="chin-msg">${escapeHtml(p.status || '')}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn-primary" style="font-size:12px;padding:6px 10px" onclick="acceptChin('${d.id}','${p.uid}')">수락</button>
+          <button class="btn-secondary" style="font-size:12px;padding:6px 10px" onclick="rejectChin('${d.id}')">거절</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('loadChinRequests error:', e); }
 }
 
 async function loadChinSent() {
-  const q = query(collection(db,'chinRequests'), where('fromUid','==',currentUser.uid), where('status','==','pending'));
-  const snap = await getDocs(q);
-  const el = document.getElementById('chin-sent-list');
-  if (snap.empty) { el.innerHTML = '<div class="empty"><div class="empty-icon">📤</div>보낸 신청이 없어요</div>'; return; }
-  const profiles = await Promise.all(snap.docs.map(d=>loadProfile(d.data().toUid)));
-  el.innerHTML = snap.docs.map((d,i) => {
-    const p = profiles[i]; if (!p) return '';
-    return `<div class="chin-card">
-      <div class="chin-avatar">${p.avatar?`<img src="${p.avatar}">`:'😊'}</div>
-      <div style="flex:1"><div class="chin-name">${esc(p.name)}</div><div class="chin-msg">신청 대기 중...</div></div>
-      <button class="delete-btn" onclick="cancelChinRequest('${d.id}')">취소</button>
-    </div>`;
-  }).join('');
+  try {
+    const q = query(collection(db, 'chinRequests'), where('fromUid', '==', currentUser.uid), where('status', '==', 'pending'));
+    const snap = await getDocs(q);
+    const el = document.getElementById('chin-sent-list');
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">📤</div>보낸 신청이 없어요</div>';
+      return;
+    }
+    const profiles = await Promise.all(snap.docs.map(d => loadProfile(d.data().toUid)));
+    el.innerHTML = snap.docs.map((d, i) => {
+      const p = profiles[i];
+      if (!p) return '';
+      return `<div class="chin-card">
+        <div class="chin-avatar">${p.avatar ? `<img src="${p.avatar}">` : '😊'}</div>
+        <div style="flex:1"><div class="chin-name">${escapeHtml(p.name)}</div><div class="chin-msg">신청 대기 중...</div></div>
+        <button class="delete-btn" onclick="cancelChinRequest('${d.id}')">취소</button>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('loadChinSent error:', e); }
 }
 
 window.searchChinUser = async () => {
   const name = document.getElementById('chin-search-input').value.trim();
   if (!name) return;
-  const q = query(collection(db,'users'), where('name','==',name));
+  const q = query(collection(db, 'users'), where('name', '==', name));
   const snap = await getDocs(q);
   const el = document.getElementById('chin-search-results');
-  if (snap.empty) { el.innerHTML='<div class="empty">찾을 수 없어요</div>'; return; }
-  const results = snap.docs.filter(d=>d.id!==currentUser.uid);
-  if (!results.length) { el.innerHTML='<div class="empty">자기 자신은 추가할 수 없어요</div>'; return; }
+  if (snap.empty) { el.innerHTML = '<div class="empty-state">찾을 수 없어요</div>'; return; }
+  const results = snap.docs.filter(d => d.id !== currentUser.uid);
+  if (!results.length) { el.innerHTML = '<div class="empty-state">자기 자신은 추가할 수 없어요</div>'; return; }
   el.innerHTML = results.map(d => {
     const p = d.data();
-    const isChin = (myProfile.chins||[]).includes(p.uid);
-    return `<div class="chin-card" onclick="visitHompy('${p.uid}')">
-      <div class="chin-avatar">${p.avatar?`<img src="${p.avatar}">`:'😊'}</div>
-      <div style="flex:1"><div class="chin-name">${esc(p.name)} ${getBadgesHtml(d.id,p)}</div><div class="chin-msg">${esc(p.status||'')}</div></div>
-      ${isChin ? '<span style="color:var(--green);font-size:13px">✓ 큐브친</span>' : `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();sendChinRequest('${p.uid}','${esc(p.name)}')">신청</button>`}
+    const isChin = (myProfile.chins || []).includes(p.uid);
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    return `<div class="chin-card">
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1"><div class="chin-name">${escapeHtml(p.name)}</div><div class="chin-msg">${escapeHtml(p.status||'')}</div></div>
+      ${isChin
+        ? '<span class="chin-badge">큐브친 ✓</span>'
+        : `<button class="btn-primary" style="font-size:12px;padding:6px 10px" onclick="sendChinRequest('${p.uid}','${escapeHtml(p.name)}')">신청</button>`
+      }
     </div>`;
   }).join('');
 };
 
 window.sendChinRequest = async (toUid, toName) => {
-  if ((myProfile.chins||[]).includes(toUid)) { showToast('이미 큐브친이에요'); return; }
-  const q = query(collection(db,'chinRequests'), where('fromUid','==',currentUser.uid), where('toUid','==',toUid), where('status','==','pending'));
-  if (!(await getDocs(q)).empty) { showToast('이미 신청했어요'); return; }
-  await addDoc(collection(db,'chinRequests'), { fromUid:currentUser.uid, fromName:myProfile.name, toUid, status:'pending', time:serverTimestamp() });
-  await addDoc(collection(db,'notifications'), { toUid, text:`${myProfile.name}님이 큐브친 신청을 보냈어요`, read:false, time:serverTimestamp() });
-  showToast(`${toName}님께 신청했어요!`);
+  const q = query(collection(db, 'chinRequests'), where('fromUid', '==', currentUser.uid), where('toUid', '==', toUid), where('status', '==', 'pending'));
+  const snap = await getDocs(q);
+  if (!snap.empty) { showToast('이미 신청했어요'); return; }
+  await addDoc(collection(db, 'chinRequests'), {
+    fromUid: currentUser.uid,
+    fromName: myProfile.name,
+    toUid,
+    status: 'pending',
+    time: serverTimestamp()
+  });
+  await addDoc(collection(db, 'notifications'), {
+    toUid,
+    text: `${myProfile.name}님이 큐브친 신청을 보냈어요`,
+    read: false,
+    time: serverTimestamp()
+  });
+  showToast(`${toName}님께 큐브친 신청을 보냈어요!`);
 };
+
 window.acceptChin = async (reqId, fromUid) => {
-  await updateDoc(doc(db,'chinRequests',reqId), {status:'accepted'});
-  await updateDoc(doc(db,'users',currentUser.uid), {chins:arrayUnion(fromUid)});
-  await updateDoc(doc(db,'users',fromUid), {chins:arrayUnion(currentUser.uid)});
-  myProfile.chins = [...(myProfile.chins||[]), fromUid];
-  await addDoc(collection(db,'notifications'), { toUid:fromUid, text:`${myProfile.name}님이 큐브친 신청을 수락했어요!`, read:false, time:serverTimestamp() });
-  await addXP(20);
-  loadChin(); showToast('큐브친이 됐어요! +20 XP 🎉');
+  await updateDoc(doc(db, 'chinRequests', reqId), { status: 'accepted' });
+  await updateDoc(doc(db, 'users', currentUser.uid), { chins: arrayUnion(fromUid) });
+  await updateDoc(doc(db, 'users', fromUid), { chins: arrayUnion(currentUser.uid) });
+  myProfile.chins = [...(myProfile.chins || []), fromUid];
+  await addDoc(collection(db, 'notifications'), {
+    toUid: fromUid,
+    text: `${myProfile.name}님이 큐브친 신청을 수락했어요!`,
+    read: false,
+    time: serverTimestamp()
+  });
+  loadChin();
+  showToast('큐브친이 됐어요! 🎉');
 };
+
 window.rejectChin = async (reqId) => {
-  await updateDoc(doc(db,'chinRequests',reqId), {status:'rejected'});
-  loadChinRequests(); showToast('거절했어요');
+  await updateDoc(doc(db, 'chinRequests', reqId), { status: 'rejected' });
+  loadChinRequests();
+  showToast('거절했어요');
 };
+
 window.cancelChinRequest = async (reqId) => {
-  await deleteDoc(doc(db,'chinRequests',reqId));
-  loadChinSent(); showToast('취소됐어요');
+  await deleteDoc(doc(db, 'chinRequests', reqId));
+  loadChinSent();
+  showToast('취소됐어요');
 };
+
 window.removeChin = async (uid) => {
   if (!confirm('큐브친을 삭제할까요?')) return;
-  await updateDoc(doc(db,'users',currentUser.uid), {chins:arrayRemove(uid)});
-  await updateDoc(doc(db,'users',uid), {chins:arrayRemove(currentUser.uid)});
-  myProfile.chins = (myProfile.chins||[]).filter(c=>c!==uid);
-  loadChinList(); showToast('큐브친을 삭제했어요');
-};
-
-// ===== CHAT =====
-async function loadChatChinList() {
-  const chins = myProfile.chins||[];
-  const el = document.getElementById('chat-chin-list');
-  if (!chins.length) { el.innerHTML='<div style="color:var(--gray);font-size:13px">큐브친이 없어요</div>'; return; }
-  const profiles = await Promise.all(chins.map(uid=>loadProfile(uid)));
-  el.innerHTML = profiles.filter(Boolean).map(p =>
-    `<div style="display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;cursor:pointer;transition:.2s" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background=''" onclick="openChatWith('${p.uid}','${esc(p.name)}')">
-      <div style="width:36px;height:36px;border-radius:50%;background:var(--blue);font-size:16px;text-align:center;line-height:36px;overflow:hidden">${p.avatar?`<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover">`:'😊'}</div>
-      <span style="font-size:13px;font-weight:700">${esc(p.name)}</span>
-    </div>`
-  ).join('');
-}
-
-window.openChatWith = async (uid, name) => {
-  if (unsubChat) unsubChat();
-  currentChatUid = uid;
-  showPage('chat');
-  document.getElementById('chat-header').textContent = name + '님과의 채팅';
-  document.getElementById('chat-input-area').style.display = 'flex';
-  const chatId = [currentUser.uid, uid].sort().join('_');
-  const q = query(collection(db,'chats',chatId,'messages'), orderBy('time','asc'));
-  unsubChat = onSnapshot(q, snap => {
-    const el = document.getElementById('chat-messages');
-    el.innerHTML = snap.docs.map(d => {
-      const m = d.data();
-      const isMe = m.uid===currentUser.uid;
-      return `<div class="msg-item${isMe?' mine':''}">
-        <div class="msg-bubble">${esc(m.text)}</div>
-        <div class="msg-time">${timeAgo(m.time)}</div>
-      </div>`;
-    }).join('');
-    el.scrollTop = el.scrollHeight;
-  });
-};
-
-window.sendChat = async () => {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text || !currentChatUid) return;
-  const chatId = [currentUser.uid, currentChatUid].sort().join('_');
-  await addDoc(collection(db,'chats',chatId,'messages'), {
-    uid:currentUser.uid, text, time:serverTimestamp()
-  });
-  await addDoc(collection(db,'notifications'), {
-    toUid:currentChatUid, text:`${myProfile.name}님이 메시지를 보냈어요`, read:false, time:serverTimestamp()
-  });
-  input.value = '';
+  await updateDoc(doc(db, 'users', currentUser.uid), { chins: arrayRemove(uid) });
+  await updateDoc(doc(db, 'users', uid), { chins: arrayRemove(currentUser.uid) });
+  myProfile.chins = (myProfile.chins || []).filter(c => c !== uid);
+  loadChinList();
+  showToast('큐브친을 삭제했어요');
 };
 
 // ===== SURF =====
 async function loadSurf() {
-  const chins = myProfile.chins||[];
+  const chins = myProfile.chins || [];
   const el = document.getElementById('surf-list');
-  if (!chins.length) { el.innerHTML='<div class="empty"><div class="empty-icon">🌊</div>큐브친을 추가하면 파도타기를 할 수 있어요!</div>'; return; }
-  const profiles = await Promise.all(chins.map(uid=>loadProfile(uid)));
+  if (!chins.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🌊</div>큐브친을 추가하면 파도타기를 할 수 있어요!</div>';
+    return;
+  }
+  const profiles = await Promise.all(chins.map(uid => loadProfile(uid)));
   el.innerHTML = profiles.filter(Boolean).map(p => {
-    const skin = SKINS.find(s=>s.id===(p.skin||'blue'))||SKINS[0];
-    return `<div class="chin-card" style="border-left:4px solid ${skin.color.startsWith('linear')?'#8b5cf6':skin.color}" onclick="visitHompy('${p.uid}')">
-      <div class="chin-avatar">${p.avatar?`<img src="${p.avatar}">`:'😊'}</div>
-      <div style="flex:1"><div class="chin-name">${esc(p.name)} ${getBadgesHtml(p.uid,p)}</div><div class="chin-msg">${esc(p.status||'한마디 없음')}</div></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-        <span style="background:${skin.color.startsWith('linear')?'#8b5cf6':skin.color};color:white;font-size:11px;padding:3px 8px;border-radius:10px">방문 →</span>
-        <span style="font-size:11px;color:var(--gray)">${p.mood||''} ${p.mood?'·':''} 방문 ${p.visits||0}</span>
+    const avatar = p.avatar ? `<img src="${p.avatar}">` : '😊';
+    const skin = SKINS.find(s => s.id === (p.skin || 'blue')) || SKINS[0];
+    return `<div class="chin-card" style="border-left:4px solid ${skin.color}" onclick="visitHompy('${p.uid}')">
+      <div class="chin-avatar">${avatar}</div>
+      <div style="flex:1">
+        <div class="chin-name">${escapeHtml(p.name)}</div>
+        <div class="chin-msg">${escapeHtml(p.status || '한마디 없음')}</div>
       </div>
+      <span class="chin-badge" style="background:${skin.color}">홈피 방문 →</span>
     </div>`;
   }).join('');
 }
@@ -1836,277 +1899,93 @@ window.visitHompy = async (uid) => {
   await loadHompy(uid);
 };
 
-// ===== RANKING =====
-async function loadRanking() {
-  const snap = await getDocs(query(collection(db,'users'), limit(20)));
-  const users = snap.docs.map(d=>d.data());
-  const rankEl = (id, arr) => {
-    document.getElementById(id).innerHTML = arr.map((u,i) => {
-      const numClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
-      const av = u.avatar?`<img src="${u.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:'😊';
-      return `<div class="rank-item">
-        <div class="rank-num ${numClass}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--blue);overflow:hidden;font-size:16px;text-align:center;line-height:36px;cursor:pointer" onclick="visitHompy('${u.uid}')">${av}</div>
-        <div style="flex:1"><div style="font-weight:700;font-size:13px">${esc(u.name)} ${getBadgesHtml(u.uid,u)}</div></div>
-        <div style="font-weight:700;color:var(--blue);font-size:14px">${arr[i]._val}</div>
-      </div>`;
-    }).join('');
-  };
-  const vUsers = users.map(u=>({...u,_val:u.visits||0})).sort((a,b)=>b._val-a._val).slice(0,5);
-  const cUsers = users.map(u=>({...u,_val:u.coins||0})).sort((a,b)=>b._val-a._val).slice(0,5);
-  const sUsers = users.map(u=>({...u,_val:u.attendStreak||0})).sort((a,b)=>b._val-a._val).slice(0,5);
-  rankEl('rank-visits',vUsers);
-  rankEl('rank-coins',cUsers);
-  rankEl('rank-streak',sUsers);
-}
-
-// ===== ATTEND =====
-async function loadAttend() {
-  const fp = await loadProfile(currentUser.uid);
-  myProfile = {...myProfile,...fp};
-  const today = new Date().toISOString().slice(0,10);
-  const done = myProfile.lastAttend===today;
-  const btn = document.getElementById('attend-btn');
-  document.getElementById('attend-streak').textContent = `🔥 연속 출석 ${myProfile.attendStreak||0}일`;
-  if (done) {
-    btn.disabled=true; btn.style.opacity='.5'; btn.textContent='✅ 오늘 출석 완료!';
-    document.getElementById('attend-msg').textContent='내일 또 만나요 😊';
-  } else {
-    btn.disabled=false; btn.style.opacity='1'; btn.textContent='출석 도장 찍기 🔵';
-    document.getElementById('attend-msg').textContent='';
-  }
-  // Calendar
-  const attendDates = myProfile.attendDates||[];
-  const now = new Date(); const yr=now.getFullYear(); const mo=now.getMonth();
-  const dim = new Date(yr,mo+1,0).getDate(); const fd = new Date(yr,mo,1).getDay();
-  let cal = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">`;
-  ['일','월','화','수','목','금','토'].forEach(d => cal+=`<div style="font-size:11px;font-weight:700;color:var(--gray);padding:4px">${d}</div>`);
-  for (let i=0;i<fd;i++) cal+='<div></div>';
-  for (let d=1;d<=dim;d++) {
-    const ds = `${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isDone = attendDates.includes(ds); const isToday = ds===today;
-    cal += `<div class="attend-day" style="background:${isDone?'var(--blue)':isToday?'#e0e7ff':'#f8faff'};color:${isDone?'white':'var(--dark)'};border:${isToday?'2px solid var(--blue)':'2px solid transparent'};font-weight:${isToday?'700':'400'}">${d}${isDone?' ✓':''}</div>`;
-  }
-  cal+='</div>';
-  document.getElementById('attend-calendar').innerHTML = cal;
-}
-
-window.doAttend = async () => {
-  const today = new Date().toISOString().slice(0,10);
-  const yesterday = new Date(Date.now()-86400000).toISOString().slice(0,10);
-  const streak = myProfile.lastAttend===yesterday ? (myProfile.attendStreak||0)+1 : 1;
-  await updateDoc(doc(db,'users',currentUser.uid), {
-    lastAttend:today, attendStreak:streak, attendDates:arrayUnion(today),
-    coins:increment(10), xp:increment(20)
-  });
-  myProfile.lastAttend=today; myProfile.attendStreak=streak;
-  myProfile.coins=(myProfile.coins||0)+10; myProfile.xp=(myProfile.xp||0)+20;
-  renderMiniProfile();
-  checkAchievements();
-  loadAttend();
-  showToast(`출석 완료! 🎉 코인 +10, XP +20! (${streak}일 연속)`);
+// ===== SEARCH =====
+window.searchUser = async () => {
+  const name = document.getElementById('topbar-search').value.trim();
+  if (!name) return;
+  const q = query(collection(db, 'users'), where('name', '==', name));
+  const snap = await getDocs(q);
+  if (snap.empty) { showToast('찾을 수 없어요'); return; }
+  const uid = snap.docs[0].id;
+  if (uid === currentUser.uid) { showPage('hompy'); return; }
+  visitHompy(uid);
+  document.getElementById('topbar-search').value = '';
 };
 
-// ===== QUIZ =====
-function loadQuiz() {
-  document.getElementById('quiz-intro').style.display='block';
-  document.getElementById('quiz-main').style.display='none';
-  document.getElementById('quiz-done').style.display='none';
-}
-window.startQuiz = () => {
-  quizData = [...QUIZ_POOL].sort(()=>Math.random()-.5).slice(0,5);
-  currentQuizIdx=0; quizScore=0; quizAnswered=0;
-  document.getElementById('quiz-intro').style.display='none';
-  document.getElementById('quiz-main').style.display='block';
-  showQuizQuestion();
-};
-function showQuizQuestion() {
-  if (currentQuizIdx>=quizData.length) { finishQuiz(); return; }
-  const q = quizData[currentQuizIdx];
-  document.getElementById('quiz-progress').textContent = `${currentQuizIdx+1} / ${quizData.length}`;
-  document.getElementById('quiz-q').textContent = q.q;
-  document.getElementById('quiz-result').style.display='none';
-  document.getElementById('quiz-next-btn').style.display='none';
-  document.getElementById('quiz-opts').innerHTML = q.opts.map((o,i) =>
-    `<div class="quiz-opt" onclick="answerQuiz(${i})">${o}</div>`
-  ).join('');
-}
-window.answerQuiz = (idx) => {
-  const q = quizData[currentQuizIdx];
-  const opts = document.querySelectorAll('.quiz-opt');
-  opts.forEach(o=>o.style.pointerEvents='none');
-  const correct = idx===q.ans;
-  opts[idx].classList.add(correct?'correct':'wrong');
-  opts[q.ans].classList.add('correct');
-  const res = document.getElementById('quiz-result');
-  res.style.display='block';
-  res.innerHTML = correct ? '🎉 정답입니다!' : `❌ 틀렸어요! 정답: ${q.opts[q.ans]}`;
-  res.style.color = correct ? '#16a34a' : 'var(--red)';
-  if (correct) quizScore++;
-  quizAnswered++;
-  document.getElementById('quiz-next-btn').style.display='inline-block';
-};
-window.nextQuiz = () => { currentQuizIdx++; showQuizQuestion(); };
-function finishQuiz() {
-  document.getElementById('quiz-main').style.display='none';
-  document.getElementById('quiz-done').style.display='block';
-  const earned = quizScore * 15;
-  document.getElementById('quiz-final-msg').textContent = `${quizData.length}문제 중 ${quizScore}개 정답!`;
-  document.getElementById('quiz-coin-earn').textContent = `🟡 큐브코인 ${earned}개 획득!`;
-  if (earned > 0) {
-    updateDoc(doc(db,'users',currentUser.uid), {coins:increment(earned), xp:increment(quizScore*10)});
-    myProfile.coins=(myProfile.coins||0)+earned;
-    myProfile.xp=(myProfile.xp||0)+quizScore*10;
-    renderMiniProfile();
+// ===== SKIN =====
+window.applySkin = async (skinId) => {
+  const skin = SKINS.find(s => s.id === skinId);
+  if (!skin) return;
+  if (!(myProfile.ownedSkins || ['blue']).includes(skinId)) {
+    showToast('먼저 샵에서 구매해주세요');
+    return;
   }
-}
-window.resetQuiz = () => { loadQuiz(); };
-
-// ===== MUSIC PLAYER =====
-function loadMusic() {
-  playlistData = myProfile.playlist || [];
-  renderPlaylist();
-}
-window.addToPlaylist = async () => {
-  const url = document.getElementById('music-url-input').value.trim();
-  const title = document.getElementById('music-title-input').value.trim() || '제목 없음';
-  if (!url) return;
-  const yid = extractYoutubeId(url);
-  if (!yid) { showToast('유튜브 URL을 입력해주세요'); return; }
-  const track = {url, title, yid};
-  playlistData.push(track);
-  await updateDoc(doc(db,'users',currentUser.uid), {playlist:playlistData});
-  myProfile.playlist = playlistData;
-  document.getElementById('music-url-input').value='';
-  document.getElementById('music-title-input').value='';
-  renderPlaylist();
-  showToast('플레이리스트에 추가됐어요!');
-};
-function renderPlaylist() {
-  const el = document.getElementById('playlist');
-  if (!playlistData.length) { el.innerHTML='<div class="empty"><div class="empty-icon">🎵</div>유튜브 URL을 추가해보세요</div>'; return; }
-  el.innerHTML = playlistData.map((t,i) =>
-    `<div class="music-item">
-      <div class="music-thumb" onclick="playMusicIdx(${i})">▶</div>
-      <div style="flex:1">
-        <div style="font-weight:700;font-size:14px">${esc(t.title)}</div>
-        <div style="font-size:11px;color:var(--gray)">${t.url.substring(0,35)}...</div>
-      </div>
-      <button class="delete-btn" onclick="removeFromPlaylist(${i})">삭제</button>
-    </div>`
-  ).join('');
-}
-window.playMusicIdx = (idx) => {
-  currentMusicIdx = idx;
-  const t = playlistData[idx];
-  playBGM(t.url, t.title);
-  document.getElementById('now-title').textContent = t.title;
-  document.getElementById('music-now-playing').style.display='block';
-};
-window.prevMusic = () => {
-  if (!playlistData.length) return;
-  currentMusicIdx = (currentMusicIdx-1+playlistData.length)%playlistData.length;
-  playMusicIdx(currentMusicIdx);
-};
-window.nextMusic = () => {
-  if (!playlistData.length) return;
-  currentMusicIdx = (currentMusicIdx+1)%playlistData.length;
-  playMusicIdx(currentMusicIdx);
-};
-window.togglePlay = () => {
-  const iframe = document.getElementById('bgm-iframe');
-  const btn = document.getElementById('play-pause-btn');
-  if (iframe.src) { iframe.src=''; btn.textContent='▶'; } else {
-    if (currentMusicIdx>=0) playMusicIdx(currentMusicIdx);
-    btn.textContent='⏸';
-  }
-};
-window.removeFromPlaylist = async (idx) => {
-  playlistData.splice(idx,1);
-  await updateDoc(doc(db,'users',currentUser.uid), {playlist:playlistData});
-  myProfile.playlist=playlistData;
-  renderPlaylist();
+  await updateDoc(doc(db, 'users', currentUser.uid), { skin: skinId });
+  myProfile.skin = skinId;
+  loadHompy(currentUser.uid);
+  showToast(`${skin.name} 스킨 적용!`);
 };
 
 // ===== BGM =====
 window.setBGM = async () => {
   const url = document.getElementById('bgm-input').value.trim();
   if (!url) {
-    await updateDoc(doc(db,'users',currentUser.uid), {bgm:'',bgmTitle:''});
-    myProfile.bgm=''; myProfile.bgmTitle='';
-    document.getElementById('bgm-title').textContent='';
-    stopBGM(); showToast('BGM 제거됐어요'); return;
+    await updateDoc(doc(db, 'users', currentUser.uid), { bgm: '', bgmTitle: '' });
+    myProfile.bgm = ''; myProfile.bgmTitle = '';
+    document.getElementById('bgm-title').textContent = '';
+    stopBGM();
+    showToast('BGM을 제거했어요');
+    return;
   }
   const yid = extractYoutubeId(url);
   if (!yid) { showToast('유튜브 URL을 입력해주세요'); return; }
-  await updateDoc(doc(db,'users',currentUser.uid), {bgm:url, bgmTitle:'BGM 설정됨'});
-  myProfile.bgm=url; myProfile.bgmTitle='BGM 설정됨';
-  document.getElementById('bgm-title').textContent='🎵 설정됨';
-  playBGM(url,'BGM');
+  await updateDoc(doc(db, 'users', currentUser.uid), { bgm: url, bgmTitle: url });
+  myProfile.bgm = url; myProfile.bgmTitle = url;
+  document.getElementById('bgm-title').textContent = '🎵 설정됨';
+  playBGM(url, '');
   showToast('BGM 설정 완료!');
 };
+
 function extractYoutubeId(url) {
   const m = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
   return m ? m[1] : null;
 }
+
 function playBGM(url, title) {
   const yid = extractYoutubeId(url);
   if (!yid) return;
-  if (bgmYid===yid) return;
-  bgmYid=yid;
-  document.getElementById('bgm-iframe').src = `https://www.youtube.com/embed/${yid}?autoplay=1&loop=1&playlist=${yid}`;
+  if (bgmYid === yid) return;
+  bgmYid = yid;
+  const iframe = document.getElementById('bgm-iframe');
+  iframe.src = `https://www.youtube.com/embed/${yid}?autoplay=1&loop=1&playlist=${yid}`;
   document.getElementById('bgm-player').classList.add('visible');
-  document.getElementById('bgm-playing-title').textContent = title||'재생 중';
+  document.getElementById('bgm-playing-title').textContent = title || 'BGM 재생 중';
 }
+
 window.stopBGM = () => {
-  document.getElementById('bgm-iframe').src='';
+  document.getElementById('bgm-iframe').src = '';
   document.getElementById('bgm-player').classList.remove('visible');
-  bgmYid=null;
-  document.getElementById('play-pause-btn') && (document.getElementById('play-pause-btn').textContent='▶');
+  bgmYid = null;
 };
 
 // ===== SHOP =====
-const SHOP_SKINS = SKINS.slice(1).map(s=>({...s,type:'skin',id:'skin_'+s.id,skinId:s.id,icon:'🎨'}));
-const SHOP_FRAMES = FRAMES.slice(1).map(f=>({...f,type:'frame',id:'frame_'+f.id,frameId:f.id}));
-const SHOP_SPECIAL = [
-  {id:'award_star', name:'스타 칭호', icon:'⭐', price:200, type:'award', awardName:'큐브스타'},
-  {id:'award_king', name:'왕 칭호', icon:'👑', price:500, type:'award', awardName:'큐브왕'},
-  {id:'xp_boost', name:'XP 부스터', icon:'⚡', price:50, type:'xp', xpAmount:100},
-];
-
 async function loadShop() {
-  const fp = await loadProfile(currentUser.uid);
-  myProfile = {...myProfile,...fp};
-  document.getElementById('shop-coins').textContent = myProfile.coins||0;
-  document.getElementById('shop-xp').textContent = myProfile.xp||0;
-  switchShopTab('skins');
-}
+  const freshProfile = await loadProfile(currentUser.uid);
+  if (freshProfile) { myProfile = {...myProfile, ...freshProfile}; }
+  document.getElementById('shop-coins').textContent = myProfile.coins || 0;
+  const owned = myProfile.ownedSkins || ['blue'];
 
-window.switchShopTab = (tab) => {
-  ['skins','frames','special'].forEach(t => {
-    document.getElementById('shop-'+t+'-tab').style.display = t===tab?'block':'none';
-  });
-  document.querySelectorAll('#shop-page .tab-btn').forEach((b,i) => {
-    b.classList.toggle('active', ['skins','frames','special'][i]===tab);
-  });
-  if (tab==='skins') renderShopItems('shop-skins', SHOP_SKINS, 'skin');
-  if (tab==='frames') renderShopItems('shop-frames', SHOP_FRAMES, 'frame');
-  if (tab==='special') renderShopItems('shop-special', SHOP_SPECIAL, 'special');
-};
-
-function renderShopItems(elId, items, type) {
-  const owned_skins = myProfile.ownedSkins||['blue'];
-  const owned_frames = myProfile.ownedFrames||['none'];
-  document.getElementById(elId).innerHTML = items.map(item => {
-    const isOwned = type==='skin'?owned_skins.includes(item.skinId):type==='frame'?owned_frames.includes(item.frameId):false;
+  const el = document.getElementById('shop-skins');
+  el.innerHTML = SHOP_ITEMS.map(item => {
+    const isOwned = owned.includes(item.skinId);
     return `<div class="shop-item">
-      <div class="item-icon">${item.icon||'🎨'}</div>
+      <div class="item-icon">${item.icon}</div>
       <div class="item-name">${item.name}</div>
       <div class="item-price">🟡 ${item.price}코인</div>
       <div style="margin-top:8px">
         ${isOwned
-          ? `<button class="btn btn-secondary" style="width:100%;font-size:12px;padding:6px" onclick="applySkin('${item.skinId||''}')">착용</button>`
-          : `<button class="btn btn-primary" style="width:100%;font-size:12px;padding:6px" onclick="buyItem('${item.id}')">구매</button>`
+          ? `<button class="btn-secondary" style="width:100%;font-size:12px;padding:6px" onclick="applySkin('${item.skinId}')">착용하기</button>`
+          : `<button class="btn-primary" style="width:100%;font-size:12px;padding:6px" onclick="buyItem('${item.id}')">구매</button>`
         }
       </div>
     </div>`;
@@ -2114,239 +1993,236 @@ function renderShopItems(elId, items, type) {
 }
 
 window.buyItem = async (itemId) => {
-  const allItems = [...SHOP_SKINS,...SHOP_FRAMES,...SHOP_SPECIAL];
-  const item = allItems.find(i=>i.id===itemId);
+  const item = SHOP_ITEMS.find(i => i.id === itemId);
   if (!item) return;
-  const fp = await loadProfile(currentUser.uid);
-  if ((fp.coins||0) < item.price) { showToast('큐브코인이 부족해요!'); return; }
-  const upd = {coins:increment(-item.price)};
-  if (item.type==='skin') upd.ownedSkins = arrayUnion(item.skinId);
-  if (item.type==='frame') upd.ownedFrames = arrayUnion(item.frameId);
-  if (item.type==='award') upd.awards = arrayUnion(item.awardName);
-  if (item.type==='xp') upd.xp = increment(item.xpAmount);
-  await updateDoc(doc(db,'users',currentUser.uid), upd);
-  myProfile.coins = (fp.coins||0) - item.price;
-  if (item.type==='skin') myProfile.ownedSkins = [...(myProfile.ownedSkins||['blue']), item.skinId];
-  if (item.type==='frame') myProfile.ownedFrames = [...(myProfile.ownedFrames||['none']), item.frameId];
-  if (item.type==='award') myProfile.awards = [...(myProfile.awards||[]), item.awardName];
-  if (item.type==='xp') myProfile.xp = (myProfile.xp||0)+item.xpAmount;
-  renderMiniProfile();
+  const freshProfile = await loadProfile(currentUser.uid);
+  const coins = freshProfile?.coins || 0;
+  if (coins < item.price) { showToast('큐브코인이 부족해요!'); return; }
+  await updateDoc(doc(db, 'users', currentUser.uid), {
+    coins: increment(-item.price),
+    ownedSkins: arrayUnion(item.skinId)
+  });
+  myProfile.coins = coins - item.price;
+  myProfile.ownedSkins = [...(myProfile.ownedSkins || ['blue']), item.skinId];
+  renderMyProfile();
   loadShop();
-  showToast(`${item.name} 구매 완료! 🎉`);
+  showToast(`${item.name} 구매 완료!`);
 };
 
-window.applySkin = async (skinId) => {
-  if (!skinId) return;
-  if (!(myProfile.ownedSkins||['blue']).includes(skinId)) { showToast('먼저 샵에서 구매해주세요'); return; }
-  await updateDoc(doc(db,'users',currentUser.uid), {skin:skinId});
-  myProfile.skin=skinId;
-  loadHompy(currentUser.uid);
-  showToast(SKINS.find(s=>s.id===skinId)?.name + ' 스킨 적용!');
-};
-
-// ===== PROFILE =====
-window.triggerAvatarUpload = () => {
-  if (viewingUid !== currentUser.uid) return;
-  document.getElementById('avatar-upload').click();
-};
-window.uploadAvatar = async (e) => {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > 2*1024*1024) { showToast('2MB 이하 이미지만 가능해요'); return; }
-  const reader = new FileReader();
-  reader.onload = async ev => {
-    const b64 = ev.target.result;
-    await updateDoc(doc(db,'users',currentUser.uid), {avatar:b64});
-    myProfile.avatar=b64;
-    renderMiniProfile(); loadHompy(currentUser.uid);
-    showToast('프로필 사진 변경됐어요!');
-  };
-  reader.readAsDataURL(file);
-};
-window.uploadCover = async (e) => {
-  const file = e.target.files[0]; if (!file) return;
-  if (file.size > 2*1024*1024) { showToast('2MB 이하 이미지만 가능해요'); return; }
-  const reader = new FileReader();
-  reader.onload = async ev => {
-    await updateDoc(doc(db,'users',currentUser.uid), {coverImg:ev.target.result});
-    myProfile.coverImg=ev.target.result;
-    loadHompy(currentUser.uid);
-    showToast('커버 이미지 변경됐어요!');
-  };
-  reader.readAsDataURL(file);
-};
-window.openProfileEdit = () => {
-  document.getElementById('edit-name').value = myProfile.name;
-  document.getElementById('edit-status').value = myProfile.status||'';
-  document.getElementById('modal-avatar').innerHTML = myProfile.avatar
-    ? `<img src="${myProfile.avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : '🙂';
-  openModal('profile-modal');
-};
-window.saveProfile = async () => {
-  const name = document.getElementById('edit-name').value.trim();
-  const status = document.getElementById('edit-status').value.trim();
-  if (!name||name.length<2||name.length>10) { showToast('닉네임은 2~10자로 입력해주세요'); return; }
-  const q = query(collection(db,'users'), where('name','==',name));
-  const snap = await getDocs(q);
-  if (!snap.empty && snap.docs[0].id!==currentUser.uid) { showToast('이미 사용 중인 닉네임이에요'); return; }
-  await updateDoc(doc(db,'users',currentUser.uid), {name, status, isNewUser:false});
-  myProfile.name=name; myProfile.status=status; myProfile.isNewUser=false;
-  renderMiniProfile(); loadHompy(currentUser.uid);
-  closeModal('profile-modal'); showToast('프로필이 저장됐어요!');
-};
-
-// ===== NOTIF =====
+// ===== NOTIFICATIONS =====
 function listenNotifications() {
   if (unsubNotif) unsubNotif();
-  const q = query(collection(db,'notifications'), where('toUid','==',currentUser.uid), where('read','==',false));
-  unsubNotif = onSnapshot(q, snap => {
-    const badge = document.getElementById('notif-badge');
-    badge.textContent = snap.size;
-    badge.style.display = snap.size>0?'inline':'none';
-  });
+  try {
+    // 복합 인덱스 없이 단순 쿼리
+    const q = query(collection(db, 'notifications'), where('toUid', '==', currentUser.uid));
+    unsubNotif = onSnapshot(q, snap => {
+      const unread = snap.docs.filter(d => !d.data().read).length;
+      updateNotifBadge(unread);
+    }, err => {
+      console.error('notif listener error:', err);
+    });
+  } catch(e) { console.error('listenNotifications error:', e); }
 }
+
+function updateNotifBadge(count) {
+  const badge = document.getElementById('notif-badge');
+  badge.textContent = count;
+  badge.style.display = count > 0 ? 'flex' : 'none';
+}
+
 async function loadNotif() {
-  const q = query(collection(db,'notifications'), where('toUid','==',currentUser.uid), orderBy('time','desc'), limit(30));
-  const snap = await getDocs(q);
   const el = document.getElementById('notif-list');
-  if (snap.empty) { el.innerHTML='<div class="empty"><div class="empty-icon">🔔</div>알림이 없어요</div>'; return; }
-  el.innerHTML = snap.docs.map(d => {
-    const n = d.data();
-    return `<div class="notif-item">
-      <div class="notif-dot ${n.read?'read':''}"></div>
-      <div>
-        <div style="font-size:13px">${esc(n.text)}</div>
-        <div style="font-size:11px;color:var(--gray)">${timeAgo(n.time)}</div>
-      </div>
-    </div>`;
-  }).join('');
-  snap.docs.filter(d=>!d.data().read).forEach(d=>updateDoc(doc(db,'notifications',d.id),{read:true}));
+  el.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div>불러오는 중...</div>';
+  try {
+    // 복합 인덱스 없이 where만, 클라이언트 정렬
+    const q = query(collection(db, 'notifications'), where('toUid', '==', currentUser.uid));
+    const snap = await getDocs(q);
+
+    if (snap.empty) {
+      el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔔</div>알림이 없어요</div>';
+      return;
+    }
+
+    const sorted = snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a,b) => {
+        const ta = a.time?.toMillis ? a.time.toMillis() : 0;
+        const tb = b.time?.toMillis ? b.time.toMillis() : 0;
+        return tb - ta;
+      })
+      .slice(0, 30);
+
+    el.innerHTML = sorted.map(n =>
+      `<div class="notif-item">
+        <div class="notif-dot ${n.read ? 'read' : ''}"></div>
+        <div>
+          <div class="notif-text">${escapeHtml(n.text || '')}</div>
+          <div class="notif-time">${timeAgo(n.time)}</div>
+        </div>
+      </div>`
+    ).join('');
+
+    // 읽음 처리
+    const batch = writeBatch(db);
+    snap.docs.filter(d => !d.data().read).forEach(d => {
+      batch.update(doc(db, 'notifications', d.id), { read: true });
+    });
+    await batch.commit();
+    updateNotifBadge(0);
+  } catch(e) {
+    console.error('loadNotif error:', e);
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">❌</div>알림을 불러오지 못했어요</div>';
+  }
 }
 
-// ===== SETTINGS =====
-function loadSettings() {
-  const s = myProfile.settings||{};
-  document.getElementById('setting-notif').checked = s.notif !== false;
-  document.getElementById('setting-privacy').value = s.privacy||'all';
-}
-window.saveSettings = async () => {
-  const settings = {
-    notif: document.getElementById('setting-notif').checked,
-    privacy: document.getElementById('setting-privacy').value
-  };
-  await updateDoc(doc(db,'users',currentUser.uid), {settings});
-  myProfile.settings=settings;
-  showToast('설정이 저장됐어요!');
-};
-window.setTheme = (theme) => {
-  if (theme==='dark') {
-    document.body.style.background='#0f172a';
-    document.body.style.color='#e2e8f0';
+// ===== ATTENDANCE — 중복 방지 강화 =====
+async function loadAttend() {
+  const freshProfile = await loadProfile(currentUser.uid);
+  if (freshProfile) { myProfile = {...myProfile, ...freshProfile}; }
+
+  const today = getTodayStr();
+  const attendDates = myProfile.attendDates || [];
+  const alreadyDone = myProfile.lastAttend === today || attendDates.includes(today);
+
+  const btn = document.getElementById('attend-btn');
+  const msg = document.getElementById('attend-msg');
+
+  document.getElementById('attend-streak').textContent =
+    `🔥 연속 출석 ${myProfile.attendStreak || 0}일`;
+
+  if (alreadyDone) {
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    btn.textContent = '✅ 오늘 출석 완료!';
+    msg.innerHTML = '<span style="color:var(--cube-blue)">내일 또 만나요 😊</span>';
   } else {
-    document.body.style.background='#dbeafe';
-    document.body.style.color='';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '출석 도장 찍기 🔵';
+    msg.textContent = '';
   }
-  showToast(theme==='dark'?'다크 모드 적용!':'라이트 모드 적용!');
-};
-
-// ===== ADMIN =====
-window.adminSearchUser = async () => {
-  if (!DEV_UIDS.includes(currentUser.uid)) return;
-  const name = document.getElementById('admin-search-input').value.trim();
-  const q = query(collection(db,'users'), where('name','==',name));
-  const snap = await getDocs(q);
-  const el = document.getElementById('admin-user-result');
-  if (snap.empty) { el.innerHTML='<div style="color:var(--gray)">찾을 수 없음</div>'; return; }
-  const p = snap.docs[0].data(); const uid = snap.docs[0].id;
-  el.innerHTML = `<div class="card-sm" style="margin-top:12px">
-    <div style="font-weight:700;margin-bottom:10px">${esc(p.name)} (${uid.substring(0,8)}...)</div>
-    <div style="font-size:13px;color:var(--gray);margin-bottom:10px">코인: ${p.coins} | XP: ${p.xp} | 방문: ${p.visits}</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-primary btn-sm" onclick="adminVerify('${uid}')">✅ 인증 부여</button>
-      <button class="btn btn-secondary btn-sm" onclick="adminUnverify('${uid}')">✅ 인증 취소</button>
-      <button class="btn btn-primary btn-sm" onclick="adminGiveCoins('${uid}')">🟡 코인 지급</button>
-      <button class="btn btn-danger btn-sm" onclick="adminBan('${uid}')">🚫 계정 정지</button>
-    </div>
-  </div>`;
-};
-window.adminVerify = async (uid) => {
-  await updateDoc(doc(db,'users',uid), {verified:true});
-  showToast('인증 배지 부여됐어요');
-};
-window.adminUnverify = async (uid) => {
-  await updateDoc(doc(db,'users',uid), {verified:false});
-  showToast('인증 배지 취소됐어요');
-};
-window.adminGiveCoins = async (uid) => {
-  const amount = parseInt(prompt('지급할 코인 수:'));
-  if (isNaN(amount)) return;
-  await updateDoc(doc(db,'users',uid), {coins:increment(amount)});
-  showToast(`${amount}코인 지급됐어요`);
-};
-window.adminBan = async (uid) => {
-  if (!confirm('이 유저를 정지할까요?')) return;
-  await updateDoc(doc(db,'users',uid), {banned:true});
-  showToast('계정이 정지됐어요');
-};
-
-// ===== SEARCH =====
-window.topSearch = async () => {
-  const val = document.getElementById('topbar-search').value.trim();
-  if (!val) return;
-  if (val.startsWith('#')) {
-    showPage('feed'); showToast(`${val} 태그 검색`); return;
-  }
-  const q = query(collection(db,'users'), where('name','==',val));
-  const snap = await getDocs(q);
-  if (snap.empty) { showToast('찾을 수 없어요'); return; }
-  const uid = snap.docs[0].id;
-  if (uid===currentUser.uid) { showPage('hompy'); return; }
-  visitHompy(uid);
-  document.getElementById('topbar-search').value='';
-};
-
-// ===== XP / ACHIEVEMENTS =====
-async function addXP(amount) {
-  await updateDoc(doc(db,'users',currentUser.uid), {xp:increment(amount)});
-  myProfile.xp = (myProfile.xp||0) + amount;
-  renderMiniProfile();
+  renderAttendCalendar(attendDates, today);
 }
 
-async function checkAchievements() {
-  const fp = await loadProfile(currentUser.uid);
-  const awards = fp.awards||[];
-  const newAwards = [];
-  if ((fp.visits||0)>=10 && !awards.includes('인기스타')) newAwards.push('인기스타');
-  if ((fp.attendStreak||0)>=7 && !awards.includes('출석왕')) newAwards.push('출석왕');
-  if ((fp.chins||[]).length>=5 && !awards.includes('큐브소셜')) newAwards.push('큐브소셜');
-  if (newAwards.length) {
-    await updateDoc(doc(db,'users',currentUser.uid), {awards:arrayUnion(...newAwards)});
-    myProfile.awards = [...awards, ...newAwards];
-    newAwards.forEach(a => showToast(`🏅 새 칭호 획득: ${a}!`));
+function renderAttendCalendar(attendDates, today) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDay = new Date(year, month, 1).getDay();
+
+  let cal = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center">`;
+  ['일','월','화','수','목','금','토'].forEach(d => {
+    cal += `<div style="font-size:11px;font-weight:700;color:var(--cube-gray);padding:4px">${d}</div>`;
+  });
+  for (let i=0; i<firstDay; i++) cal += '<div></div>';
+  for (let d=1; d<=daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const done = attendDates.includes(dateStr);
+    const isToday = dateStr === today;
+    cal += `<div style="padding:5px 2px;border-radius:8px;font-size:12px;
+      background:${done ? 'var(--cube-blue)' : isToday ? '#e0e7ff' : '#f8faff'};
+      color:${done ? 'white' : 'var(--cube-dark)'};
+      border:${isToday ? '2px solid var(--cube-blue)' : '2px solid transparent'};
+      font-weight:${isToday ? '700' : '400'}">${d}${done ? '✓' : ''}</div>`;
   }
+  cal += '</div>';
+  document.getElementById('attend-calendar').innerHTML = cal;
+}
+
+window.doAttend = async () => {
+  if (isAttending) return; // 중복 방지
+  const today = getTodayStr();
+
+  // DB에서 최신 데이터로 확인 (클라이언트 캐시 신뢰 안 함)
+  const freshProfile = await loadProfile(currentUser.uid);
+  if (freshProfile && (freshProfile.lastAttend === today || (freshProfile.attendDates||[]).includes(today))) {
+    showToast('오늘은 이미 출석했어요!');
+    myProfile = {...myProfile, ...freshProfile};
+    loadAttend();
+    return;
+  }
+
+  isAttending = true;
+  const btn = document.getElementById('attend-btn');
+  btn.disabled = true;
+  btn.textContent = '출석 중...';
+
+  try {
+    const yesterday = getYesterdayStr();
+    const last = freshProfile?.lastAttend || myProfile.lastAttend || '';
+    const currentStreak = freshProfile?.attendStreak || myProfile.attendStreak || 0;
+    const streak = last === yesterday ? currentStreak + 1 : 1;
+
+    await updateDoc(doc(db, 'users', currentUser.uid), {
+      lastAttend: today,
+      attendStreak: streak,
+      attendDates: arrayUnion(today),
+      coins: increment(10)
+    });
+
+    myProfile.lastAttend = today;
+    myProfile.attendStreak = streak;
+    myProfile.coins = (myProfile.coins || 0) + 10;
+    if (!myProfile.attendDates) myProfile.attendDates = [];
+    myProfile.attendDates.push(today);
+
+    renderMyProfile();
+    loadAttend();
+    showToast(`출석 완료! 🎉 큐브코인 10개 획득! (${streak}일 연속)`);
+  } catch(e) {
+    console.error('doAttend error:', e);
+    showToast('출석 중 오류가 났어요. 다시 시도해주세요.');
+    btn.disabled = false;
+    btn.textContent = '출석 도장 찍기 🔵';
+  } finally {
+    isAttending = false;
+  }
+};
+
+function getTodayStr() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+function getYesterdayStr() {
+  const d = new Date(Date.now() - 86400000);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
 // ===== UTILS =====
 window.openModal = (id) => document.getElementById(id).classList.add('open');
 window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+
 document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target===m) m.classList.remove('open'); });
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
 window.showToast = (msg) => {
   const t = document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
 };
+
 function timeAgo(ts) {
   if (!ts) return '';
-  const date = ts.toDate ? ts.toDate() : new Date(ts);
-  const diff = (Date.now()-date.getTime())/1000;
-  if (diff<60) return '방금 전';
-  if (diff<3600) return Math.floor(diff/60)+'분 전';
-  if (diff<86400) return Math.floor(diff/3600)+'시간 전';
-  return Math.floor(diff/86400)+'일 전';
+  try {
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    const diff = (Date.now() - date.getTime()) / 1000;
+    if (diff < 60) return '방금 전';
+    if (diff < 3600) return Math.floor(diff/60) + '분 전';
+    if (diff < 86400) return Math.floor(diff/3600) + '시간 전';
+    return Math.floor(diff/86400) + '일 전';
+  } catch(e) { return ''; }
 }
-function esc(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function escapeHtml(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
 }
 </script>
 </body>
